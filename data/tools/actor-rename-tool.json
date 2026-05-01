@@ -1,0 +1,224 @@
+{
+  "slug": "actor-rename-tool",
+  "name": "ActorRenameTool",
+  "displayName": "Actor Rename Tool",
+  "description": "场景 Actor 批量重命名与 Tag 管理工具，支持查找替换、批量编号重命名、Tag 添加与清除。",
+  "category": "level-editing",
+  "author": "TA Team",
+  "ownerTeam": "Technical Art",
+  "status": "approved",
+  "riskLevel": "medium",
+  "tags": ["actor", "batch-rename", "tag", "chameleon", "level-editing"],
+  "compatibility": {
+    "unrealEngine": ["5.3", "5.4", "5.5"],
+    "tapython": ["1.2+"],
+    "plugins": ["TAPython"]
+  },
+  "mountPoint": "OnToolBarChameleon",
+  "installPath": "<Project>/TA/TAPython/Python/ActorRenameTool/",
+  "entryJson": "ActorRenameTool/ActorRenameTool.json",
+  "sourceDocument": "plan/tool_share/ActorRenameTool.md",
+  "updatedAt": "2026-04-30",
+  "downloads": {
+    "latestManifest": "/downloads/actor-rename-tool/1.1.0/manifest.json",
+    "latestReadme": "/downloads/actor-rename-tool/1.1.0/README.md",
+    "latestPackage": ""
+  },
+  "summary": {
+    "features": [
+      "选中 Actor 名称查找替换",
+      "按基础名和编号批量重命名",
+      "添加名称同名 Tag",
+      "清除或批量添加编号 Tag",
+      "预览当前选中 Actor 和 Tags"
+    ],
+    "unrealApis": [
+      "unreal.EditorLevelLibrary.get_selected_level_actors",
+      "actor.get_actor_label",
+      "actor.set_actor_label",
+      "actor.tags",
+      "unreal.PythonBPLib.get_chameleon_data"
+    ],
+    "widgetAkas": [
+      "input_find",
+      "input_replace",
+      "chk_case_sensitive",
+      "input_base_name",
+      "input_start_index",
+      "input_padding",
+      "txt_actor_list",
+      "txt_status"
+    ],
+    "installSteps": [
+      "下载工具包并解压 ActorRenameTool 文件夹。",
+      "复制到 <Project>/TA/TAPython/Python/ActorRenameTool/。",
+      "将 MenuConfig.snippet.json 合并到 <Project>/TA/TAPython/UI/MenuConfig.json。",
+      "Reload TAPython 或重启 UE 编辑器。"
+    ],
+    "riskNotes": [
+      "批量重命名会覆盖 Actor 显示名称。",
+      "清除所有 Tag 操作不可撤销，执行前需要确认选择范围。",
+      "安装时会修改项目 MenuConfig.json。"
+    ]
+  },
+  "versions": [
+    {
+      "version": "1.1.0",
+      "releasedAt": "2026-04-30",
+      "author": "TA Team",
+      "changeSummary": "补充 Tag 管理、选中 Actor 预览和更完整的状态反馈。",
+      "breaking": false,
+      "downloads": {
+        "manifest": "/downloads/actor-rename-tool/1.1.0/manifest.json",
+        "readme": "/downloads/actor-rename-tool/1.1.0/README.md",
+        "package": ""
+      },
+      "manifest": {
+        "schemaVersion": "1.0.0",
+        "name": "ActorRenameTool",
+        "displayName": "Actor Rename Tool",
+        "version": "1.1.0",
+        "author": "TA Team",
+        "description": "场景 Actor 批量重命名与 Tag 管理工具",
+        "category": "level-editing",
+        "tags": ["actor", "batch-rename", "tag"],
+        "compatibility": {
+          "unrealEngine": ["5.3", "5.4", "5.5"],
+          "tapython": ["1.2+"],
+          "plugins": ["TAPython"]
+        },
+        "dependencies": [],
+        "mountPoint": "OnToolBarChameleon",
+        "installPath": "<Project>/TA/TAPython/Python/ActorRenameTool/",
+        "entryJson": "ActorRenameTool/ActorRenameTool.json",
+        "riskLevel": "medium",
+        "files": [
+          {
+            "path": "ActorRenameTool/ActorRenameTool.json",
+            "sha256": "8b2b51bdbd3d4e6c-ui-v110",
+            "size": 16820
+          },
+          {
+            "path": "ActorRenameTool/ActorRenameTool.py",
+            "sha256": "40a1f949a8f51e75-py-v110",
+            "size": 10240
+          },
+          {
+            "path": "ActorRenameTool/__init__.py",
+            "sha256": "e3b0c44298fc1c14-empty",
+            "size": 0
+          },
+          {
+            "path": "MenuConfig.snippet.json",
+            "sha256": "55c7c28c0c5f-menu-v110",
+            "size": 156
+          }
+        ],
+        "menuConfigMerge": {
+          "target": "<Project>/TA/TAPython/UI/MenuConfig.json",
+          "mountPoint": "OnToolBarChameleon",
+          "itemsToAdd": [
+            {
+              "name": "Actor Rename Tool",
+              "ChameleonTools": "../Python/ActorRenameTool/ActorRenameTool.json",
+              "ExtensionHookName": "OnToolBarChameleon"
+            }
+          ]
+        },
+        "preInstallChecks": [
+          "确认项目已安装 TAPython",
+          "确认 MenuConfig.json 可写",
+          "确认目标目录不存在同名未备份工具"
+        ],
+        "postInstallSteps": [
+          "Reload TAPython 或重启 UE 编辑器",
+          "在 Chameleon 工具栏中确认工具入口可见"
+        ],
+        "uninstallSteps": [
+          "删除 <Project>/TA/TAPython/Python/ActorRenameTool/",
+          "从 MenuConfig.json 移除对应 items 项"
+        ],
+        "createdAt": "2026-04-30",
+        "updatedAt": "2026-04-30"
+      }
+    },
+    {
+      "version": "1.0.0",
+      "releasedAt": "2026-04-20",
+      "author": "TA Team",
+      "changeSummary": "首版提供 Actor 查找替换和基础批量编号重命名。",
+      "breaking": false,
+      "downloads": {
+        "manifest": "/downloads/actor-rename-tool/1.0.0/manifest.json",
+        "readme": "/downloads/actor-rename-tool/1.0.0/README.md",
+        "package": ""
+      },
+      "manifest": {
+        "schemaVersion": "1.0.0",
+        "name": "ActorRenameTool",
+        "displayName": "Actor Rename Tool",
+        "version": "1.0.0",
+        "author": "TA Team",
+        "description": "场景 Actor 批量重命名工具",
+        "category": "level-editing",
+        "tags": ["actor", "batch-rename"],
+        "compatibility": {
+          "unrealEngine": ["5.3", "5.4"],
+          "tapython": ["1.2+"],
+          "plugins": ["TAPython"]
+        },
+        "dependencies": [],
+        "mountPoint": "OnToolBarChameleon",
+        "installPath": "<Project>/TA/TAPython/Python/ActorRenameTool/",
+        "entryJson": "ActorRenameTool/ActorRenameTool.json",
+        "riskLevel": "medium",
+        "files": [
+          {
+            "path": "ActorRenameTool/ActorRenameTool.json",
+            "sha256": "4f390e2147acbbf1-ui-v100",
+            "size": 11840
+          },
+          {
+            "path": "ActorRenameTool/ActorRenameTool.py",
+            "sha256": "c3d4e9d1a7910a44-py-v100",
+            "size": 6520
+          },
+          {
+            "path": "ActorRenameTool/__init__.py",
+            "sha256": "e3b0c44298fc1c14-empty",
+            "size": 0
+          },
+          {
+            "path": "MenuConfig.snippet.json",
+            "sha256": "55c7c28c0c5f-menu-v100",
+            "size": 156
+          }
+        ],
+        "menuConfigMerge": {
+          "target": "<Project>/TA/TAPython/UI/MenuConfig.json",
+          "mountPoint": "OnToolBarChameleon",
+          "itemsToAdd": [
+            {
+              "name": "Actor Rename Tool",
+              "ChameleonTools": "../Python/ActorRenameTool/ActorRenameTool.json",
+              "ExtensionHookName": "OnToolBarChameleon"
+            }
+          ]
+        },
+        "preInstallChecks": [
+          "确认项目已安装 TAPython",
+          "确认 MenuConfig.json 可写"
+        ],
+        "postInstallSteps": [
+          "Reload TAPython 或重启 UE 编辑器"
+        ],
+        "uninstallSteps": [
+          "删除 <Project>/TA/TAPython/Python/ActorRenameTool/",
+          "从 MenuConfig.json 移除对应 items 项"
+        ],
+        "createdAt": "2026-04-20",
+        "updatedAt": "2026-04-20"
+      }
+    }
+  ]
+}

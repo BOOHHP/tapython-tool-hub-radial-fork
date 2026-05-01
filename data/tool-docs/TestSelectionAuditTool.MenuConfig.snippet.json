@@ -1,0 +1,5 @@
+{
+  "name": "Test Selection Audit Tool",
+  "ChameleonTools": "../Python/TestSelectionAuditTool/TestSelectionAuditTool.json",
+  "ExtensionHookName": "OnToolBarChameleon"
+}

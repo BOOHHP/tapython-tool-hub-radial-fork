@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-05-01T02:29:48.016Z",
+  "total": 2,
+  "tools": [
+    {
+      "slug": "actor-rename-tool",
+      "name": "ActorRenameTool",
+      "displayName": "Actor Rename Tool",
+      "description": "场景 Actor 批量重命名与 Tag 管理工具，支持查找替换、批量编号重命名、Tag 添加与清除。",
+      "category": "level-editing",
+      "author": "TA Team",
+      "ownerTeam": "Technical Art",
+      "status": "approved",
+      "riskLevel": "medium",
+      "tags": [
+        "actor",
+        "batch-rename",
+        "tag",
+        "chameleon",
+        "level-editing"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.3",
+          "5.4",
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/ActorRenameTool/",
+      "latestVersion": "1.1.0",
+      "updatedAt": "2026-04-30",
+      "apiUrl": "/api/tools/actor-rename-tool.json",
+      "sourceDocument": "data/tool-docs/actor-rename-tool.md",
+      "sourceMode": "markdown-with-external-files",
+      "downloads": {
+        "latestManifest": "/downloads/actor-rename-tool/1.1.0/manifest.json",
+        "latestReadme": "/downloads/actor-rename-tool/1.1.0/README.md",
+        "latestMarkdown": "/downloads/actor-rename-tool/1.1.0/tool.md",
+        "latestPackage": ""
+      }
+    },
+    {
+      "slug": "test-selection-audit-tool",
+      "name": "TestSelectionAuditTool",
+      "displayName": "Test Selection Audit Tool",
+      "description": "用于测试 Tool Hub 发布、检索、安装和版本对比流程的伪造工具，模拟对当前选中 Actor 进行轻量审计。",
+      "category": "validation",
+      "author": "Tool Hub QA",
+      "ownerTeam": "Pipeline QA",
+      "status": "pending",
+      "riskLevel": "low",
+      "tags": [
+        "test-fixture",
+        "validation",
+        "selection",
+        "audit",
+        "chameleon"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.4",
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/TestSelectionAuditTool/",
+      "latestVersion": "0.2.0",
+      "updatedAt": "2026-04-29",
+      "apiUrl": "/api/tools/test-selection-audit-tool.json",
+      "sourceDocument": "data/tool-docs/test-selection-audit-tool.md",
+      "sourceMode": "markdown-with-external-files",
+      "downloads": {
+        "latestManifest": "/downloads/test-selection-audit-tool/0.2.0/manifest.json",
+        "latestReadme": "/downloads/test-selection-audit-tool/0.2.0/README.md",
+        "latestMarkdown": "/downloads/test-selection-audit-tool/0.2.0/tool.md",
+        "latestPackage": ""
+      }
+    }
+  ]
+}

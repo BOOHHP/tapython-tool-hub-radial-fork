@@ -1,0 +1,49 @@
+{
+  "TabLabel": "Test Selection Audit Tool",
+  "InitTabSize": [560, 520],
+  "InitPyCmd": "import importlib; from TestSelectionAuditTool import TestSelectionAuditTool; importlib.reload(TestSelectionAuditTool); TestSelectionAuditTool.instance = TestSelectionAuditTool.TestSelectionAuditController(%JsonPath)",
+  "OnClosePyCmd": "from TestSelectionAuditTool import TestSelectionAuditTool; TestSelectionAuditTool.instance = None",
+  "Root": {
+    "SVerticalBox": {
+      "Slots": [
+        {
+          "AutoHeight": true,
+          "STextBlock": {
+            "Text": "Test Selection Audit Tool"
+          }
+        },
+        {
+          "AutoHeight": true,
+          "STextBlock": {
+            "Aka": "txt_selection_count",
+            "Text": "Selected Actors: 0"
+          }
+        },
+        {
+          "AutoHeight": true,
+          "SButton": {
+            "Aka": "btn_refresh_audit",
+            "Text": "刷新审计结果",
+            "OnClick": "TestSelectionAuditTool.instance.refresh_audit()"
+          }
+        },
+        {
+          "AutoHeight": true,
+          "SButton": {
+            "Aka": "btn_copy_summary",
+            "Text": "复制摘要",
+            "OnClick": "TestSelectionAuditTool.instance.copy_summary()"
+          }
+        },
+        {
+          "FillHeight": 1,
+          "SMultiLineEditableText": {
+            "Aka": "txt_audit_result",
+            "IsReadOnly": true,
+            "Text": "等待刷新。"
+          }
+        }
+      ]
+    }
+  }
+}
