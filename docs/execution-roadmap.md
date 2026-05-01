@@ -463,6 +463,23 @@ Phase G: 兼容 API 和下载产物切换到发布任务
 1. 继续从 `ToolHubPage` 中拆出 `ToolCatalog`、`ToolDetail`、`CompareView`、`SubmitGuide` 等 feature 组件。
 2. 进入 Phase C，将 `apps/web/src/types.ts` 迁入 `packages/shared`，并引入运行时 schema。
 
+### 2026-05-01 Phase C 已启动
+
+已完成：
+
+1. 将工具、版本、manifest、diff 相关 TypeScript 类型迁入 `packages/shared/src/types.ts`。
+2. 新增 `packages/shared/src/schemas.ts`，用 Zod 定义风险等级、审核状态、manifest、工具详情和工具索引响应 schema。
+3. 将 `packages/shared` 作为 `apps/web` 的 workspace 依赖。
+4. 将 `apps/web/src/types.ts` 改为兼容转发层，减少现有引用断裂风险。
+5. 将 web 内部关键模块改为从 `@tapython-tool-hub/shared` 引入类型。
+6. 通过 `npm run typecheck -w @tapython-tool-hub/shared` 与 `npm run build` 验收。
+
+下一步：
+
+1. 继续拆分 `ToolHubPage` 内部 UI 组件，降低页面容器复杂度。
+2. 让生成器使用 `packages/shared` 的 schema 校验输出 JSON，为后端发布任务复用做准备。
+3. 补数据库实体边界和投稿/审核/发布流设计，再进入 `apps/api` 业务实现。
+
 ## 维护约定
 
 后续涉及架构和目录调整时，优先更新这份文档，而不是只在聊天中口头确认。

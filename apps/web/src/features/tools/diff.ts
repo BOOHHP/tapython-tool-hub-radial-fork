@@ -1,4 +1,4 @@
-import type { FileDiffRow, ManifestDiffRow, ToolFileManifest, ToolManifest } from '../../types';
+import type { FileDiffRow, ManifestDiffRow, ToolFileManifest, ToolManifest } from '@tapython-tool-hub/shared';
 
 export function buildManifestDiff(from: ToolManifest, to: ToolManifest): ManifestDiffRow[] {
   const rows: Array<[keyof ToolManifest, string]> = [

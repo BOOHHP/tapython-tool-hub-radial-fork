@@ -1,6 +1,6 @@
+import type { ToolRecord } from '@tapython-tool-hub/shared';
 import actorRenameToolApi from '../../public/api/tools/actor-rename-tool.json';
 import testSelectionAuditToolApi from '../../public/api/tools/test-selection-audit-tool.json';
-import type { ToolRecord } from '../types';
 
 export const tools = [actorRenameToolApi.tool as ToolRecord, testSelectionAuditToolApi.tool as ToolRecord];
 

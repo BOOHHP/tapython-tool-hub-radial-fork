@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import type { ToolRecord } from '../types';
+import type { ToolRecord } from '@tapython-tool-hub/shared';
 
 export function useToolFilters(tools: ToolRecord[]) {
   const [query, setQuery] = useState('');

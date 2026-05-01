@@ -1,1 +1,2 @@
-export const sharedPackageName = '@tapython-tool-hub/shared';
+export * from './schemas';
+export type * from './types';

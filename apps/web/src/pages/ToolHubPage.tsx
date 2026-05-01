@@ -39,11 +39,11 @@ import {
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useState } from 'react';
+import type { FileDiffRow, ManifestDiffRow, ToolFileManifest, ToolManifest, ToolRecord, ToolVersion } from '@tapython-tool-hub/shared';
 import { buildFileDiff, buildManifestDiff } from '../features/tools/diff';
 import { riskColor, statusColor } from '../features/tools/display';
 import { useToolFilters } from '../hooks/useToolFilters';
 import { categories, riskLevels, statuses, tools } from '../services/toolRegistry';
-import type { FileDiffRow, ManifestDiffRow, ToolFileManifest, ToolManifest, ToolRecord, ToolVersion } from '../types';
 
 const { Header, Content } = Layout;
 const { Paragraph, Text, Title } = Typography;
