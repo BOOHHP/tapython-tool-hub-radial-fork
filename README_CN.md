@@ -72,6 +72,53 @@ npm run build:api
 npm test -w @tapython-tool-hub/api
 ```
 
+## 常用命令
+
+| 命令 | 用途 |
+|------|------|
+| `npm run dev:api` | 构建 shared/tooling 包，然后以 watch 模式启动 Fastify API。 |
+| `npm run dev` | 构建 `packages/shared`，然后启动 Vite 前端。 |
+| `npm run generate:data` | 从 `data/` 重新生成兼容 API/downloads 产物。 |
+| `npm run build` | 重新生成数据并构建前端到 `dist/`。 |
+| `npm run build:api` | 构建 `packages/shared`、`packages/tooling` 和 `apps/api`。 |
+| `npm test -w @tapython-tool-hub/api` | 运行 API/workflow focused tests。 |
+| `npm run start:api` | 构建 API 依赖后启动编译产物。 |
+
+## 配置项
+
+API 从环境变量读取配置：
+
+| 变量 | 默认值 | 用途 |
+|------|--------|------|
+| `API_HOST` | `127.0.0.1` | Fastify 监听地址。 |
+| `API_PORT` | `8787` | Fastify 监听端口。 |
+| `DATABASE_URL` | 未配置 | PostgreSQL 连接串；未配置时投稿使用文件 fallback。 |
+| `TOOL_DATA_ROOT` | `data/tools` | JSON 工具源数据目录。 |
+| `TOOL_DOCS_ROOT` | `data/tool-docs` | Markdown-first 工具源数据目录。 |
+| `TOOL_API_ROOT` | `apps/web/public/api/tools` | 兼容工具 API 生成目录。 |
+| `TOOL_DOWNLOAD_ROOT` | `apps/web/public/downloads` | 兼容 downloads 生成目录。 |
+| `SUBMISSION_ROOT` | `.tapython-tool-hub/submissions` | 投稿文件 fallback 存储目录。 |
+
+前端读取：
+
+| 变量 | 默认值 | 用途 |
+|------|--------|------|
+| `VITE_API_BASE_URL` | `http://127.0.0.1:8787` | 前端请求 API 和 downloads 的基础地址。 |
+
+## 可选 PostgreSQL
+
+本地试用不强制 PostgreSQL。未配置 `DATABASE_URL` 时，投稿记录会写入 `.tapython-tool-hub/submissions`。
+
+如需使用 PostgreSQL，先创建数据库、应用初始 schema，再带 `DATABASE_URL` 启动 API：
+
+```bash
+createdb tapython_tool_hub
+psql "$DATABASE_URL" -f apps/api/db/migrations/001_initial.sql
+DATABASE_URL="postgres://localhost/tapython_tool_hub" npm run dev:api
+```
+
+当前 SQL migration 是幂等的。专门的迁移执行脚本计划在 Phase H 中补齐。
+
 ## 目录结构
 
 ```text
@@ -108,6 +155,35 @@ npm test -w @tapython-tool-hub/api
    - `/downloads/<tool-slug>/<version>/tool.md`
 4. 投稿通过 `/api/submissions` 进入后端，经过 `packages/tooling` 校验、审核后导出为 Markdown/source 资产和兼容生成产物。
 
+## API 路由
+
+| 方法 | 路径 | 用途 |
+|------|------|------|
+| `GET` | `/health` | API 和可选数据库健康检查。 |
+| `GET` | `/api/tools` | 兼容工具索引。 |
+| `GET` | `/api/tools/index.json` | 前端和 Agent 使用的兼容工具索引。 |
+| `GET` | `/api/tools/<slug>` | 兼容工具详情。 |
+| `GET` | `/api/tools/<slug>.json` | 前端和 Agent 使用的兼容工具详情。 |
+| `GET` | `/downloads/*` | 兼容 manifest、README、tool Markdown 和引用资源。 |
+| `GET` | `/api/submissions` | 投稿列表。 |
+| `POST` | `/api/submissions` | 创建并校验 Markdown-first 投稿。 |
+| `GET` | `/api/submissions/<id>` | 查看单个投稿。 |
+| `POST` | `/api/submissions/<id>/review` | 审核通过、拒绝或要求修改。 |
+
+投稿和审核路由当前面向可信内网试用；如果要暴露到非可信网络，需要先补鉴权。
+
+## 投稿审核流程
+
+1. 打开前端，切换到投稿页。
+2. 粘贴包含合法 front matter 的 Markdown-first 工具文档。
+3. 上传 Markdown 中 `@file:` 引用的文本资源，例如 Chameleon UI JSON、Python Controller 或 MenuConfig 片段。
+4. 提交后，API 通过 `packages/tooling` 执行校验。
+5. 校验通过后进入 `pending`；校验失败则保存为 `draft` 并显示校验问题。
+6. 审核者在工作台通过或拒绝投稿。
+7. 审核通过后导出源码文件到 `data/tool-docs/<slug>/`，并重新生成兼容 API/downloads 产物。
+
+已发布版本不可变。同一 slug 和 version 已存在时，投稿会在校验阶段被拒绝。
+
 ## 源数据流程
 
 1. 在 `data/tool-docs/` 中维护工具 Markdown 文档，或在 `data/tools/` 中保留兼容 JSON 数据。
@@ -135,6 +211,24 @@ npm test -w @tapython-tool-hub/api
 
 当前 Markdown-first 示例工具包括 `Actor Rename Tool` 和 `Test Selection Audit Tool`，数据位于 `data/tool-docs/`。
 
+## 测试与验证
+
+修改代码前后建议先跑最小相关检查，再跑完整构建：
+
+```bash
+npm test -w @tapython-tool-hub/api
+npm run build:api
+npm run build
+```
+
+依赖安全检查：
+
+```bash
+npm audit --omit=dev
+```
+
+当前前端构建可能提示 Ant Design 相关 chunk 较大，这是已知现象；代码拆包属于后续 UI 优化。
+
 ## 部署说明
 
 推荐的内网部署模式是 API + web build：
@@ -151,8 +245,16 @@ npm run start:api
 
 下一阶段建议执行 execution roadmap 中的 Phase H：补数据库迁移脚本、本地 PostgreSQL 启动说明、route tests、PostgreSQL-first 工具读取，以及审核发布动作的最小鉴权。
 
+## 已知缺口
+
+- 还没有 migration runner；使用 PostgreSQL 时需要手动执行 `apps/api/db/migrations/001_initial.sql`。
+- 工具读取仍基于生成 JSON 产物；PostgreSQL-first 工具读取计划后续补齐。
+- 投稿审核/发布路由尚未做登录或权限校验。
+- tools、downloads、health 和 submission HTTP 错误响应的 route-level tests 仍待补齐。
+- 投稿审核工作台已经可用，但继续扩展前建议拆成更小的前端组件。
+
 ## 相关文档
 
 - [tool-hub-plan.md](tool-hub-plan.md)：完整站点方案与阶段计划。
 - [docs/execution-roadmap.md](docs/execution-roadmap.md)：前后端执行路线、目标目录树、包职责和迁移顺序。
-- [docs/implementation-notes.md](docs/implementation-notes.md)：一期实现记录和接口说明。
+- [docs/implementation-notes.md](docs/implementation-notes.md)：当前实现记录和接口说明。

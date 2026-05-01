@@ -72,6 +72,53 @@ npm run build:api
 npm test -w @tapython-tool-hub/api
 ```
 
+## Common Commands
+
+| Command | Purpose |
+|---------|---------|
+| `npm run dev:api` | Build shared/tooling packages, then start the Fastify API in watch mode. |
+| `npm run dev` | Build `packages/shared`, then start the Vite web app. |
+| `npm run generate:data` | Regenerate compatible API/download artifacts from `data/`. |
+| `npm run build` | Regenerate data and build the web app to `dist/`. |
+| `npm run build:api` | Build `packages/shared`, `packages/tooling`, and `apps/api`. |
+| `npm test -w @tapython-tool-hub/api` | Run focused API/workflow tests. |
+| `npm run start:api` | Build API dependencies and start the compiled API service. |
+
+## Configuration
+
+The API reads configuration from environment variables:
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `API_HOST` | `127.0.0.1` | Fastify listen host. |
+| `API_PORT` | `8787` | Fastify listen port. |
+| `DATABASE_URL` | unset | PostgreSQL connection string. When unset, submissions use file fallback. |
+| `TOOL_DATA_ROOT` | `data/tools` | JSON source tool directory. |
+| `TOOL_DOCS_ROOT` | `data/tool-docs` | Markdown-first source tool directory. |
+| `TOOL_API_ROOT` | `apps/web/public/api/tools` | Compatible generated tool API root. |
+| `TOOL_DOWNLOAD_ROOT` | `apps/web/public/downloads` | Compatible generated downloads root. |
+| `SUBMISSION_ROOT` | `.tapython-tool-hub/submissions` | File fallback storage for submissions. |
+
+The web app reads:
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `VITE_API_BASE_URL` | `http://127.0.0.1:8787` | Base URL used by the web app for API and download links. |
+
+## Optional PostgreSQL
+
+PostgreSQL is optional for local trials. Without `DATABASE_URL`, the submission workflow stores records under `.tapython-tool-hub/submissions`.
+
+To use PostgreSQL, create a database, apply the initial schema, and start the API with `DATABASE_URL`:
+
+```bash
+createdb tapython_tool_hub
+psql "$DATABASE_URL" -f apps/api/db/migrations/001_initial.sql
+DATABASE_URL="postgres://localhost/tapython_tool_hub" npm run dev:api
+```
+
+The SQL migration is idempotent. A dedicated migration runner is planned for Phase H.
+
 ## Directory Structure
 
 ```text
@@ -108,6 +155,35 @@ npm test -w @tapython-tool-hub/api
    - `/downloads/<tool-slug>/<version>/tool.md`
 4. Submissions are posted to `/api/submissions`, validated through `packages/tooling`, reviewed, and exported back to Markdown/source artifacts plus compatible generated outputs.
 
+## API Surface
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/health` | API and optional database health. |
+| `GET` | `/api/tools` | Compatible tool index. |
+| `GET` | `/api/tools/index.json` | Compatible tool index used by web and agents. |
+| `GET` | `/api/tools/<slug>` | Compatible tool detail. |
+| `GET` | `/api/tools/<slug>.json` | Compatible tool detail used by web and agents. |
+| `GET` | `/downloads/*` | Compatible generated manifests, README, tool Markdown, and referenced assets. |
+| `GET` | `/api/submissions` | List submissions. |
+| `POST` | `/api/submissions` | Create and validate a Markdown-first submission. |
+| `GET` | `/api/submissions/<id>` | Read one submission. |
+| `POST` | `/api/submissions/<id>/review` | Approve, reject, or request changes. |
+
+Submission and review routes are currently trusted-LAN oriented. Add authorization before exposing them outside a trusted network.
+
+## Submission Workflow
+
+1. Open the web app and switch to the submission tab.
+2. Paste a Markdown-first tool document with valid front matter.
+3. Upload any text assets referenced by `@file:` code blocks, such as Chameleon UI JSON, Python controllers, or MenuConfig snippets.
+4. Submit the draft. The API validates it through `packages/tooling`.
+5. If validation passes, the submission enters `pending`; otherwise it is saved as `draft` with validation issues.
+6. A reviewer approves or rejects the submission in the workbench.
+7. Approval exports source files under `data/tool-docs/<slug>/` and regenerates compatible API/download artifacts.
+
+Already published versions are immutable. A submission with the same slug and version as an existing release is rejected by validation.
+
 ## Source Data Flow
 
 1. Maintain tool documents under `data/tool-docs/`, or keep compatibility JSON records under `data/tools/`.
@@ -135,6 +211,24 @@ Each tool should describe at least:
 
 The current Markdown-first sample tools are `Actor Rename Tool` and `Test Selection Audit Tool`, defined in `data/tool-docs/`.
 
+## Testing And Validation
+
+Before committing code changes, prefer running the smallest relevant checks first, then the full build:
+
+```bash
+npm test -w @tapython-tool-hub/api
+npm run build:api
+npm run build
+```
+
+For dependency safety checks:
+
+```bash
+npm audit --omit=dev
+```
+
+The web build may warn about large chunks because Ant Design is included in the current bundle. That warning is expected for now; code splitting is a later UI optimization.
+
 ## Deployment
 
 Preferred LAN deployment runs the API and web build together:
@@ -151,8 +245,16 @@ Static-only deployment is still possible for catalog browsing if generated `publ
 
 Next recommended work is Phase H from the execution roadmap: database migration scripts, local PostgreSQL setup, route tests, PostgreSQL-first tool reads, and minimal authorization around review/publish actions.
 
+## Known Gaps
+
+- There is no migration runner yet; apply `apps/api/db/migrations/001_initial.sql` manually when using PostgreSQL.
+- Tool reads are still backed by generated JSON artifacts; PostgreSQL-first tool reads are planned.
+- Submission review/publish routes do not yet enforce authentication or authorization.
+- Route-level tests for tools, downloads, health, and submission HTTP errors are still pending.
+- The submission workbench is functional but should be split into smaller frontend components before it grows.
+
 ## Related Documents
 
 - [tool-hub-plan.md](tool-hub-plan.md): Full site plan and phase roadmap.
 - [docs/execution-roadmap.md](docs/execution-roadmap.md): Frontend/backend execution roadmap, target directory tree, package responsibilities, and migration sequence.
-- [docs/implementation-notes.md](docs/implementation-notes.md): Phase 1 implementation notes and API details.
+- [docs/implementation-notes.md](docs/implementation-notes.md): Current implementation notes and API details.
