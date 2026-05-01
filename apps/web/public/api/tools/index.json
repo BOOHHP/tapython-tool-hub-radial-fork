@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-01T04:29:42.730Z",
+  "generatedAt": "2026-05-01T09:47:21.131Z",
   "total": 2,
   "tools": [
     {
@@ -9,7 +9,7 @@
       "displayName": "Actor Rename Tool",
       "description": "场景 Actor 批量重命名与 Tag 管理工具，支持查找替换、批量编号重命名、Tag 添加与清除。",
       "category": "level-editing",
-      "author": "TA Team",
+      "author": "WeiXuLu",
       "ownerTeam": "Technical Art",
       "status": "approved",
       "riskLevel": "medium",
@@ -35,16 +35,16 @@
       },
       "mountPoint": "OnToolBarChameleon",
       "installPath": "<Project>/TA/TAPython/Python/ActorRenameTool/",
-      "latestVersion": "1.1.0",
+      "latestVersion": "1.2.0",
       "updatedAt": "2026-04-30",
       "apiUrl": "/api/tools/actor-rename-tool.json",
-      "sourceDocument": "data/tool-docs/actor-rename-tool.md",
+      "sourceDocument": "data/tool-docs/actor-rename-tool/actor-rename-tool.md",
       "sourceMode": "markdown-with-external-files",
       "downloads": {
-        "latestManifest": "/downloads/actor-rename-tool/1.1.0/manifest.json",
-        "latestReadme": "/downloads/actor-rename-tool/1.1.0/README.md",
-        "latestMarkdown": "/downloads/actor-rename-tool/1.1.0/tool.md",
-        "latestPackage": "/downloads/actor-rename-tool/1.1.0/actor-rename-tool-1.1.0.zip"
+        "latestManifest": "/downloads/actor-rename-tool/1.2.0/manifest.json",
+        "latestReadme": "/downloads/actor-rename-tool/1.2.0/README.md",
+        "latestMarkdown": "/downloads/actor-rename-tool/1.2.0/tool.md",
+        "latestPackage": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.zip"
       }
     },
     {
