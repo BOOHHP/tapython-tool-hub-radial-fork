@@ -511,6 +511,23 @@ Phase G: 兼容 API 和下载产物切换到发布任务
 2. 补数据库实体边界与投稿/审核/发布流设计。
 3. 进入 Phase E，在 `apps/api` 建立 Fastify 服务骨架并复用 `packages/shared` 与 `packages/tooling`。
 
+### 2026-05-01 Phase E 已启动
+
+已完成：
+
+1. 在 `apps/api` 建立 Fastify 5 后端骨架，支持独立构建与启动。
+2. 新增 `/health`，返回服务状态与 PostgreSQL 连接检查结果；未配置 `DATABASE_URL` 时以后端静态读取模式运行。
+3. 新增 `/api/tools`、`/api/tools/index.json`、`/api/tools/<slug>` 与 `/api/tools/<slug>.json`，从当前兼容 JSON 产物读取工具索引和详情，并复用 `packages/shared` schema 校验。
+4. 新增 PostgreSQL 初始迁移 `apps/api/db/migrations/001_initial.sql`，固定 `tools`、`tool_versions`、`submissions`、`reviews`、`assets`、`audit_logs` 实体边界。
+5. 根命令新增 `dev:api`、`start:api`、`build:api`。
+6. 通过 `npm audit --omit=dev`、`npm run build:api`、本地 API 启动和接口请求验收。
+
+下一步：
+
+1. 为 `apps/api` 增加 focused tests，覆盖 health、工具索引、工具详情和 404。
+2. 补数据库迁移执行脚本，并决定本地开发 PostgreSQL 启动方式。
+3. 将工具读取从纯静态 JSON 仓库扩展为数据库优先、静态 JSON fallback。
+
 ## 维护约定
 
 后续涉及架构和目录调整时，优先更新这份文档，而不是只在聊天中口头确认。
