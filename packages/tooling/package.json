@@ -3,14 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./dist/index.js"
   },
   "scripts": {
+    "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@tapython-tool-hub/shared": "0.1.0"
+    "@tapython-tool-hub/shared": "0.1.0",
+    "gray-matter": "^4.0.3"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/node": "^20.12.12"
+  }
 }

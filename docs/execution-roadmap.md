@@ -495,6 +495,22 @@ Phase G: 兼容 API 和下载产物切换到发布任务
 1. 补数据库实体边界与投稿/审核/发布流设计。
 2. 在 `apps/api` 建立 Fastify 服务骨架，并复用 `packages/shared` 的 schema 作为响应契约。
 
+### 2026-05-01 Phase D 已启动
+
+已完成：
+
+1. 将 `packages/tooling` 改为可构建包，输出 `dist/index.js` 与声明文件。
+2. 新增 `packages/tooling/src/generateToolData.ts`，承载 Markdown/JSON 读取、front matter 解析、`@file:` 资源解析、hash 计算、manifest 生成、下载产物导出和 schema 校验。
+3. 将 `scripts/generate-data.mjs` 收敛为薄 CLI，只负责装配仓库路径并调用 `generateToolData`。
+4. 根命令 `generate:data` 在执行 CLI 前先构建 `@tapython-tool-hub/shared` 与 `@tapython-tool-hub/tooling`。
+5. 通过 `npm run typecheck -w @tapython-tool-hub/tooling`、`npm run build -w @tapython-tool-hub/tooling`、`npm run generate:data` 与 `npm run build` 验收。
+
+下一步：
+
+1. 为 `packages/tooling` 增加 focused tests，覆盖路径越界、缺失 front matter、manifest schema 失败和 `@file:` 资源复制。
+2. 补数据库实体边界与投稿/审核/发布流设计。
+3. 进入 Phase E，在 `apps/api` 建立 Fastify 服务骨架并复用 `packages/shared` 与 `packages/tooling`。
+
 ## 维护约定
 
 后续涉及架构和目录调整时，优先更新这份文档，而不是只在聊天中口头确认。
