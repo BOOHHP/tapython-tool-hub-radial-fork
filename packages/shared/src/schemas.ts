@@ -61,7 +61,11 @@ export const toolVersionSchema = z.object({
     manifest: z.string(),
     readme: z.string(),
     markdown: z.string().optional(),
-    package: z.string()
+    package: z.string(),
+    packageSha256: z.string().optional(),
+    packageSize: z.number().int().nonnegative().optional(),
+    packageAvailable: z.boolean().optional(),
+    packageUnavailableReason: z.string().optional()
   }),
   manifest: toolManifestSchema
 });
@@ -88,7 +92,11 @@ export const toolRecordSchema = z.object({
     latestManifest: z.string(),
     latestReadme: z.string(),
     latestMarkdown: z.string().optional(),
-    latestPackage: z.string()
+    latestPackage: z.string(),
+    latestPackageSha256: z.string().optional(),
+    latestPackageSize: z.number().int().nonnegative().optional(),
+    latestPackageAvailable: z.boolean().optional(),
+    latestPackageUnavailableReason: z.string().optional()
   }),
   summary: z.object({
     features: z.array(z.string()),

@@ -5,9 +5,11 @@ import {
   CheckCircleOutlined,
   CloudDownloadOutlined,
   CodeOutlined,
+  CopyOutlined,
   DiffOutlined,
   FileProtectOutlined,
   FileSearchOutlined,
+  RobotOutlined,
   SafetyCertificateOutlined,
   StarOutlined,
   UploadOutlined
@@ -294,7 +296,6 @@ function ToolDetail({ tool, onBack, onCompare }: { tool: ToolRecord; onBack: () 
   const latestVersion = tool.versions[0];
   const latestManifest = latestVersion.manifest;
   const fileCount = latestManifest.files.length;
-  const primaryDownload = latestVersion.downloads.package || latestVersion.downloads.readme;
 
   return (
     <Space direction="vertical" size={18} className="full-width detail-page">
@@ -336,9 +337,15 @@ function ToolDetail({ tool, onBack, onCompare }: { tool: ToolRecord; onBack: () 
                 Markdown
               </Button>
             ) : null}
-            <Button type="primary" icon={<CloudDownloadOutlined />} href={getApiUrl(primaryDownload)} target="_blank" download>
-              下载 ZIP
-            </Button>
+            {latestVersion.downloads.package ? (
+              <Button type="primary" icon={<CloudDownloadOutlined />} href={getApiUrl(latestVersion.downloads.package)} target="_blank" download>
+                下载 ZIP
+              </Button>
+            ) : (
+              <Button type="primary" icon={<FileSearchOutlined />} href={getApiUrl(latestVersion.downloads.readme)} target="_blank">
+                打开 README
+              </Button>
+            )}
           </Space>
         </Flex>
       </section>
@@ -461,10 +468,35 @@ function ToolOverview({ tool }: { tool: ToolRecord }) {
 function InstallGuide({ tool }: { tool: ToolRecord }) {
   const latestVersion = tool.versions[0];
   const latestManifest = latestVersion.manifest;
-  const manifestUrl = getApiUrl(latestVersion.downloads.manifest);
   const packageUrl = latestVersion.downloads.package ? getApiUrl(latestVersion.downloads.package) : '';
-  const markdownUrl = latestVersion.downloads.markdown ? getApiUrl(latestVersion.downloads.markdown) : '';
-  const cliCommand = `tapython-tool-hub install "${manifestUrl}"${packageUrl ? ` --package "${packageUrl}"` : ''} --project "<Project>"`;
+  const packageSha256 = latestVersion.downloads.packageSha256 || '';
+  const packageSize = latestVersion.downloads.packageSize || 0;
+
+  const platform = useMemo(() => {
+    const ua = navigator.userAgent.toLowerCase();
+    if (ua.includes('win')) return 'windows';
+    if (ua.includes('mac')) return 'macos';
+    return 'linux';
+  }, []);
+
+  const hubBaseUrl = window.location.origin;
+  const aiPrompt = `请帮我从 TAPython Tool Hub 安装工具：${tool.slug}。
+
+1. 先检查本机是否可用 tapython-tool-hub CLI：执行 tapython-tool-hub --version。
+2. 如果未安装 CLI，请根据当前操作系统安装 Tool Hub CLI；只安装 CLI，不修改 UE 项目。
+3. 安装或确认 CLI 后，读取工具 API：${hubBaseUrl}/api/tools/${tool.slug}.json。
+4. 下载 manifest 和 ZIP 包，校验 hash。
+5. 先执行 dry-run，展示目标项目路径、将写入的文件、已有文件冲突、MenuConfig.json 合并 diff 和回滚方案。
+6. 等我确认后再执行实际安装。
+
+推荐命令：
+tapython-tool-hub install ${tool.slug} --hub ${hubBaseUrl} --project "<Project>" --dry-run`;
+
+  const cliInstallCmd = `tapython-tool-hub install ${tool.slug} --hub ${hubBaseUrl} --project "<Project>"`;
+
+  const handleCopyPrompt = () => {
+    navigator.clipboard.writeText(aiPrompt);
+  };
 
   return (
     <Card>
@@ -478,12 +510,16 @@ function InstallGuide({ tool }: { tool: ToolRecord }) {
       <div className="install-option-grid">
         <div className="install-option">
           <Space align="start" size={12}>
-            <span className="install-option-icon"><ApiOutlined /></span>
+            <span className="install-option-icon"><RobotOutlined /></span>
             <Space direction="vertical" size={8} className="full-width">
-              <Title level={5}>对话安装</Title>
-              <Paragraph type="secondary">把工具 API 交给 Agent，由 Agent 读取 manifest 和完整包，展示路径、文件清单、hash 校验和 MenuConfig diff 后执行。</Paragraph>
-              <Button size="small" href={getApiUrl(`/api/tools/${tool.slug}.json`)} target="_blank">
-                打开工具 API
+              <Title level={5}>方式一：复制提示词给 AI 助手</Title>
+              <Paragraph type="secondary">
+                将以下提示词粘贴给任意 AI 助手（Copilot、Claude、Kimi、OpenClaw 等），
+                助手会自动检查 CLI、读取 API、校验文件并展示安装计划，待你确认后执行。
+              </Paragraph>
+              <pre className="code-block ai-prompt-block">{aiPrompt}</pre>
+              <Button type="primary" icon={<CopyOutlined />} onClick={handleCopyPrompt}>
+                复制 AI 安装提示词
               </Button>
             </Space>
           </Space>
@@ -492,9 +528,19 @@ function InstallGuide({ tool }: { tool: ToolRecord }) {
           <Space align="start" size={12}>
             <span className="install-option-icon"><CodeOutlined /></span>
             <Space direction="vertical" size={8} className="full-width">
-              <Title level={5}>CLI 安装</Title>
-              <Paragraph type="secondary">CLI 以 manifest 为入口，配合完整 ZIP 包完成校验、解包、目标目录写入和菜单合并。</Paragraph>
-              <pre className="inline-code-block">{cliCommand}</pre>
+              <Title level={5}>方式二：终端 CLI 安装</Title>
+              <Paragraph type="secondary">
+                CLI 默认先展示安装计划并要求确认；AI 助手或 CI 场景可使用 --dry-run 获取预览。
+              </Paragraph>
+              <pre className="inline-code-block">{cliInstallCmd}</pre>
+              <Paragraph type="secondary">
+                如果尚未安装 CLI，请先执行：
+              </Paragraph>
+              {platform === 'windows' ? (
+                <pre className="inline-code-block">{`irm ${hubBaseUrl}/install/cli.ps1 | iex`}</pre>
+              ) : (
+                <pre className="inline-code-block">{`curl -fsSL ${hubBaseUrl}/install/cli.sh | bash -s -- --cli-only`}</pre>
+              )}
             </Space>
           </Space>
         </div>
@@ -502,27 +548,27 @@ function InstallGuide({ tool }: { tool: ToolRecord }) {
           <Space align="start" size={12}>
             <span className="install-option-icon"><CloudDownloadOutlined /></span>
             <Space direction="vertical" size={8} className="full-width">
-              <Title level={5}>ZIP 安装</Title>
-              <Paragraph type="secondary">完整包包含 manifest、README、tool.md 和工具核心资源，适合手动解压或离线分发。</Paragraph>
+              <Title level={5}>方式三：ZIP 包安装</Title>
+              <Paragraph type="secondary">
+                完整包包含 manifest、README、tool.md 和工具核心资源，适合手动解压、离线分发或内网镜像。
+              </Paragraph>
               {packageUrl ? (
-                <Button type="primary" size="small" href={packageUrl} target="_blank" download>
-                  下载完整包
-                </Button>
+                <Space direction="vertical" size={4}>
+                  <Button type="primary" size="small" href={packageUrl} target="_blank" download>
+                    下载完整包
+                  </Button>
+                  {packageSha256 ? (
+                    <Space direction="vertical" size={2}>
+                      <Text type="secondary" copyable={{ text: packageSha256 }}>
+                        sha256: {packageSha256.slice(0, 16)}…
+                      </Text>
+                      {packageSize > 0 && (
+                        <Text type="secondary">大小: {formatBytes(packageSize)}</Text>
+                      )}
+                    </Space>
+                  ) : null}
+                </Space>
               ) : <Text type="secondary">当前版本暂无完整包。</Text>}
-            </Space>
-          </Space>
-        </div>
-        <div className="install-option">
-          <Space align="start" size={12}>
-            <span className="install-option-icon"><FileSearchOutlined /></span>
-            <Space direction="vertical" size={8} className="full-width">
-              <Title level={5}>单 Markdown 安装</Title>
-              <Paragraph type="secondary">Markdown-first 文档保留给 Agent 或审阅者解析正文、安装步骤和外部文件引用。</Paragraph>
-              {markdownUrl ? (
-                <Button size="small" href={markdownUrl} target="_blank">
-                  打开 Markdown
-                </Button>
-              ) : <Text type="secondary">当前版本暂无 Markdown 文档。</Text>}
             </Space>
           </Space>
         </div>
@@ -534,6 +580,12 @@ function InstallGuide({ tool }: { tool: ToolRecord }) {
       <pre className="code-block">{JSON.stringify(latestManifest.menuConfigMerge.itemsToAdd, null, 2)}</pre>
     </Card>
   );
+}
+
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
 function ManifestPanel({ manifest }: { manifest: ToolManifest }) {

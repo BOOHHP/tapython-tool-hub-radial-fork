@@ -60,6 +60,10 @@ export interface ToolVersion {
     readme: string;
     markdown?: string;
     package: string;
+    packageSha256?: string;
+    packageSize?: number;
+    packageAvailable?: boolean;
+    packageUnavailableReason?: string;
   };
   manifest: ToolManifest;
 }
@@ -87,6 +91,10 @@ export interface ToolRecord {
     latestReadme: string;
     latestMarkdown?: string;
     latestPackage: string;
+    latestPackageSha256?: string;
+    latestPackageSize?: number;
+    latestPackageAvailable?: boolean;
+    latestPackageUnavailableReason?: string;
   };
   summary: {
     features: string[];

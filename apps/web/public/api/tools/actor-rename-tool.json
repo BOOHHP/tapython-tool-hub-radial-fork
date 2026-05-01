@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-01T09:47:21.124Z",
+  "generatedAt": "2026-05-01T13:24:13.581Z",
   "tool": {
     "slug": "actor-rename-tool",
     "name": "ActorRenameTool",
@@ -41,7 +41,10 @@
       "latestManifest": "/downloads/actor-rename-tool/1.2.0/manifest.json",
       "latestReadme": "/downloads/actor-rename-tool/1.2.0/README.md",
       "latestMarkdown": "/downloads/actor-rename-tool/1.2.0/tool.md",
-      "latestPackage": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.zip"
+      "latestPackage": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.zip",
+      "latestPackageSha256": "e5d531e07a00b5b6b1ed74fdbffd675d9998090aa8b2f1747d91db543648feb8",
+      "latestPackageSize": 14021,
+      "latestPackageAvailable": true
     },
     "summary": {
       "features": [
@@ -114,7 +117,10 @@
           "manifest": "/downloads/actor-rename-tool/1.2.0/manifest.json",
           "readme": "/downloads/actor-rename-tool/1.2.0/README.md",
           "markdown": "/downloads/actor-rename-tool/1.2.0/tool.md",
-          "package": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.zip"
+          "package": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.zip",
+          "packageSha256": "e5d531e07a00b5b6b1ed74fdbffd675d9998090aa8b2f1747d91db543648feb8",
+          "packageSize": 14021,
+          "packageAvailable": true
         },
         "manifest": {
           "schemaVersion": "1.0.0",
@@ -209,7 +215,11 @@
           "manifest": "/downloads/actor-rename-tool/1.0.0/manifest.json",
           "readme": "/downloads/actor-rename-tool/1.0.0/README.md",
           "markdown": "/downloads/actor-rename-tool/1.0.0/tool.md",
-          "package": ""
+          "package": "",
+          "packageSha256": "",
+          "packageSize": 0,
+          "packageAvailable": false,
+          "packageUnavailableReason": "One or more manifest files missing from build output"
         },
         "manifest": {
           "schemaVersion": "1.0.0",

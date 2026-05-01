@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-01T09:47:21.129Z",
+  "generatedAt": "2026-05-01T13:24:13.585Z",
   "tool": {
     "slug": "test-selection-audit-tool",
     "name": "TestSelectionAuditTool",
@@ -40,7 +40,10 @@
       "latestManifest": "/downloads/test-selection-audit-tool/0.2.0/manifest.json",
       "latestReadme": "/downloads/test-selection-audit-tool/0.2.0/README.md",
       "latestMarkdown": "/downloads/test-selection-audit-tool/0.2.0/tool.md",
-      "latestPackage": "/downloads/test-selection-audit-tool/0.2.0/test-selection-audit-tool-0.2.0.zip"
+      "latestPackage": "/downloads/test-selection-audit-tool/0.2.0/test-selection-audit-tool-0.2.0.zip",
+      "latestPackageSha256": "8054bdba598ea296e38bbf268b35fdaeffc62866445013d4b959d8be0d8f133f",
+      "latestPackageSize": 11319,
+      "latestPackageAvailable": true
     },
     "summary": {
       "features": [
@@ -106,7 +109,10 @@
           "manifest": "/downloads/test-selection-audit-tool/0.2.0/manifest.json",
           "readme": "/downloads/test-selection-audit-tool/0.2.0/README.md",
           "markdown": "/downloads/test-selection-audit-tool/0.2.0/tool.md",
-          "package": "/downloads/test-selection-audit-tool/0.2.0/test-selection-audit-tool-0.2.0.zip"
+          "package": "/downloads/test-selection-audit-tool/0.2.0/test-selection-audit-tool-0.2.0.zip",
+          "packageSha256": "8054bdba598ea296e38bbf268b35fdaeffc62866445013d4b959d8be0d8f133f",
+          "packageSize": 11319,
+          "packageAvailable": true
         },
         "manifest": {
           "schemaVersion": "1.0.0",
@@ -199,7 +205,11 @@
           "manifest": "/downloads/test-selection-audit-tool/0.1.0/manifest.json",
           "readme": "/downloads/test-selection-audit-tool/0.1.0/README.md",
           "markdown": "/downloads/test-selection-audit-tool/0.1.0/tool.md",
-          "package": ""
+          "package": "",
+          "packageSha256": "",
+          "packageSize": 0,
+          "packageAvailable": false,
+          "packageUnavailableReason": "One or more manifest files missing from build output"
         },
         "manifest": {
           "schemaVersion": "1.0.0",

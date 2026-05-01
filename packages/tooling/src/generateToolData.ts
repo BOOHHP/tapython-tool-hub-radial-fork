@@ -50,8 +50,8 @@ export async function generateToolData(options: GenerateToolDataOptions): Promis
 
   for (const tool of tools) {
     normalizeTool(tool);
-    await writeToolApi(tool, options.apiRoot);
     await writeDownloads(tool, options.downloadRoot);
+    await writeToolApi(tool, options.apiRoot);
   }
 
   tools.sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
@@ -215,9 +215,29 @@ async function writeDownloads(tool: ToolData, downloadRoot: string): Promise<voi
     }
     if (version.downloads.package && await hasPackageFiles(versionRoot, version.manifest.files)) {
       await writePackageArchive(versionRoot, `${tool.slug}-${version.version}.zip`, version.releasedAt);
+      const archivePath = path.join(versionRoot, `${tool.slug}-${version.version}.zip`);
+      const archiveBuffer = await fs.readFile(archivePath);
+      version.downloads.packageSha256 = crypto.createHash('sha256').update(archiveBuffer).digest('hex');
+      version.downloads.packageSize = archiveBuffer.length;
+      version.downloads.packageAvailable = true;
     } else {
       await fs.rm(path.join(versionRoot, `${tool.slug}-${version.version}.zip`), { force: true });
       version.downloads.package = '';
+      version.downloads.packageSha256 = '';
+      version.downloads.packageSize = 0;
+      version.downloads.packageAvailable = false;
+      version.downloads.packageUnavailableReason = version.manifest.files.length === 0
+        ? 'No files defined in manifest'
+        : 'One or more manifest files missing from build output';
+    }
+  }
+  const latest = tool.versions[0];
+  if (latest) {
+    tool.downloads.latestPackageSha256 = latest.downloads.packageSha256 || '';
+    tool.downloads.latestPackageSize = latest.downloads.packageSize || 0;
+    tool.downloads.latestPackageAvailable = latest.downloads.packageAvailable ?? false;
+    if (!latest.downloads.packageAvailable) {
+      tool.downloads.latestPackageUnavailableReason = latest.downloads.packageUnavailableReason || '';
     }
   }
 }

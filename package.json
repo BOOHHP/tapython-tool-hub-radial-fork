@@ -14,6 +14,7 @@
     "start:api": "npm run build -w @tapython-tool-hub/shared && npm run build -w @tapython-tool-hub/tooling && npm run build -w @tapython-tool-hub/api && npm run start -w @tapython-tool-hub/api",
     "build": "npm run generate:data && npm run build -w @tapython-tool-hub/web",
     "build:api": "npm run build -w @tapython-tool-hub/shared && npm run build -w @tapython-tool-hub/tooling && npm run build -w @tapython-tool-hub/api",
+    "build-cli": "npm run build -w @tapython-tool-hub/shared -w @tapython-tool-hub/cli",
     "preview": "npm run preview -w @tapython-tool-hub/web",
     "generate:data": "npm run build -w @tapython-tool-hub/shared && npm run build -w @tapython-tool-hub/tooling && node scripts/generate-data.mjs"
   },

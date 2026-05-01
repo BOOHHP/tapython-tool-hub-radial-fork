@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-01T09:47:21.131Z",
+  "generatedAt": "2026-05-01T13:24:13.585Z",
   "total": 2,
   "tools": [
     {
@@ -44,7 +44,10 @@
         "latestManifest": "/downloads/actor-rename-tool/1.2.0/manifest.json",
         "latestReadme": "/downloads/actor-rename-tool/1.2.0/README.md",
         "latestMarkdown": "/downloads/actor-rename-tool/1.2.0/tool.md",
-        "latestPackage": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.zip"
+        "latestPackage": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.zip",
+        "latestPackageSha256": "e5d531e07a00b5b6b1ed74fdbffd675d9998090aa8b2f1747d91db543648feb8",
+        "latestPackageSize": 14021,
+        "latestPackageAvailable": true
       }
     },
     {
@@ -87,7 +90,10 @@
         "latestManifest": "/downloads/test-selection-audit-tool/0.2.0/manifest.json",
         "latestReadme": "/downloads/test-selection-audit-tool/0.2.0/README.md",
         "latestMarkdown": "/downloads/test-selection-audit-tool/0.2.0/tool.md",
-        "latestPackage": "/downloads/test-selection-audit-tool/0.2.0/test-selection-audit-tool-0.2.0.zip"
+        "latestPackage": "/downloads/test-selection-audit-tool/0.2.0/test-selection-audit-tool-0.2.0.zip",
+        "latestPackageSha256": "8054bdba598ea296e38bbf268b35fdaeffc62866445013d4b959d8be0d8f133f",
+        "latestPackageSize": 11319,
+        "latestPackageAvailable": true
       }
     }
   ]
