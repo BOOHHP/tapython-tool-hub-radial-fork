@@ -8,7 +8,6 @@ import {
   DiffOutlined,
   FileProtectOutlined,
   FileSearchOutlined,
-  InfoCircleOutlined,
   SafetyCertificateOutlined,
   StarOutlined,
   UploadOutlined
@@ -40,6 +39,7 @@ import {
 import type { ColumnsType } from 'antd/es/table';
 import { useState } from 'react';
 import type { FileDiffRow, ManifestDiffRow, ToolFileManifest, ToolManifest, ToolRecord, ToolVersion } from '@tapython-tool-hub/shared';
+import { SubmissionWorkbench } from '../features/submissions/SubmissionWorkbench';
 import { buildFileDiff, buildManifestDiff } from '../features/tools/diff';
 import { riskColor, statusColor } from '../features/tools/display';
 import { useToolFilters } from '../hooks/useToolFilters';
@@ -107,7 +107,7 @@ export function ToolHubPage() {
         {viewMode === 'tool' && selectedTool && toolViewMode === 'compare' && (
           <CompareView tool={selectedTool} onBack={() => setToolViewMode('detail')} />
         )}
-        {viewMode === 'submit' && <SubmitGuide />}
+        {viewMode === 'submit' && <SubmissionWorkbench />}
       </Content>
     </Layout>
   );
@@ -569,34 +569,6 @@ function CompareView({ tool, onBack }: { tool: ToolRecord; onBack: () => void })
       </Card>
       <Card title="ZIP 包级文件差异">
         <Table rowKey="path" columns={fileColumns} dataSource={fileRows} pagination={false} size="small" />
-      </Card>
-    </Space>
-  );
-}
-
-function SubmitGuide() {
-  return (
-    <Space direction="vertical" size={16} className="full-width">
-      <Card title="MVP 投稿流程">
-        <Timeline
-          items={[
-            { children: '按工具文档规范准备 README、MenuConfig 片段、UI JSON、Python Controller 和 manifest。' },
-            { children: '将工具包提交给维护者或放入内网共享目录。' },
-            { children: '维护者校验结构、兼容性、风险说明和版本记录。' },
-            { children: '构建脚本生成工具索引、静态 API、manifest 快照和下载入口。' }
-          ]}
-        />
-      </Card>
-      <Card title="必填检查项">
-        <List
-          dataSource={[
-            '工具名、版本、作者、分类、标签和兼容版本完整。',
-            'ZIP 内包含工具目录、README、manifest 和 MenuConfig.snippet.json。',
-            '风险等级和不可撤销操作说明清楚。',
-            'Agent 安装前必须展示文件写入和 MenuConfig diff。'
-          ]}
-          renderItem={(item) => <List.Item><InfoCircleOutlined /> {item}</List.Item>}
-        />
       </Card>
     </Space>
   );

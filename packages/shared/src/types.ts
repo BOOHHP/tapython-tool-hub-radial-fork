@@ -1,5 +1,7 @@
 export type RiskLevel = 'low' | 'medium' | 'high';
 export type ToolStatus = 'draft' | 'pending' | 'approved' | 'rejected' | 'deprecated' | 'archived';
+export type SubmissionStatus = 'draft' | 'pending' | 'approved' | 'rejected';
+export type ReviewDecision = 'approved' | 'rejected' | 'changes_requested';
 
 export interface Compatibility {
   unrealEngine: string[];
@@ -112,4 +114,57 @@ export interface FileDiffRow {
   toHash: string;
   fromSize?: number;
   toSize?: number;
+}
+
+export interface SubmissionAssetPayload {
+  path: string;
+  content: string;
+}
+
+export interface ToolSubmissionRequest {
+  slug: string;
+  submitter: string;
+  markdown: string;
+  assets: SubmissionAssetPayload[];
+  notes?: string;
+}
+
+export interface ValidationIssue {
+  level: 'error' | 'warning';
+  message: string;
+  path?: string;
+}
+
+export interface ValidationReport {
+  valid: boolean;
+  issues: ValidationIssue[];
+  generatedToolCount?: number;
+}
+
+export interface ReviewRecord {
+  id: string;
+  reviewer: string;
+  decision: ReviewDecision;
+  comment?: string;
+  createdAt: string;
+}
+
+export interface SubmissionRecord {
+  id: string;
+  slug: string;
+  submitter: string;
+  status: SubmissionStatus;
+  markdown: string;
+  assets: SubmissionAssetPayload[];
+  notes?: string;
+  validationReport: ValidationReport;
+  reviews: ReviewRecord[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ReviewSubmissionRequest {
+  reviewer: string;
+  decision: ReviewDecision;
+  comment?: string;
 }

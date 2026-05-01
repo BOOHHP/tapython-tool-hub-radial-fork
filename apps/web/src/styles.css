@@ -245,6 +245,21 @@ body {
   gap: 12px;
 }
 
+.submission-grid {
+  display: grid;
+  grid-template-columns: minmax(360px, 0.9fr) minmax(420px, 1.1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.submission-workbench h5 {
+  margin: 0;
+}
+
+.asset-list {
+  margin: 12px 0;
+}
+
 .code-block {
   max-height: 460px;
   margin: 0;
@@ -268,6 +283,7 @@ body {
 @media (max-width: 920px) {
   .stats-grid,
   .two-column-list,
+  .submission-grid,
   .metric-strip,
   .safety-results {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -287,6 +303,7 @@ body {
 
   .stats-grid,
   .two-column-list,
+  .submission-grid,
   .metric-strip,
   .safety-results,
   .tool-grid {

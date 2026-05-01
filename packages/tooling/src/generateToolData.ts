@@ -371,7 +371,14 @@ function resolveInside(baseDir: string, relativePath: string): string {
 
 async function listFiles(dirPath: string, extension: string): Promise<string[]> {
   try {
-    return (await fs.readdir(dirPath)).filter((fileName) => fileName.endsWith(extension));
+    const entries = await fs.readdir(dirPath, { withFileTypes: true });
+    const files = await Promise.all(entries.map(async (entry) => {
+      if (entry.isDirectory()) {
+        return (await listFiles(path.join(dirPath, entry.name), extension)).map((fileName) => path.join(entry.name, fileName));
+      }
+      return entry.isFile() && entry.name.endsWith(extension) ? [entry.name] : [];
+    }));
+    return files.flat().sort();
   } catch (error) {
     if (isNodeError(error) && error.code === 'ENOENT') {
       return [];

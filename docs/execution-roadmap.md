@@ -528,6 +528,26 @@ Phase G: 兼容 API 和下载产物切换到发布任务
 2. 补数据库迁移执行脚本，并决定本地开发 PostgreSQL 启动方式。
 3. 将工具读取从纯静态 JSON 仓库扩展为数据库优先、静态 JSON fallback。
 
+### 2026-05-01 Phase F 已启动
+
+已完成：
+
+1. 在 `packages/shared` 增加投稿、校验报告、审核记录和审核请求 DTO/schema。
+2. 在 `apps/api` 增加 `/api/submissions` 投稿队列接口，支持创建投稿、列出投稿、查看投稿和审核流转。
+3. 后端投稿流采用文件系统 repository 作为数据库落地前的可替换适配层，默认存储在 `.tapython-tool-hub/submissions`，不进入版本库。
+4. 投稿创建时调用 `packages/tooling` 做 Markdown/front matter/资源引用/manifest/API 生成校验；同 slug 同版本已发布时会阻止通过，保持已发布版本不可变。
+5. 审核通过时写入 `data/tool-docs/<slug>/`，并触发内容处理包导出兼容 API、manifest、README、tool.md 和下载产物。
+6. `packages/tooling` 支持递归读取 `data/tool-docs`，使新投稿的 Markdown 与外部资源可以按工具目录隔离。
+7. 前端投稿页升级为投稿/审核工作台，支持提交 Markdown、上传 `@file:` 文本资源、查看校验报告、审核通过并发布。
+8. 通过 `npm audit --omit=dev`、`npm run build:api`、`npm run build` 和临时目录端到端 API 冒烟验收。
+
+下一步：
+
+1. 将文件系统 submission repository 替换或封装为 PostgreSQL repository，并补迁移执行脚本。
+2. 为投稿和审核接口增加 focused tests，覆盖校验失败、版本不可变、审核拒绝和发布导出。
+3. 增加登录/权限边界，限制审核通过和发布动作。
+4. 将前端投稿表单拆成更细的 Markdown 编辑、资源清单、校验报告和审核队列组件。
+
 ## 维护约定
 
 后续涉及架构和目录调整时，优先更新这份文档，而不是只在聊天中口头确认。

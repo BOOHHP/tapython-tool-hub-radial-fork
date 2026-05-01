@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 export const riskLevelSchema = z.enum(['low', 'medium', 'high']);
 export const toolStatusSchema = z.enum(['draft', 'pending', 'approved', 'rejected', 'deprecated', 'archived']);
+export const submissionStatusSchema = z.enum(['draft', 'pending', 'approved', 'rejected']);
+export const reviewDecisionSchema = z.enum(['approved', 'rejected', 'changes_requested']);
 
 export const compatibilitySchema = z.object({
   unrealEngine: z.array(z.string()),
@@ -132,4 +134,64 @@ export const toolDetailResponseSchema = z.object({
   schemaVersion: z.string(),
   generatedAt: z.string(),
   tool: toolRecordSchema
+});
+
+export const submissionAssetPayloadSchema = z.object({
+  path: z.string().min(1),
+  content: z.string()
+});
+
+export const toolSubmissionRequestSchema = z.object({
+  slug: z.string().regex(/^[a-z0-9-]+$/),
+  submitter: z.string().min(1),
+  markdown: z.string().min(1),
+  assets: z.array(submissionAssetPayloadSchema),
+  notes: z.string().optional()
+});
+
+export const validationIssueSchema = z.object({
+  level: z.enum(['error', 'warning']),
+  message: z.string(),
+  path: z.string().optional()
+});
+
+export const validationReportSchema = z.object({
+  valid: z.boolean(),
+  issues: z.array(validationIssueSchema),
+  generatedToolCount: z.number().int().nonnegative().optional()
+});
+
+export const reviewRecordSchema = z.object({
+  id: z.string(),
+  reviewer: z.string(),
+  decision: reviewDecisionSchema,
+  comment: z.string().optional(),
+  createdAt: z.string()
+});
+
+export const submissionRecordSchema = z.object({
+  id: z.string(),
+  slug: z.string(),
+  submitter: z.string(),
+  status: submissionStatusSchema,
+  markdown: z.string(),
+  assets: z.array(submissionAssetPayloadSchema),
+  notes: z.string().optional(),
+  validationReport: validationReportSchema,
+  reviews: z.array(reviewRecordSchema),
+  createdAt: z.string(),
+  updatedAt: z.string()
+});
+
+export const submissionListResponseSchema = z.object({
+  schemaVersion: z.string(),
+  generatedAt: z.string(),
+  total: z.number().int().nonnegative(),
+  submissions: z.array(submissionRecordSchema)
+});
+
+export const reviewSubmissionRequestSchema = z.object({
+  reviewer: z.string().min(1),
+  decision: reviewDecisionSchema,
+  comment: z.string().optional()
 });
