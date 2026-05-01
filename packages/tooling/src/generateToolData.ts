@@ -203,12 +203,16 @@ async function writeDownloads(tool: ToolData, downloadRoot: string): Promise<voi
     const versionRoot = path.join(downloadRoot, tool.slug, version.version);
     await fs.mkdir(versionRoot, { recursive: true });
     await writeJson(path.join(versionRoot, 'manifest.json'), version.manifest);
-    await fs.writeFile(path.join(versionRoot, 'README.md'), buildReadme(tool, version), 'utf8');
+    await writeUtf8Markdown(path.join(versionRoot, 'README.md'), buildReadme(tool, version));
     if (tool.documentationMarkdown && version.version === tool.versions[0]?.version) {
-      await fs.writeFile(path.join(versionRoot, 'tool.md'), tool.documentationMarkdown, 'utf8');
+      await writeUtf8Markdown(path.join(versionRoot, 'tool.md'), tool.documentationMarkdown);
       await writeAssetFiles(versionRoot, tool._assetFiles ?? []);
     }
   }
+}
+
+async function writeUtf8Markdown(filePath: string, content: string): Promise<void> {
+  await fs.writeFile(filePath, `\uFEFF${content}`, 'utf8');
 }
 
 async function writeAssetFiles(versionRoot: string, assetFiles: AssetFile[]): Promise<void> {

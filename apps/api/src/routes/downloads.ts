@@ -10,9 +10,12 @@ export function registerDownloadRoutes(config: ApiConfig) {
       const filePath = resolveInside(config.downloadRoot, relativePath);
 
       try {
-        const content = await fs.readFile(filePath);
+        const contentType = getContentType(filePath);
+        const content = isTextContent(contentType)
+          ? await fs.readFile(filePath, 'utf8')
+          : await fs.readFile(filePath);
         return reply
-          .type(getContentType(filePath))
+          .type(contentType)
           .send(content);
       } catch (error) {
         if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
@@ -37,11 +40,18 @@ function getContentType(filePath: string): string {
   if (filePath.endsWith('.json')) {
     return 'application/json; charset=utf-8';
   }
-  if (filePath.endsWith('.md') || filePath.endsWith('.txt')) {
+  if (filePath.endsWith('.md')) {
+    return 'text/markdown; charset=utf-8';
+  }
+  if (filePath.endsWith('.txt')) {
     return 'text/plain; charset=utf-8';
   }
   if (filePath.endsWith('.py')) {
     return 'text/x-python; charset=utf-8';
   }
   return 'application/octet-stream';
+}
+
+function isTextContent(contentType: string): boolean {
+  return contentType.includes('charset=utf-8');
 }
