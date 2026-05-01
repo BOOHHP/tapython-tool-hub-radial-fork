@@ -5,12 +5,12 @@ import path from 'node:path';
 import { generateToolData } from '@tapython-tool-hub/tooling';
 import type { ReviewRecord, ReviewSubmissionRequest, SubmissionRecord, ToolSubmissionRequest, ValidationIssue, ValidationReport } from '@tapython-tool-hub/shared';
 import type { ApiConfig } from '../config/env.js';
-import type { FileSubmissionRepository } from '../repositories/fileSubmissionRepository.js';
+import type { SubmissionRepository } from '../repositories/submissionRepository.js';
 
 export class SubmissionWorkflow {
   constructor(
     private readonly config: ApiConfig,
-    private readonly repository: FileSubmissionRepository
+    private readonly repository: SubmissionRepository
   ) {}
 
   async createSubmission(request: ToolSubmissionRequest): Promise<SubmissionRecord> {

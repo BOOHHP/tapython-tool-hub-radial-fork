@@ -4,10 +4,11 @@ import path from 'node:path';
 import { submissionRecordSchema } from '@tapython-tool-hub/shared';
 import type { SubmissionRecord, ToolSubmissionRequest, ValidationReport } from '@tapython-tool-hub/shared';
 import type { ApiConfig } from '../config/env.js';
+import type { SubmissionRepository } from './submissionRepository.js';
 
 const idPattern = /^[a-f0-9-]+$/;
 
-export class FileSubmissionRepository {
+export class FileSubmissionRepository implements SubmissionRepository {
   constructor(private readonly config: ApiConfig) {}
 
   async list(): Promise<SubmissionRecord[]> {

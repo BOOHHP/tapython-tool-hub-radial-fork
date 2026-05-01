@@ -540,11 +540,13 @@ Phase G: 兼容 API 和下载产物切换到发布任务
 6. `packages/tooling` 支持递归读取 `data/tool-docs`，使新投稿的 Markdown 与外部资源可以按工具目录隔离。
 7. 前端投稿页升级为投稿/审核工作台，支持提交 Markdown、上传 `@file:` 文本资源、查看校验报告、审核通过并发布。
 8. 通过 `npm audit --omit=dev`、`npm run build:api`、`npm run build` 和临时目录端到端 API 冒烟验收。
+9. 将 submission 存储抽象为 repository 接口；配置 `DATABASE_URL` 时使用 PostgreSQL repository 读写 `submissions` 与 `reviews`，未配置数据库时保留文件系统 fallback 方便本地试用。
+10. 为投稿/审核 workflow 增加 focused tests，覆盖校验失败、已发布版本不可变、审核拒绝和审核通过发布导出。
 
 下一步：
 
-1. 将文件系统 submission repository 替换或封装为 PostgreSQL repository，并补迁移执行脚本。
-2. 为投稿和审核接口增加 focused tests，覆盖校验失败、版本不可变、审核拒绝和发布导出。
+1. 补 PostgreSQL 迁移执行脚本和本地数据库启动方式，避免只靠手工执行 SQL。
+2. 为投稿和审核接口增加 HTTP route tests，覆盖 400/404/409 响应形状。
 3. 增加登录/权限边界，限制审核通过和发布动作。
 4. 将前端投稿表单拆成更细的 Markdown 编辑、资源清单、校验报告和审核队列组件。
 

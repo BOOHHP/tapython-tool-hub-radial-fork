@@ -1,9 +1,9 @@
 import type { FastifyInstance } from 'fastify';
 import { reviewSubmissionRequestSchema, submissionListResponseSchema, toolSubmissionRequestSchema } from '@tapython-tool-hub/shared';
-import type { FileSubmissionRepository } from '../repositories/fileSubmissionRepository.js';
+import type { SubmissionRepository } from '../repositories/submissionRepository.js';
 import type { SubmissionWorkflow } from '../services/submissionWorkflow.js';
 
-export function registerSubmissionRoutes(repository: FileSubmissionRepository, workflow: SubmissionWorkflow) {
+export function registerSubmissionRoutes(repository: SubmissionRepository, workflow: SubmissionWorkflow) {
   return async function submissionRoutes(app: FastifyInstance) {
     app.get('/api/submissions', async () => {
       const submissions = await repository.list();
