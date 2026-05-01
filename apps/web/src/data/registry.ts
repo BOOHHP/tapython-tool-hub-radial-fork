@@ -1,1 +1,1 @@
-export { categories, getTools, riskLevels, statuses, tools } from '../services/toolRegistry';
+export { getApiUrl, getCategories, getRiskLevels, getStatuses, getTools } from '../services/toolRegistry';

@@ -61,6 +61,10 @@ body {
   margin-bottom: 16px;
 }
 
+.tool-load-alert {
+  margin-bottom: 16px;
+}
+
 .tool-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));

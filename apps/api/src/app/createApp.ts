@@ -5,6 +5,7 @@ import { createDatabasePool } from '../database/client.js';
 import { FileSubmissionRepository } from '../repositories/fileSubmissionRepository.js';
 import { PgSubmissionRepository } from '../repositories/pgSubmissionRepository.js';
 import { StaticToolRepository } from '../repositories/staticToolRepository.js';
+import { registerDownloadRoutes } from '../routes/downloads.js';
 import { registerHealthRoutes } from '../routes/health.js';
 import { registerSubmissionRoutes } from '../routes/submissions.js';
 import { registerToolRoutes } from '../routes/tools.js';
@@ -22,6 +23,7 @@ export function createApp(config: ApiConfig) {
   app.register(cors, { origin: true });
   app.register(registerHealthRoutes(databasePool));
   app.register(registerToolRoutes(toolRepository));
+  app.register(registerDownloadRoutes(config));
   app.register(registerSubmissionRoutes(submissionRepository, submissionWorkflow));
 
   app.addHook('onClose', async () => {

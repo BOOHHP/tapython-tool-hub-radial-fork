@@ -37,13 +37,13 @@ import {
   Typography
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { FileDiffRow, ManifestDiffRow, ToolFileManifest, ToolManifest, ToolRecord, ToolVersion } from '@tapython-tool-hub/shared';
 import { SubmissionWorkbench } from '../features/submissions/SubmissionWorkbench';
 import { buildFileDiff, buildManifestDiff } from '../features/tools/diff';
 import { riskColor, statusColor } from '../features/tools/display';
 import { useToolFilters } from '../hooks/useToolFilters';
-import { categories, riskLevels, statuses, tools } from '../services/toolRegistry';
+import { getApiUrl, getCategories, getRiskLevels, getStatuses, getTools } from '../services/toolRegistry';
 
 const { Header, Content } = Layout;
 const { Paragraph, Text, Title } = Typography;
@@ -55,9 +55,40 @@ export function ToolHubPage() {
   const [viewMode, setViewMode] = useState<ViewMode>('tools');
   const [toolViewMode, setToolViewMode] = useState<ToolViewMode>('detail');
   const [selectedSlug, setSelectedSlug] = useState<string>();
+  const [tools, setTools] = useState<ToolRecord[]>([]);
+  const [loadingTools, setLoadingTools] = useState(true);
+  const [toolError, setToolError] = useState<string>();
   const { filteredTools, query, category, riskLevel, status, setQuery, setCategory, setRiskLevel, setStatus } = useToolFilters(tools);
+  const categories = useMemo(() => getCategories(tools), [tools]);
+  const riskLevels = useMemo(() => getRiskLevels(tools), [tools]);
+  const statuses = useMemo(() => getStatuses(tools), [tools]);
 
   const selectedTool = selectedSlug ? tools.find((tool) => tool.slug === selectedSlug) : undefined;
+
+  useEffect(() => {
+    let active = true;
+    setLoadingTools(true);
+    getTools()
+      .then((loadedTools) => {
+        if (active) {
+          setTools(loadedTools);
+          setToolError(undefined);
+        }
+      })
+      .catch((error) => {
+        if (active) {
+          setToolError(error instanceof Error ? error.message : String(error));
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setLoadingTools(false);
+        }
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     <Layout className="app-shell">
@@ -78,14 +109,19 @@ export function ToolHubPage() {
         </Flex>
       </Header>
       <Content className="app-content">
-        <OverviewStats />
+        <OverviewStats tools={tools} loading={loadingTools} />
+        {toolError ? <Alert className="tool-load-alert" type="error" showIcon message="工具数据加载失败" description={toolError} /> : null}
         {viewMode === 'tools' && (
           <ToolCatalog
             filteredTools={filteredTools}
+            loading={loadingTools}
             query={query}
             category={category}
             riskLevel={riskLevel}
             status={status}
+            categories={categories}
+            riskLevels={riskLevels}
+            statuses={statuses}
             setQuery={setQuery}
             setCategory={setCategory}
             setRiskLevel={setRiskLevel}
@@ -113,20 +149,20 @@ export function ToolHubPage() {
   );
 }
 
-function OverviewStats() {
+function OverviewStats({ tools, loading }: { tools: ToolRecord[]; loading: boolean }) {
   const latestUpdates = tools.filter((tool) => tool.status === 'approved').length;
   const versionCount = tools.reduce((total, tool) => total + tool.versions.length, 0);
 
   return (
     <section className="stats-grid" aria-label="Tool Hub summary">
       <Card>
-        <Statistic title="工具数量" value={tools.length} prefix={<AppstoreOutlined />} />
+        <Statistic title="工具数量" value={loading ? '-' : tools.length} prefix={<AppstoreOutlined />} />
       </Card>
       <Card>
-        <Statistic title="已审核工具" value={latestUpdates} prefix={<CheckCircleOutlined />} />
+        <Statistic title="已审核工具" value={loading ? '-' : latestUpdates} prefix={<CheckCircleOutlined />} />
       </Card>
       <Card>
-        <Statistic title="版本快照" value={versionCount} prefix={<DiffOutlined />} />
+        <Statistic title="版本快照" value={loading ? '-' : versionCount} prefix={<DiffOutlined />} />
       </Card>
       <Card>
         <Statistic title="部署模式" value="LAN MVP" prefix={<SafetyCertificateOutlined />} />
@@ -137,10 +173,14 @@ function OverviewStats() {
 
 interface ToolCatalogProps {
   filteredTools: ToolRecord[];
+  loading: boolean;
   query: string;
   category?: string;
   riskLevel?: string;
   status?: string;
+  categories: string[];
+  riskLevels: string[];
+  statuses: string[];
   setQuery: (value: string) => void;
   setCategory: (value?: string) => void;
   setRiskLevel: (value?: string) => void;
@@ -150,10 +190,14 @@ interface ToolCatalogProps {
 
 function ToolCatalog({
   filteredTools,
+  loading,
   query,
   category,
   riskLevel,
   status,
+  categories,
+  riskLevels,
+  statuses,
   setQuery,
   setCategory,
   setRiskLevel,
@@ -198,7 +242,9 @@ function ToolCatalog({
         </Flex>
       </Card>
 
-      {filteredTools.length === 0 ? (
+      {loading ? (
+        <Card loading />
+      ) : filteredTools.length === 0 ? (
         <Card>
           <Empty description="没有找到匹配工具" />
         </Card>
@@ -214,7 +260,7 @@ function ToolCatalog({
                 <Button type="link" onClick={() => onOpenTool(tool)} key="detail">
                   查看详情
                 </Button>,
-                <Button type="link" href={tool.downloads.latestManifest} target="_blank" key="manifest">
+                <Button type="link" href={getApiUrl(tool.downloads.latestManifest)} target="_blank" key="manifest">
                   manifest
                 </Button>
               ]}
@@ -285,11 +331,11 @@ function ToolDetail({ tool, onBack, onCompare }: { tool: ToolRecord; onBack: () 
               版本对比
             </Button>
             {latestVersion.downloads.markdown ? (
-              <Button icon={<FileSearchOutlined />} href={latestVersion.downloads.markdown} target="_blank">
+              <Button icon={<FileSearchOutlined />} href={getApiUrl(latestVersion.downloads.markdown)} target="_blank">
                 Markdown
               </Button>
             ) : null}
-            <Button type="primary" icon={<CloudDownloadOutlined />} href={latestVersion.downloads.readme} target="_blank">
+            <Button type="primary" icon={<CloudDownloadOutlined />} href={getApiUrl(latestVersion.downloads.readme)} target="_blank">
               获取工具
             </Button>
           </Space>
@@ -485,10 +531,10 @@ function VersionTimeline({ versions }: { versions: ToolVersion[] }) {
               </Space>
               <Text>{version.changeSummary}</Text>
               <Space wrap>
-                <Button size="small" href={version.downloads.manifest} target="_blank">
+                <Button size="small" href={getApiUrl(version.downloads.manifest)} target="_blank">
                   manifest
                 </Button>
-                <Button size="small" href={version.downloads.readme} target="_blank">
+                <Button size="small" href={getApiUrl(version.downloads.readme)} target="_blank">
                   README
                 </Button>
               </Space>

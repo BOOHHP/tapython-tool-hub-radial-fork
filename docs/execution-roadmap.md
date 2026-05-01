@@ -550,6 +550,23 @@ Phase G: 兼容 API 和下载产物切换到发布任务
 3. 增加登录/权限边界，限制审核通过和发布动作。
 4. 将前端投稿表单拆成更细的 Markdown 编辑、资源清单、校验报告和审核队列组件。
 
+### 2026-05-01 Phase G 已启动
+
+已完成：
+
+1. 后端新增 `/downloads/*` 兼容下载路由，从 `TOOL_DOWNLOAD_ROOT`/`downloadRoot` 安全读取已发布 manifest、README、tool.md 和资源文件。
+2. 前端工具库从静态 import `public/api/tools/*.json` 切换为运行时调用 `VITE_API_BASE_URL` 下的 `/api/tools/index.json` 和 `/api/tools/<slug>.json`。
+3. 前端筛选选项、统计卡片和详情页数据改为基于后端兼容 API 返回的数据计算，页面不再依赖构建时固定工具清单。
+4. 前端下载按钮会解析到后端 API base 下的 `/downloads/...`，同时工具 API payload 内仍保留兼容相对 URL，旧 Agent 和静态消费方不感知变化。
+5. 通过 `npm audit --omit=dev`、`npm test -w @tapython-tool-hub/api`、`npm run build:api`、`npm run build`、后端兼容接口请求和前端页面加载冒烟验收。
+
+下一步：
+
+1. 为 `/downloads/*`、`/api/tools/index.json`、`/api/tools/<slug>.json` 增加 HTTP route tests，覆盖 404 和路径越界。
+2. 将工具读取扩展为 PostgreSQL 优先、静态 JSON fallback，并补数据库到兼容 JSON 的导出任务边界。
+3. 增加前端 API base 配置文档，明确内网部署时 web/API 同源或跨域的推荐方式。
+4. 把 `apps/web/public/api` 和 `apps/web/public/downloads` 定位为发布任务产物目录，减少人工编辑入口。
+
 ## 维护约定
 
 后续涉及架构和目录调整时，优先更新这份文档，而不是只在聊天中口头确认。
