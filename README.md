@@ -4,13 +4,15 @@
 
 TAPython Tool Hub is a standalone sharing site for TAPython/Chameleon editor tools. It is designed to collect, search, distribute, and compare installable editor tool packages. The site shares tools, not Skills.
 
-The Phase 1 implementation uses a static-site workflow. Tool records can be maintained as Markdown documents with front matter or as local JSON files, and the build step generates static API files, exported Markdown, referenced assets, and downloadable manifests. The output can be hosted on an internal company nginx server or any static file server.
+The current implementation is a hybrid web/API workspace. Tool records can still be maintained as Markdown documents with front matter or local JSON files, but the frontend now reads the catalog through a Fastify API. The backend serves compatible tool JSON, downloadable manifests/Markdown/assets, and a submission/review/publish workflow.
 
 ## Current Stage
 
-The site has reached a basic usable static-maintenance stage. Tool authors can publish or update tools by editing Markdown documents and referenced files in the repository, then running the static generation/build workflow. No backend service is required for catalog browsing, detail pages, Markdown downloads, manifest inspection, or version comparison.
+The project has completed the initial frontend/backend migration through Phase G. It now runs as an npm workspace with `apps/web`, `apps/api`, `packages/shared`, and `packages/tooling`.
 
-This stage is intended for company LAN or static-server deployment where a maintainer reviews Markdown changes through git. Online upload, permission workflows, download statistics, and database-backed review state remain future work.
+The backend is the preferred runtime entry point for catalog browsing, compatible JSON, downloads, and submissions. Generated static files are still kept as compatibility artifacts and can be served by the API or deployed statically when needed.
+
+PostgreSQL is supported for submission/review storage when `DATABASE_URL` is configured. Without a database, the API falls back to local file storage for submissions so the workflow remains easy to try locally.
 
 ## Current Features
 
@@ -20,30 +22,40 @@ This stage is intended for company LAN or static-server deployment where a maint
 - SkillHub-inspired detail page with selected-tool-only detail and version comparison flows.
 - Manifest view with a structured table and raw JSON view for future Agent-based installation.
 - Version comparison for manifest field diffs and file list/hash diffs.
-- Submission guide describing the required documentation, Chameleon UI JSON, Python controller, MenuConfig snippet, manifest, and version metadata.
-- Static API generated at `/api/tools/index.json` and `/api/tools/<tool>.json`, plus exported tool Markdown at `/downloads/<tool>/<version>/tool.md`.
+- Submission and review workbench for Markdown-first tool submissions and referenced text assets.
+- Backend validation through the shared tooling package before submissions enter review.
+- Review approval flow that exports compatible API files, manifests, README, tool Markdown, and download assets.
+- Backend-compatible API at `/api/tools/index.json` and `/api/tools/<tool>.json`.
+- Backend-compatible downloads at `/downloads/<tool>/<version>/manifest.json`, `/README.md`, and `/tool.md`.
 
 ## Tech Stack
 
 - Frontend: Vite + React + TypeScript
 - UI: Ant Design
 - Data source: `data/tool-docs/*.md` and `data/tools/*.json`
-- Static generation: Node.js script
-- Workspace: npm workspaces with `apps/web`, future `apps/api`, and shared packages
-- Deployment: static file hosting, with company LAN nginx as the primary target
+- Backend: Fastify + TypeScript
+- Database: PostgreSQL for submissions/reviews when `DATABASE_URL` is configured; file fallback for local trials
+- Shared contracts: Zod schemas and TypeScript DTOs in `packages/shared`
+- Content processing: `packages/tooling`
+- Workspace: npm workspaces with `apps/web`, `apps/api`, `packages/shared`, and `packages/tooling`
+- Deployment: API-backed LAN deployment first, with static artifacts retained for compatibility
 
 ## Quick Start
 
 ```bash
 npm install
-npm run dev -- --host 127.0.0.1
+npm run dev:api
+npm run dev
 ```
 
-Default development URL:
+Default development URLs:
 
 ```text
-http://127.0.0.1:5174/
+API: http://127.0.0.1:8787
+Web: http://localhost:5174/ or the Vite-reported fallback port
 ```
+
+The web app uses `VITE_API_BASE_URL` when set, otherwise it defaults to `http://127.0.0.1:8787`.
 
 Production build:
 
@@ -52,6 +64,13 @@ npm run build
 ```
 
 The build runs `npm run generate:data` first, generates static API files and downloadable Markdown/manifests/assets, then writes the production bundle to `dist/`.
+
+API build and focused tests:
+
+```bash
+npm run build:api
+npm test -w @tapython-tool-hub/api
+```
 
 ## Directory Structure
 
@@ -63,21 +82,33 @@ The build runs `npm run generate:data` first, generates static API files and dow
 │   │   │   ├── api/tools/       # Static tool API generated by the build script
 │   │   │   └── downloads/       # Generated manifests, Markdown, README files, and assets
 │   │   └── src/                 # Frontend UI, registry, styles, and types
-│   └── api/                     # Future Node/TypeScript backend service
+│   └── api/                     # Fastify backend service and API routes
 ├── data/
 │   ├── tools/                  # Source tool data, one JSON file per tool
 │   └── tool-docs/              # Markdown-first tool documents and referenced assets
 ├── docs/                       # Implementation notes, API contracts, and follow-up notes
 ├── packages/
-│   ├── shared/                 # Future shared schema, DTO, manifest, and enum package
-│   └── tooling/                # Future Markdown parsing, hashing, export, and diff package
+│   ├── shared/                 # Shared schema, DTO, manifest, and enum package
+│   └── tooling/                # Markdown parsing, hashing, export, and diff package
 ├── scripts/
 │   └── generate-data.mjs       # Generates apps/web/public/api and downloads from sources
 ├── tool-hub-plan.md            # Full execution plan
 └── tsconfig.base.json          # Shared TypeScript base config
 ```
 
-## Data Flow
+## Runtime Data Flow
+
+1. The frontend calls the API at `VITE_API_BASE_URL`.
+2. The API serves compatible catalog JSON from generated artifacts:
+   - `/api/tools/index.json`
+   - `/api/tools/<tool-slug>.json`
+3. The API serves compatible downloads from the generated download root:
+   - `/downloads/<tool-slug>/<version>/manifest.json`
+   - `/downloads/<tool-slug>/<version>/README.md`
+   - `/downloads/<tool-slug>/<version>/tool.md`
+4. Submissions are posted to `/api/submissions`, validated through `packages/tooling`, reviewed, and exported back to Markdown/source artifacts plus compatible generated outputs.
+
+## Source Data Flow
 
 1. Maintain tool documents under `data/tool-docs/`, or keep compatibility JSON records under `data/tools/`.
 2. Run `npm run generate:data`.
@@ -88,9 +119,9 @@ The build runs `npm run generate:data` first, generates static API files and dow
    - `apps/web/public/downloads/<tool-slug>/<version>/README.md`
    - `apps/web/public/downloads/<tool-slug>/<version>/tool.md`
    - referenced UI JSON, Python, and MenuConfig files
-4. The frontend reads generated API data to render the catalog and links to generated Markdown/manifests.
+4. The backend reads generated API/download artifacts and exposes them through stable compatible routes.
 
-For the current static-maintenance stage, review changes with git, run `npm run build`, and deploy the generated `dist/` directory to a static server.
+For the current hybrid stage, run both the API and web app in development. Static artifacts remain compatibility outputs and can still be deployed when a backend is not required.
 
 ## Tool Data Requirements
 
@@ -106,15 +137,19 @@ The current Markdown-first sample tools are `Actor Rename Tool` and `Test Select
 
 ## Deployment
 
-The Phase 1 site can be deployed as static files:
+Preferred LAN deployment runs the API and web build together:
 
 ```bash
+npm run build:api
 npm run build
+npm run start:api
 ```
 
-Publish `dist/` to nginx, an internal file server, or a cloud static hosting service. The generated API files and downloadable manifests are included in the static output, so no backend service is required for Phase 1.
+Serve `dist/` with nginx or another static server and route API/download requests to `apps/api`, or configure `VITE_API_BASE_URL` to point at the API host.
 
-If real uploads, review workflows, permissions, version archives, and download statistics are needed later, the current manifest-first model will evolve toward a Node/TypeScript backend, PostgreSQL, and object storage.
+Static-only deployment is still possible for catalog browsing if generated `public/api` and `public/downloads` artifacts are served directly, but submissions/reviews require the API.
+
+Next recommended work is Phase H from the execution roadmap: database migration scripts, local PostgreSQL setup, route tests, PostgreSQL-first tool reads, and minimal authorization around review/publish actions.
 
 ## Related Documents
 

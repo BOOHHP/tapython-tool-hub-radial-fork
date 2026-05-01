@@ -569,6 +569,56 @@ Phase G: 兼容 API 和下载产物切换到发布任务
 
 ## 维护约定
 
+## 当前实现评估与建议
+
+截至 Phase G，仓库已经从“静态站点 MVP”进入“后端承载兼容接口、前端运行时读取 API、投稿审核发布流可用”的 hybrid 阶段。当前实现的核心事实如下：
+
+1. `apps/web` 已不再静态 import `public/api/tools/*.json`，工具库通过 `VITE_API_BASE_URL` 调用后端兼容 API。
+2. `apps/api` 已承载 `/api/tools/*`、`/downloads/*`、`/api/submissions/*` 与 `/health`。
+3. `packages/shared` 已提供核心 Tool、Submission、Review、Validation schema。
+4. `packages/tooling` 已成为脚本和后端发布流共用的 Markdown/manifest/export 能力。
+5. Submission 存储已抽象为 repository；有 `DATABASE_URL` 时使用 PostgreSQL，未配置时使用文件系统 fallback。
+6. 兼容 JSON 与 downloads 仍由生成/发布任务写入 `apps/web/public`，并由 API 读取后对外服务。
+
+主要差距：
+
+1. 数据库迁移还没有脚本化，本地 PostgreSQL 启动方式和 schema 应用方式仍依赖人工约定。
+2. Tool 读取仍是静态 JSON repository，尚未做到 PostgreSQL 优先、静态 JSON fallback。
+3. 测试覆盖集中在 submission workflow，缺少 Fastify route tests，尤其是 `/downloads/*` 路径越界、404、`/api/tools/*` 404 和 submission 400/409 响应。
+4. 审核通过与发布动作没有鉴权，当前只适合内网可信环境或演示验证。
+5. 前端投稿审核工作台已经可用，但仍是单组件承载 Markdown 编辑、资源清单、校验报告和审核队列，后续维护会变重。
+6. README 与部署说明需要明确“后端 API 优先、静态产物兼容”的新运行模式，避免继续按纯静态站点理解。
+
+建议下一阶段不要立刻扩展新功能，而是进入 **Phase H：运行化与质量收敛**。推荐顺序：
+
+1. 先补 `scripts/migration` 与本地 PostgreSQL 启动说明，让数据库 schema 可以一条命令应用。
+2. 为 API 增加 HTTP route tests，优先覆盖兼容接口和下载路径安全。
+3. 将 Tool repository 扩展为 PostgreSQL 优先、静态 JSON fallback，并定义数据库到兼容 JSON/downloads 的导出任务边界。
+4. 增加最小鉴权边界，至少保护审核通过和发布动作。
+5. 拆分前端 submission workbench，降低单文件复杂度。
+6. 最后再考虑对象存储、下载统计、后台管理细节和更完整的用户权限模型。
+
+### Phase H：运行化与质量收敛
+
+目标：把 A-G 形成的 hybrid 架构稳定成可长期开发和内网试运行的工程底座。
+
+执行项：
+
+1. 增加数据库迁移执行脚本和本地 PostgreSQL 启动说明。
+2. 为 health、tools、downloads、submissions 增加 Fastify route tests。
+3. 将工具读取扩展为 PostgreSQL 优先、静态 JSON fallback。
+4. 为审核发布动作增加最小鉴权或内网管理 token。
+5. 拆分前端投稿审核工作台组件。
+6. 更新部署文档，明确 web/API 同源和跨域两种模式。
+
+完成标准：
+
+- 新开发者可以按文档启动 web、API 和本地数据库。
+- 数据库迁移可重复执行，不依赖手工 SQL。
+- 兼容 API、downloads、投稿审核发布流有 route 级测试保护。
+- 前端不需要修改代码即可通过环境变量切换 API 地址。
+- 审核通过和发布动作不再裸露给任意调用者。
+
 后续涉及架构和目录调整时，优先更新这份文档，而不是只在聊天中口头确认。
 
 建议维护规则：
@@ -580,8 +630,8 @@ Phase G: 兼容 API 和下载产物切换到发布任务
 
 ## 下一步建议
 
-当前最合适的落地顺序不是直接写后端业务代码，而是先做以下三件事：
+当前最合适的落地顺序不是继续堆新业务页面，而是先让 Phase A-G 的成果进入可运行、可测试、可部署的稳定状态：
 
-1. 把仓库改造成 workspace，并迁移现有前端到 `apps/web`。
-2. 把 [src/types.ts](../src/types.ts) 和 [scripts/generate-data.mjs](../scripts/generate-data.mjs) 分别识别为共享契约和内容处理的拆分起点。
-3. 先补一版数据库实体和发布流设计，再开始真正实现 `apps/api`。
+1. 执行 Phase H，补数据库迁移脚本、本地 PostgreSQL 说明和 API route tests。
+2. 将 Tool repository 做成 PostgreSQL 优先、静态 JSON fallback，明确兼容 JSON/downloads 的导出任务边界。
+3. 增加审核发布动作的最小鉴权，再扩展更完整的后台权限、下载统计和对象存储能力。
