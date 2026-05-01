@@ -3,6 +3,7 @@ import crypto from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import matter from 'gray-matter';
+import { toolDetailResponseSchema, toolIndexResponseSchema } from '@tapython-tool-hub/shared';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const toolDataRoot = path.join(root, 'data', 'tools');
@@ -62,6 +63,7 @@ async function main() {
     }))
   };
 
+  validatePayload(toolIndexResponseSchema, index, 'tool index API');
   await writeJson(path.join(apiRoot, 'index.json'), index);
   console.log(`Generated ${tools.length} tool API record(s).`);
 }
@@ -176,6 +178,7 @@ async function writeToolApi(tool) {
     generatedAt: new Date().toISOString(),
     tool: publicTool
   };
+  validatePayload(toolDetailResponseSchema, payload, `tool API '${tool.slug}'`);
   await writeJson(path.join(apiRoot, `${tool.slug}.json`), payload);
 }
 
@@ -366,6 +369,18 @@ function required(value, fieldName, sourcePath) {
     throw new Error(`${sourcePath}: missing required front matter field '${fieldName}'`);
   }
   return value;
+}
+
+function validatePayload(schema, payload, label) {
+  const result = schema.safeParse(payload);
+  if (result.success) {
+    return;
+  }
+
+  const details = result.error.issues
+    .map((issue) => `${issue.path.join('.') || '<root>'}: ${issue.message}`)
+    .join('\n');
+  throw new Error(`Generated ${label} failed schema validation:\n${details}`);
 }
 
 async function writeJson(filePath, payload) {

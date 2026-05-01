@@ -480,6 +480,21 @@ Phase G: 兼容 API 和下载产物切换到发布任务
 2. 让生成器使用 `packages/shared` 的 schema 校验输出 JSON，为后端发布任务复用做准备。
 3. 补数据库实体边界和投稿/审核/发布流设计，再进入 `apps/api` 业务实现。
 
+### 2026-05-01 Phase C 生成器契约校验
+
+已完成：
+
+1. 将 `packages/shared` 改为可构建包，输出 `dist/index.js` 与声明文件，供 Node 脚本和后续 API 服务复用。
+2. 根命令在 `dev` 和 `generate:data` 前先构建 `@tapython-tool-hub/shared`，保证 workspace 包导出可用。
+3. `scripts/generate-data.mjs` 复用 `toolDetailResponseSchema` 与 `toolIndexResponseSchema`，在写入 JSON 前校验工具详情和索引 payload。
+4. `packages/*/dist/` 加入忽略规则，构建产物不进入版本库。
+5. 通过 `npm run generate:data` 与 `npm run build` 验收。
+
+下一步：
+
+1. 补数据库实体边界与投稿/审核/发布流设计。
+2. 在 `apps/api` 建立 Fastify 服务骨架，并复用 `packages/shared` 的 schema 作为响应契约。
+
 ## 维护约定
 
 后续涉及架构和目录调整时，优先更新这份文档，而不是只在聊天中口头确认。

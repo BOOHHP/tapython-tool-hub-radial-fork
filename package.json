@@ -8,11 +8,11 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "npm run dev -w @tapython-tool-hub/web",
+    "dev": "npm run build -w @tapython-tool-hub/shared && npm run dev -w @tapython-tool-hub/web",
     "start": "npm run start -w @tapython-tool-hub/web",
     "build": "npm run generate:data && npm run build -w @tapython-tool-hub/web",
     "preview": "npm run preview -w @tapython-tool-hub/web",
-    "generate:data": "node scripts/generate-data.mjs"
+    "generate:data": "npm run build -w @tapython-tool-hub/shared && node scripts/generate-data.mjs"
   },
   "devDependencies": {
     "gray-matter": "^4.0.3",
