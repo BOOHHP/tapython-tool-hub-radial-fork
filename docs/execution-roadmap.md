@@ -446,6 +446,23 @@ Phase G: 兼容 API 和下载产物切换到发布任务
 2. 继续 Phase C，将 `apps/web/src/types.ts` 下沉到 `packages/shared`。
 3. 在进入后端业务实现前，补数据库实体边界和投稿/审核/发布流设计。
 
+### 2026-05-01 Phase B 已启动
+
+已完成：
+
+1. 将 `apps/web/src/App.tsx` 收敛为轻量入口，只负责渲染页面容器。
+2. 新增 `apps/web/src/pages/ToolHubPage.tsx` 作为当前工具站主页面容器。
+3. 新增 `apps/web/src/services/toolRegistry.ts`，集中封装当前静态工具注册表读取。
+4. 新增 `apps/web/src/hooks/useToolFilters.ts`，把搜索、分类、风险等级和审核状态筛选逻辑从页面中抽离。
+5. 新增 `apps/web/src/features/tools/display.ts` 与 `apps/web/src/features/tools/diff.ts`，集中维护工具展示颜色和版本/文件 diff 逻辑。
+6. 保留 `apps/web/src/data/registry.ts` 作为兼容转发层，减少后续迁移时的引用断裂风险。
+7. 通过 `npm run build` 验收。
+
+下一步：
+
+1. 继续从 `ToolHubPage` 中拆出 `ToolCatalog`、`ToolDetail`、`CompareView`、`SubmitGuide` 等 feature 组件。
+2. 进入 Phase C，将 `apps/web/src/types.ts` 迁入 `packages/shared`，并引入运行时 schema。
+
 ## 维护约定
 
 后续涉及架构和目录调整时，优先更新这份文档，而不是只在聊天中口头确认。
