@@ -34,3 +34,37 @@ test('serves markdown downloads as utf-8 markdown text', async () => {
     await fs.rm(root, { recursive: true, force: true });
   }
 });
+
+test('serves zip packages as binary archives', async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'tapython-download-route-'));
+  const config = createConfig(root);
+  const filePath = path.join(config.downloadRoot, 'demo-tool', '1.0.0', 'demo-tool-1.0.0.zip');
+  const content = Buffer.from('PK\u0003\u0004demo archive');
+  await fs.mkdir(path.dirname(filePath), { recursive: true });
+  await fs.writeFile(filePath, content);
+
+  const app = createApp(config);
+  try {
+    const response = await app.inject({ method: 'GET', url: '/downloads/demo-tool/1.0.0/demo-tool-1.0.0.zip' });
+
+    assert.equal(response.statusCode, 200);
+    assert.equal(response.headers['content-type'], 'application/zip');
+    assert.deepEqual(response.rawPayload, content);
+  } finally {
+    await app.close();
+    await fs.rm(root, { recursive: true, force: true });
+  }
+});
+
+function createConfig(root: string): ApiConfig {
+  return {
+    host: '127.0.0.1',
+    port: 0,
+    repoRoot: root,
+    toolDataRoot: path.join(root, 'data', 'tools'),
+    toolDocsRoot: path.join(root, 'data', 'tool-docs'),
+    toolApiRoot: path.join(root, 'public', 'api', 'tools'),
+    downloadRoot: path.join(root, 'public', 'downloads'),
+    submissionRoot: path.join(root, 'submissions')
+  };
+}

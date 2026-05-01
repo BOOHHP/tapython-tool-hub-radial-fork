@@ -49,6 +49,9 @@ function getContentType(filePath: string): string {
   if (filePath.endsWith('.py')) {
     return 'text/x-python; charset=utf-8';
   }
+  if (filePath.endsWith('.zip')) {
+    return 'application/zip';
+  }
   return 'application/octet-stream';
 }
 

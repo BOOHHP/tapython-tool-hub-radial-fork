@@ -249,6 +249,53 @@ body {
   gap: 12px;
 }
 
+.install-option-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.install-option {
+  min-width: 0;
+  padding: 14px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+}
+
+.install-option h5,
+.install-option p {
+  margin: 0;
+}
+
+.install-option-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  color: #2563eb;
+  background: #eff6ff;
+  border-radius: 6px;
+  font-size: 17px;
+}
+
+.inline-code-block {
+  width: 100%;
+  margin: 0;
+  padding: 10px;
+  overflow: auto;
+  color: #111827;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 .submission-grid {
   display: grid;
   grid-template-columns: minmax(360px, 0.9fr) minmax(420px, 1.1fr);
@@ -287,6 +334,7 @@ body {
 @media (max-width: 920px) {
   .stats-grid,
   .two-column-list,
+  .install-option-grid,
   .submission-grid,
   .metric-strip,
   .safety-results {
@@ -307,6 +355,7 @@ body {
 
   .stats-grid,
   .two-column-list,
+  .install-option-grid,
   .submission-grid,
   .metric-strip,
   .safety-results,

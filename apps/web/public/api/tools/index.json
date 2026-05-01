@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-01T03:52:42.255Z",
+  "generatedAt": "2026-05-01T04:29:42.730Z",
   "total": 2,
   "tools": [
     {
@@ -44,7 +44,7 @@
         "latestManifest": "/downloads/actor-rename-tool/1.1.0/manifest.json",
         "latestReadme": "/downloads/actor-rename-tool/1.1.0/README.md",
         "latestMarkdown": "/downloads/actor-rename-tool/1.1.0/tool.md",
-        "latestPackage": ""
+        "latestPackage": "/downloads/actor-rename-tool/1.1.0/actor-rename-tool-1.1.0.zip"
       }
     },
     {
@@ -87,7 +87,7 @@
         "latestManifest": "/downloads/test-selection-audit-tool/0.2.0/manifest.json",
         "latestReadme": "/downloads/test-selection-audit-tool/0.2.0/README.md",
         "latestMarkdown": "/downloads/test-selection-audit-tool/0.2.0/tool.md",
-        "latestPackage": ""
+        "latestPackage": "/downloads/test-selection-audit-tool/0.2.0/test-selection-audit-tool-0.2.0.zip"
       }
     }
   ]

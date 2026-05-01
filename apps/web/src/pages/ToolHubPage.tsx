@@ -294,6 +294,7 @@ function ToolDetail({ tool, onBack, onCompare }: { tool: ToolRecord; onBack: () 
   const latestVersion = tool.versions[0];
   const latestManifest = latestVersion.manifest;
   const fileCount = latestManifest.files.length;
+  const primaryDownload = latestVersion.downloads.package || latestVersion.downloads.readme;
 
   return (
     <Space direction="vertical" size={18} className="full-width detail-page">
@@ -335,8 +336,8 @@ function ToolDetail({ tool, onBack, onCompare }: { tool: ToolRecord; onBack: () 
                 Markdown
               </Button>
             ) : null}
-            <Button type="primary" icon={<CloudDownloadOutlined />} href={getApiUrl(latestVersion.downloads.readme)} target="_blank">
-              获取工具
+            <Button type="primary" icon={<CloudDownloadOutlined />} href={getApiUrl(primaryDownload)} target="_blank" download>
+              下载 ZIP
             </Button>
           </Space>
         </Flex>
@@ -458,7 +459,13 @@ function ToolOverview({ tool }: { tool: ToolRecord }) {
 }
 
 function InstallGuide({ tool }: { tool: ToolRecord }) {
-  const latestManifest = tool.versions[0].manifest;
+  const latestVersion = tool.versions[0];
+  const latestManifest = latestVersion.manifest;
+  const manifestUrl = getApiUrl(latestVersion.downloads.manifest);
+  const packageUrl = latestVersion.downloads.package ? getApiUrl(latestVersion.downloads.package) : '';
+  const markdownUrl = latestVersion.downloads.markdown ? getApiUrl(latestVersion.downloads.markdown) : '';
+  const cliCommand = `tapython-tool-hub install "${manifestUrl}"${packageUrl ? ` --package "${packageUrl}"` : ''} --project "<Project>"`;
+
   return (
     <Card>
       <Alert
@@ -468,18 +475,61 @@ function InstallGuide({ tool }: { tool: ToolRecord }) {
         description="站点不直接写用户项目目录。手动安装或 Agent 安装都应先确认目标路径、同名工具和 MenuConfig diff。"
       />
       <Divider />
-      <Title level={4}>手动安装</Title>
+      <div className="install-option-grid">
+        <div className="install-option">
+          <Space align="start" size={12}>
+            <span className="install-option-icon"><ApiOutlined /></span>
+            <Space direction="vertical" size={8} className="full-width">
+              <Title level={5}>对话安装</Title>
+              <Paragraph type="secondary">把工具 API 交给 Agent，由 Agent 读取 manifest 和完整包，展示路径、文件清单、hash 校验和 MenuConfig diff 后执行。</Paragraph>
+              <Button size="small" href={getApiUrl(`/api/tools/${tool.slug}.json`)} target="_blank">
+                打开工具 API
+              </Button>
+            </Space>
+          </Space>
+        </div>
+        <div className="install-option">
+          <Space align="start" size={12}>
+            <span className="install-option-icon"><CodeOutlined /></span>
+            <Space direction="vertical" size={8} className="full-width">
+              <Title level={5}>CLI 安装</Title>
+              <Paragraph type="secondary">CLI 以 manifest 为入口，配合完整 ZIP 包完成校验、解包、目标目录写入和菜单合并。</Paragraph>
+              <pre className="inline-code-block">{cliCommand}</pre>
+            </Space>
+          </Space>
+        </div>
+        <div className="install-option">
+          <Space align="start" size={12}>
+            <span className="install-option-icon"><CloudDownloadOutlined /></span>
+            <Space direction="vertical" size={8} className="full-width">
+              <Title level={5}>ZIP 安装</Title>
+              <Paragraph type="secondary">完整包包含 manifest、README、tool.md 和工具核心资源，适合手动解压或离线分发。</Paragraph>
+              {packageUrl ? (
+                <Button type="primary" size="small" href={packageUrl} target="_blank" download>
+                  下载完整包
+                </Button>
+              ) : <Text type="secondary">当前版本暂无完整包。</Text>}
+            </Space>
+          </Space>
+        </div>
+        <div className="install-option">
+          <Space align="start" size={12}>
+            <span className="install-option-icon"><FileSearchOutlined /></span>
+            <Space direction="vertical" size={8} className="full-width">
+              <Title level={5}>单 Markdown 安装</Title>
+              <Paragraph type="secondary">Markdown-first 文档保留给 Agent 或审阅者解析正文、安装步骤和外部文件引用。</Paragraph>
+              {markdownUrl ? (
+                <Button size="small" href={markdownUrl} target="_blank">
+                  打开 Markdown
+                </Button>
+              ) : <Text type="secondary">当前版本暂无 Markdown 文档。</Text>}
+            </Space>
+          </Space>
+        </div>
+      </div>
+      <Divider />
+      <Title level={4}>手动安装步骤</Title>
       <Timeline items={tool.summary.installSteps.map((step) => ({ children: step }))} />
-      <Title level={4}>Agent 安装入口</Title>
-      <Paragraph>
-        Agent 应先读取 <Text code>/api/tools/{tool.slug}.json</Text>，再下载 manifest 和工具包，校验后展示安装预览。
-      </Paragraph>
-      {tool.versions[0].downloads.markdown ? (
-        <Paragraph>
-          Markdown-first 工具也可以让 Agent 直接读取 <Text code>{tool.versions[0].downloads.markdown}</Text>，从文档正文、外部文件引用和 manifest
-          生成安装计划。
-        </Paragraph>
-      ) : null}
       <Title level={4}>MenuConfig 合并项</Title>
       <pre className="code-block">{JSON.stringify(latestManifest.menuConfigMerge.itemsToAdd, null, 2)}</pre>
     </Card>
@@ -537,6 +587,11 @@ function VersionTimeline({ versions }: { versions: ToolVersion[] }) {
                 <Button size="small" href={getApiUrl(version.downloads.readme)} target="_blank">
                   README
                 </Button>
+                {version.downloads.package ? (
+                  <Button size="small" href={getApiUrl(version.downloads.package)} target="_blank" download>
+                    ZIP
+                  </Button>
+                ) : null}
               </Space>
             </Space>
           )

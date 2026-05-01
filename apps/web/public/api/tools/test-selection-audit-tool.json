@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-01T03:52:42.254Z",
+  "generatedAt": "2026-05-01T04:29:42.728Z",
   "tool": {
     "slug": "test-selection-audit-tool",
     "name": "TestSelectionAuditTool",
@@ -40,7 +40,7 @@
       "latestManifest": "/downloads/test-selection-audit-tool/0.2.0/manifest.json",
       "latestReadme": "/downloads/test-selection-audit-tool/0.2.0/README.md",
       "latestMarkdown": "/downloads/test-selection-audit-tool/0.2.0/tool.md",
-      "latestPackage": ""
+      "latestPackage": "/downloads/test-selection-audit-tool/0.2.0/test-selection-audit-tool-0.2.0.zip"
     },
     "summary": {
       "features": [
@@ -106,7 +106,7 @@
           "manifest": "/downloads/test-selection-audit-tool/0.2.0/manifest.json",
           "readme": "/downloads/test-selection-audit-tool/0.2.0/README.md",
           "markdown": "/downloads/test-selection-audit-tool/0.2.0/tool.md",
-          "package": ""
+          "package": "/downloads/test-selection-audit-tool/0.2.0/test-selection-audit-tool-0.2.0.zip"
         },
         "manifest": {
           "schemaVersion": "1.0.0",

@@ -23,6 +23,11 @@ interface AssetFile {
   content?: string;
 }
 
+interface ZipEntry {
+  path: string;
+  content: Buffer;
+}
+
 type ToolData = Record<string, any>;
 
 export async function generateToolData(options: GenerateToolDataOptions): Promise<GenerateToolDataResult> {
@@ -123,7 +128,7 @@ async function buildToolFromMarkdown(data: ToolData, markdown: string, sourcePat
     author: previous.author ?? data.author,
     changeSummary: previous.changeSummary,
     breaking: Boolean(previous.breaking),
-    downloads: buildDownloads(slug, previous.version),
+    downloads: buildDownloads(slug, previous.version, false),
     manifest: buildManifest(
       {
         ...data,
@@ -160,7 +165,7 @@ async function buildToolFromMarkdown(data: ToolData, markdown: string, sourcePat
       latestManifest: `/downloads/${slug}/${version}/manifest.json`,
       latestReadme: `/downloads/${slug}/${version}/README.md`,
       latestMarkdown: `/downloads/${slug}/${version}/tool.md`,
-      latestPackage: data.latestPackage ?? ''
+      latestPackage: `/downloads/${slug}/${version}/${slug}-${version}.zip`
     },
     summary: {
       features: data.summary?.features ?? [],
@@ -208,6 +213,12 @@ async function writeDownloads(tool: ToolData, downloadRoot: string): Promise<voi
       await writeUtf8Markdown(path.join(versionRoot, 'tool.md'), tool.documentationMarkdown);
       await writeAssetFiles(versionRoot, tool._assetFiles ?? []);
     }
+    if (version.downloads.package && await hasPackageFiles(versionRoot, version.manifest.files)) {
+      await writePackageArchive(versionRoot, `${tool.slug}-${version.version}.zip`, version.releasedAt);
+    } else {
+      await fs.rm(path.join(versionRoot, `${tool.slug}-${version.version}.zip`), { force: true });
+      version.downloads.package = '';
+    }
   }
 }
 
@@ -232,16 +243,157 @@ function buildReadme(tool: ToolData, version: ToolData): string {
 
 function normalizeTool(tool: ToolData): void {
   tool.versions.sort((left: ToolData, right: ToolData) => right.releasedAt.localeCompare(left.releasedAt));
+  for (const version of tool.versions) {
+    const packagePath = version.downloads?.package ?? '';
+    version.downloads = {
+      ...buildDownloads(tool.slug, version.version, Boolean(packagePath)),
+      ...version.downloads,
+      package: packagePath
+    };
+  }
+  tool.downloads = {
+    ...tool.downloads,
+    latestPackage: tool.downloads?.latestPackage || tool.versions[0]?.downloads?.package || ''
+  };
 }
 
-function buildDownloads(slug: string, version: string): ToolData {
+function buildDownloads(slug: string, version: string, includePackage = true): ToolData {
   return {
     manifest: `/downloads/${slug}/${version}/manifest.json`,
     readme: `/downloads/${slug}/${version}/README.md`,
     markdown: `/downloads/${slug}/${version}/tool.md`,
-    package: ''
+    package: includePackage ? `/downloads/${slug}/${version}/${slug}-${version}.zip` : ''
   };
 }
+
+async function hasPackageFiles(versionRoot: string, files: AssetFile[]): Promise<boolean> {
+  if (files.length === 0) {
+    return false;
+  }
+  for (const file of files) {
+    try {
+      await fs.access(resolveInside(versionRoot, file.path));
+    } catch {
+      return false;
+    }
+  }
+  return true;
+}
+
+async function writePackageArchive(versionRoot: string, archiveName: string, releasedAt: string): Promise<void> {
+  const archivePath = path.join(versionRoot, archiveName);
+  const filePaths = await listPackageFiles(versionRoot, archivePath);
+  const entries = await Promise.all(filePaths.map(async (filePath) => ({
+    path: path.relative(versionRoot, filePath).split(path.sep).join('/'),
+    content: await fs.readFile(filePath)
+  })));
+  await fs.writeFile(archivePath, createZipArchive(entries, releasedAt));
+}
+
+async function listPackageFiles(directory: string, archivePath: string): Promise<string[]> {
+  const entries = await fs.readdir(directory, { withFileTypes: true });
+  const files: string[] = [];
+
+  for (const entry of entries) {
+    const entryPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...await listPackageFiles(entryPath, archivePath));
+      continue;
+    }
+    if (entry.isFile() && entryPath !== archivePath) {
+      files.push(entryPath);
+    }
+  }
+
+  return files.sort((left, right) => left.localeCompare(right));
+}
+
+function createZipArchive(entries: ZipEntry[], releasedAt: string): Buffer {
+  const localParts: Buffer[] = [];
+  const centralDirectory: Buffer[] = [];
+  let offset = 0;
+  const { dosTime, dosDate } = getDosDateTime(releasedAt);
+
+  for (const entry of entries) {
+    const name = Buffer.from(entry.path, 'utf8');
+    const checksum = crc32(entry.content);
+    const localHeader = Buffer.alloc(30);
+    localHeader.writeUInt32LE(0x04034b50, 0);
+    localHeader.writeUInt16LE(20, 4);
+    localHeader.writeUInt16LE(0x0800, 6);
+    localHeader.writeUInt16LE(0, 8);
+    localHeader.writeUInt16LE(dosTime, 10);
+    localHeader.writeUInt16LE(dosDate, 12);
+    localHeader.writeUInt32LE(checksum, 14);
+    localHeader.writeUInt32LE(entry.content.length, 18);
+    localHeader.writeUInt32LE(entry.content.length, 22);
+    localHeader.writeUInt16LE(name.length, 26);
+    localHeader.writeUInt16LE(0, 28);
+    localParts.push(localHeader, name, entry.content);
+
+    const centralHeader = Buffer.alloc(46);
+    centralHeader.writeUInt32LE(0x02014b50, 0);
+    centralHeader.writeUInt16LE(20, 4);
+    centralHeader.writeUInt16LE(20, 6);
+    centralHeader.writeUInt16LE(0x0800, 8);
+    centralHeader.writeUInt16LE(0, 10);
+    centralHeader.writeUInt16LE(dosTime, 12);
+    centralHeader.writeUInt16LE(dosDate, 14);
+    centralHeader.writeUInt32LE(checksum, 16);
+    centralHeader.writeUInt32LE(entry.content.length, 20);
+    centralHeader.writeUInt32LE(entry.content.length, 24);
+    centralHeader.writeUInt16LE(name.length, 28);
+    centralHeader.writeUInt16LE(0, 30);
+    centralHeader.writeUInt16LE(0, 32);
+    centralHeader.writeUInt16LE(0, 34);
+    centralHeader.writeUInt16LE(0, 36);
+    centralHeader.writeUInt32LE(0, 38);
+    centralHeader.writeUInt32LE(offset, 42);
+    centralDirectory.push(Buffer.concat([centralHeader, name]));
+
+    offset += localHeader.length + name.length + entry.content.length;
+  }
+
+  const centralParts = centralDirectory;
+  const centralSize = centralParts.reduce((total, entry) => total + entry.length, 0);
+  const end = Buffer.alloc(22);
+  end.writeUInt32LE(0x06054b50, 0);
+  end.writeUInt16LE(0, 4);
+  end.writeUInt16LE(0, 6);
+  end.writeUInt16LE(entries.length, 8);
+  end.writeUInt16LE(entries.length, 10);
+  end.writeUInt32LE(centralSize, 12);
+  end.writeUInt32LE(offset, 16);
+  end.writeUInt16LE(0, 20);
+
+  return Buffer.concat([...localParts, ...centralParts, end]);
+}
+
+function getDosDateTime(releasedAt: string): { dosDate: number; dosTime: number } {
+  const date = new Date(`${releasedAt}T00:00:00Z`);
+  const validDate = Number.isNaN(date.getTime()) ? new Date('1980-01-01T00:00:00Z') : date;
+  const year = Math.max(validDate.getUTCFullYear(), 1980);
+  return {
+    dosDate: validDate.getUTCDate() | ((validDate.getUTCMonth() + 1) << 5) | ((year - 1980) << 9),
+    dosTime: Math.floor(validDate.getUTCSeconds() / 2) | (validDate.getUTCMinutes() << 5) | (validDate.getUTCHours() << 11)
+  };
+}
+
+function crc32(content: Buffer): number {
+  let checksum = 0xffffffff;
+  for (const byte of content) {
+    checksum = CRC32_TABLE[(checksum ^ byte) & 0xff] ^ (checksum >>> 8);
+  }
+  return (checksum ^ 0xffffffff) >>> 0;
+}
+
+const CRC32_TABLE = Array.from({ length: 256 }, (_, index) => {
+  let value = index;
+  for (let bit = 0; bit < 8; bit += 1) {
+    value = value & 1 ? 0xedb88320 ^ (value >>> 1) : value >>> 1;
+  }
+  return value >>> 0;
+});
 
 function buildManifest(data: ToolData, version: string, files: AssetFile[] | undefined, fallbackDate: string): ToolData {
   return {

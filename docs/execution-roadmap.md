@@ -602,6 +602,25 @@ Phase G: 兼容 API 和下载产物切换到发布任务
 
 目标：把 A-G 形成的 hybrid 架构稳定成可长期开发和内网试运行的工程底座。
 
+#### Phase H.1：安装交付模式补齐
+
+触发背景：参考 SkillHub 的详情页模式，工具详情需要把“概述、安装方式、版本历史”作为一等信息；当前 TAPython Tool Hub 虽然已经有安装页签，但默认“获取工具”只指向 README/Markdown，实际下载不到 `ActorRenameTool.py`、`ActorRenameTool.json`、`MenuConfig.snippet.json` 等核心资源。
+
+目标交付：
+
+1. **对话安装**：详情页提供 Agent/对话式安装入口说明，明确 Agent 应读取工具 API、manifest、完整包并展示写入预览与 MenuConfig diff。
+2. **CLI 安装**：详情页提供稳定 CLI 命令形态，先以 manifest/package URL 为输入，后续由真实 CLI 安装器接管。
+3. **ZIP 安装**：生成器为每个版本导出完整资源包，包含 manifest、README、tool.md 和工具核心资源；默认“获取工具”下载 ZIP，而不是单文件。
+4. **单 Markdown 安装**：保留 `tool.md`，用于 Agent 直接解析 Markdown-first 文档和外部文件引用。
+
+第一轮执行顺序：
+
+1. 在 `packages/tooling` 中生成 `<slug>-<version>.zip`，并写回 `downloads.package/latestPackage`。
+2. 在 `apps/api` 下载路由中补 `.zip` 的 content type，避免完整包被当作未知二进制。
+3. 在 `apps/web` 详情页安装方式中展示对话安装、CLI 安装、ZIP 安装、单 Markdown 安装四类入口，并让主按钮下载 ZIP。
+4. 为 ZIP 和 Markdown 下载补 route 测试，防止后续又退回单文件下载。
+5. 重新生成兼容 API/downloads，并通过 API 测试与前端/后端构建验收。
+
 执行项：
 
 1. 增加数据库迁移执行脚本和本地 PostgreSQL 启动说明。
