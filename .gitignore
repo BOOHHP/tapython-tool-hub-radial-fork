@@ -3,3 +3,4 @@ dist/
 .vite/
 *.local
 public/downloads/
+apps/web/public/downloads/

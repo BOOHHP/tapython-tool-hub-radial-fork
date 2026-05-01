@@ -7,7 +7,7 @@ import matter from 'gray-matter';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const toolDataRoot = path.join(root, 'data', 'tools');
 const toolDocsRoot = path.join(root, 'data', 'tool-docs');
-const publicRoot = path.join(root, 'public');
+const publicRoot = path.join(root, 'apps', 'web', 'public');
 const apiRoot = path.join(publicRoot, 'api', 'tools');
 const downloadRoot = path.join(publicRoot, 'downloads');
 

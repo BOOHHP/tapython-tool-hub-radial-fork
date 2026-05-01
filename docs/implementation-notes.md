@@ -11,7 +11,7 @@
 
 ## Basic Usable Static Stage
 
-The current implementation is considered usable for static maintenance. Tool publication is handled by editing Markdown documents and referenced assets in git, then running `npm run generate:data` or `npm run build`. Generated API files are committed for the static frontend registry, while downloadable tool Markdown/manifests/assets are produced under `public/downloads/` during generation and deployment builds.
+The current implementation is considered usable for static maintenance. Tool publication is handled by editing Markdown documents and referenced assets in git, then running `npm run generate:data` or `npm run build`. Generated API files are committed for the static frontend registry, while downloadable tool Markdown/manifests/assets are produced under `apps/web/public/downloads/` during generation and deployment builds.
 
 Operational model:
 
@@ -34,12 +34,12 @@ Supported source modes:
 Generated artifacts include:
 
 ```text
-/api/tools/index.json
-/api/tools/<tool>.json
-/downloads/<tool>/<version>/manifest.json
-/downloads/<tool>/<version>/README.md
-/downloads/<tool>/<version>/tool.md
-/downloads/<tool>/<version>/<referenced asset files>
+apps/web/public/api/tools/index.json        -> served as /api/tools/index.json
+apps/web/public/api/tools/<tool>.json       -> served as /api/tools/<tool>.json
+apps/web/public/downloads/<tool>/<version>/manifest.json
+apps/web/public/downloads/<tool>/<version>/README.md
+apps/web/public/downloads/<tool>/<version>/tool.md
+apps/web/public/downloads/<tool>/<version>/<referenced asset files>
 ```
 
 The frontend continues to consume generated JSON, while users and agents can open the generated Markdown directly.

@@ -1,0 +1,1 @@
+export const sharedPackageName = '@tapython-tool-hub/shared';
