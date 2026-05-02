@@ -33,7 +33,6 @@ import {
   Select,
   Segmented,
   Space,
-  Statistic,
   Table,
   Tabs,
   Tag,
@@ -134,7 +133,7 @@ export function ToolHubPage() {
         {viewMode === 'tools' ? (
           <RegistryHero tools={tools} loading={loadingTools} onSubmit={() => setViewMode('submit')} />
         ) : null}
-        <OverviewStats tools={tools} loading={loadingTools} />
+        {viewMode === 'tools' ? <OverviewStats tools={tools} loading={loadingTools} /> : null}
         {toolError ? <Alert className="tool-load-alert" type="error" showIcon message="工具数据加载失败" description={toolError} /> : null}
         {viewMode === 'tools' && (
           <ToolCatalog
@@ -223,18 +222,26 @@ function OverviewStats({ tools, loading }: { tools: ToolRecord[]; loading: boole
 
   return (
     <section className="stats-grid" aria-label="Tool Hub summary">
-      <Card>
-        <Statistic title="工具数量" value={loading ? '-' : tools.length} prefix={<AppstoreOutlined />} />
-      </Card>
-      <Card>
-        <Statistic title="已审核工具" value={loading ? '-' : latestUpdates} prefix={<CheckCircleOutlined />} />
-      </Card>
-      <Card>
-        <Statistic title="版本快照" value={loading ? '-' : versionCount} prefix={<DiffOutlined />} />
-      </Card>
-      <Card>
-        <Statistic title="部署模式" value="LAN MVP" prefix={<SafetyCertificateOutlined />} />
-      </Card>
+      <div className="stats-pill">
+        <AppstoreOutlined />
+        <Text type="secondary">工具</Text>
+        <Text strong>{loading ? '-' : tools.length}</Text>
+      </div>
+      <div className="stats-pill">
+        <CheckCircleOutlined />
+        <Text type="secondary">已审核</Text>
+        <Text strong>{loading ? '-' : latestUpdates}</Text>
+      </div>
+      <div className="stats-pill">
+        <DiffOutlined />
+        <Text type="secondary">版本</Text>
+        <Text strong>{loading ? '-' : versionCount}</Text>
+      </div>
+      <div className="stats-pill">
+        <SafetyCertificateOutlined />
+        <Text type="secondary">部署</Text>
+        <Text strong>LAN MVP</Text>
+      </div>
     </section>
   );
 }
@@ -363,15 +370,15 @@ function ToolCatalog({
                 key={tool.slug}
                 className="tool-card"
                 title={(
-                  <Flex align="center" gap={10} className="tool-card-title">
+                  <Flex align="center" gap={14} className="tool-card-title">
                     <span className="tool-card-mark">{tool.displayName.slice(0, 1).toUpperCase()}</span>
-                    <Space direction="vertical" size={0}>
-                      <Text strong>{tool.displayName}</Text>
-                      <Text type="secondary">{tool.author}</Text>
-                    </Space>
+                    <div className="tool-card-title-copy">
+                      <Text strong className="tool-card-name">{tool.displayName}</Text>
+                      <Text type="secondary" className="tool-card-author">{tool.author}</Text>
+                    </div>
                   </Flex>
                 )}
-                extra={<Tag color={statusColor[tool.status]}>{tool.status}</Tag>}
+                extra={<Tag className="tool-card-status" color={statusColor[tool.status]}>{tool.status}</Tag>}
               >
                 <Paragraph className="tool-description">{tool.description}</Paragraph>
                 <div className="tool-meta-grid">

@@ -7,3 +7,4 @@ packages/*/dist/
 *.local
 public/downloads/
 apps/web/public/downloads/
+.github/prompts/ui-ux-pro-max

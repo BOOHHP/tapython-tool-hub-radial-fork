@@ -127,6 +127,14 @@ export function SubmissionWorkbench() {
     document.getElementById('submission-form')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const importMarkdownFile = async (file: File) => {
+    const content = await file.text();
+    form.setFieldValue('markdown', content);
+    void form.validateFields(['markdown']).catch(() => undefined);
+    messageApi.success(`已导入 ${file.name}`);
+    return Upload.LIST_IGNORE;
+  };
+
   return (
     <Space direction="vertical" size={16} className="full-width submission-workbench">
       {contextHolder}
@@ -185,8 +193,23 @@ export function SubmissionWorkbench() {
             <Form.Item name="submitter" label="提交人" rules={[{ required: true }]}>
               <Input placeholder="TA Team" />
             </Form.Item>
-            <Form.Item name="markdown" label="工具 Markdown" rules={[{ required: true }]}>
-              <Input.TextArea rows={14} placeholder={modeCopy.markdownPlaceholder} />
+            <Form.Item label="工具 Markdown" required>
+              <Space direction="vertical" size={10} className="full-width markdown-input-group">
+                <Upload.Dragger
+                  className="markdown-file-dropzone"
+                  accept=".md,.markdown,.txt,text/markdown,text/plain"
+                  multiple={false}
+                  showUploadList={false}
+                  beforeUpload={importMarkdownFile}
+                >
+                  <p className="ant-upload-drag-icon"><InboxOutlined /></p>
+                  <p className="ant-upload-text">拖入 Markdown 文件，或点击选择</p>
+                  <p className="ant-upload-hint">支持 .md、.markdown、.txt；导入后仍可在下方继续编辑文本。</p>
+                </Upload.Dragger>
+                <Form.Item name="markdown" noStyle rules={[{ required: true, message: '请粘贴 Markdown 文本或导入 Markdown 文件' }]}>
+                  <Input.TextArea rows={14} placeholder={modeCopy.markdownPlaceholder} />
+                </Form.Item>
+              </Space>
             </Form.Item>
             <Form.Item name="notes" label="投稿备注">
               <Input.TextArea rows={3} placeholder={modeCopy.notesPlaceholder} />
@@ -202,7 +225,7 @@ export function SubmissionWorkbench() {
               }}
             >
               <p className="ant-upload-drag-icon"><InboxOutlined /></p>
-              <p className="ant-upload-text">上传 Markdown 中 @file 引用的文本资源</p>
+              <p className="ant-upload-text">拖入 @file 引用资源，或点击选择</p>
               <p className="ant-upload-hint">支持 JSON、Python、MenuConfig 片段等文本文件。</p>
             </Upload.Dragger>
             {assets.length > 0 ? (

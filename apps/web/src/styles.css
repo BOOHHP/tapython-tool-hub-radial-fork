@@ -220,17 +220,38 @@ body {
 }
 
 .stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -2px 0 18px;
 }
 
-.stats-grid .ant-card-body {
-  padding: 22px 24px;
+.stats-pill {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 34px;
+  padding: 6px 12px;
+  color: var(--color-muted);
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 999px;
 }
 
-.stats-grid .ant-card,
+.stats-pill .anticon {
+  color: #8f8f9a;
+  font-size: 14px;
+}
+
+.stats-pill .ant-typography {
+  font-size: 13px;
+}
+
+.stats-pill strong {
+  color: #e8e8ee;
+  font-weight: 700;
+}
+
 .catalog-toolbar,
 .tool-card,
 .detail-tabs-card,
@@ -586,23 +607,74 @@ body {
   font-size: 17px;
 }
 
+.tool-card .ant-card-head {
+  min-height: 96px;
+  padding: 22px 26px 18px;
+}
+
+.tool-card .ant-card-head-wrapper {
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.tool-card .ant-card-extra {
+  flex: 0 0 auto;
+  margin-left: 0;
+  padding-top: 4px;
+}
+
 .tool-card-title {
   min-width: 0;
+  width: 100%;
 }
 
 .tool-card-mark {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 48px;
+  height: 48px;
   flex: 0 0 auto;
   color: #0b0b0f;
   background: #ffffff;
   border: 1px solid #ffffff;
   border-radius: 7px;
-  font-size: 16px;
+  font-size: 22px;
   font-weight: 800;
+}
+
+.tool-card-title-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 7px;
+  padding-top: 1px;
+}
+
+.tool-card-name {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  color: #ffffff !important;
+  font-size: 19px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tool-card-author {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tool-card-status.ant-tag {
+  margin-inline-end: 0;
+  padding: 4px 11px;
+  font-weight: 700;
 }
 
 .tool-description,
@@ -936,6 +1008,33 @@ body {
 
 .submission-workbench h5 {
   margin: 0;
+}
+
+.markdown-input-group {
+  display: flex;
+}
+
+.markdown-file-dropzone.ant-upload-wrapper .ant-upload-drag {
+  background: #20202a !important;
+  border-style: dashed !important;
+}
+
+.markdown-file-dropzone .ant-upload-drag-icon {
+  margin-bottom: 6px !important;
+}
+
+.markdown-file-dropzone .ant-upload-drag-icon .anticon {
+  color: var(--color-primary);
+}
+
+.markdown-file-dropzone .ant-upload-text {
+  margin-bottom: 2px !important;
+  color: var(--color-text) !important;
+  font-weight: 700;
+}
+
+.markdown-file-dropzone .ant-upload-hint {
+  color: var(--color-muted) !important;
 }
 
 .submission-workbench .ant-list-item {
