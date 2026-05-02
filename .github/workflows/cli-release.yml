@@ -118,19 +118,36 @@ jobs:
           path: artifacts/*
           if-no-files-found: error
 
-      - name: Resolve release tag
-        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+      - name: Resolve release publishing context
         shell: bash
         run: |
           set -euo pipefail
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            echo "SHOULD_PUBLISH_RELEASE=true" >> "$GITHUB_ENV"
+            echo "RELEASE_TAG=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "SHOULD_PUBLISH_RELEASE=true" >> "$GITHUB_ENV"
             echo "RELEASE_TAG=${{ inputs.release_tag }}" >> "$GITHUB_ENV"
           else
-            echo "RELEASE_TAG=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+            echo "SHOULD_PUBLISH_RELEASE=false" >> "$GITHUB_ENV"
           fi
 
+      - name: Summarize non-release run
+        if: env.SHOULD_PUBLISH_RELEASE != 'true'
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<EOF
+          ### Release upload skipped
+
+          This run was triggered by `${{ github.event_name }}` on `${GITHUB_REF_NAME}`.
+
+          CLI archives were uploaded as the workflow artifact `tapython-tool-hub-cli`.
+          GitHub Releases are only updated for tag pushes matching `v*` or `cli-v*`, or for manual dispatch with `release_tag`.
+          EOF
+
       - name: Publish GitHub Release assets
-        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+        if: env.SHOULD_PUBLISH_RELEASE == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash

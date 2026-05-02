@@ -125,13 +125,13 @@ npm run build-cli
 npm run test -w @tapython-tool-hub/cli
 ```
 
-CLI release artifacts are produced by the `CLI CI/CD` GitHub Actions workflow. Pull requests build and test the CLI, while `master` pushes and tags run the release workflow. Tags such as `v1.0.0` or `cli-v1.0.0` publish downloadable CLI archives to GitHub Releases:
+CLI release artifacts are produced by the `CLI CI/CD` GitHub Actions workflow. Pull requests build and test the CLI, while `master` pushes and tags run the packaging workflow. A `master` push uploads the archives as the workflow artifact `tapython-tool-hub-cli` for inspection only. Tags such as `v1.0.0` or `cli-v1.0.0` publish downloadable CLI archives to GitHub Releases:
 
 - `tapython-tool-hub-cli-<version>.tar.gz`
 - `tapython-tool-hub-cli-<version>.zip`
 - `SHA256SUMS.txt`
 
-The workflow can also be run manually with a `release_tag` input when a release needs to be republished.
+The workflow can also be run manually with a `release_tag` input when a release needs to be republished. If a run finishes successfully but no files appear under GitHub Releases, check whether the run was started from `master` instead of a tag; in that case the files will be available under the workflow artifact rather than the Release page.
 
 ## 1.0.0 Release
 

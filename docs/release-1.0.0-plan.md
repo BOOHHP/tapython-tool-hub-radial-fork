@@ -82,6 +82,8 @@ git tag v1.0.0
 git push origin v1.0.0
 ```
 
+Non-tag `master` pushes still run `CLI CI/CD`, but they only upload the packaged CLI archives to the workflow artifact `tapython-tool-hub-cli`. They do not create or update a GitHub Release.
+
 Exit criteria:
 
 - `CLI CI/CD` workflow runs for the tag.
@@ -128,6 +130,8 @@ git push origin v1.0.0
 5. Wait for GitHub Actions to complete.
 
 6. Open the GitHub Release and verify downloadable assets and checksums.
+
+If the workflow was run from `master` instead of the release tag, verify the files under the workflow artifact instead; that run is not expected to update GitHub Releases.
 
 7. Edit the Release description with the 1.0.0 highlights from `CHANGELOG.md`.
 
