@@ -70,6 +70,11 @@ export function ToolHubPage() {
   const statuses = useMemo(() => getStatuses(tools), [tools]);
 
   const selectedTool = selectedSlug ? tools.find((tool) => tool.slug === selectedSlug) : undefined;
+  const goHome = () => {
+    setSelectedSlug(undefined);
+    setToolViewMode('detail');
+    setViewMode('tools');
+  };
 
   useEffect(() => {
     let active = true;
@@ -99,8 +104,22 @@ export function ToolHubPage() {
   return (
     <Layout className="app-shell">
       <Header className="app-header">
-        <Flex align="center" justify="space-between" gap={16} wrap="wrap">
-          <Flex align="center" gap={12} className="brand-lockup">
+        <Flex align="center" justify="space-between" gap={16} wrap="wrap" className="app-header-inner">
+          <Flex
+            align="center"
+            gap={12}
+            className="brand-lockup brand-lockup-interactive"
+            role="button"
+            tabIndex={0}
+            aria-label="返回工具库主页"
+            onClick={goHome}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                goHome();
+              }
+            }}
+          >
             <span className="brand-mark"><ApiOutlined /></span>
             <Space direction="vertical" size={0}>
               <Text className="eyebrow">TAPython Tool Hub</Text>
@@ -108,31 +127,13 @@ export function ToolHubPage() {
               <Text type="secondary" className="header-subtitle">面向 TAPython / Unreal Editor 的工具发布与安装审计</Text>
             </Space>
           </Flex>
-          <Input.Search
-            className="global-search"
-            placeholder="搜索工具、标签、作者或 Unreal API"
-            allowClear
-            value={query}
-            onChange={(event) => {
-              setQuery(event.target.value);
-              if (viewMode !== 'tools') setViewMode('tools');
-            }}
-          />
-          <Segmented
-            className="primary-nav"
-            value={viewMode === 'submit' ? 'submit' : 'tools'}
-            onChange={(value) => setViewMode(value as 'tools' | 'submit')}
-            options={[
-              { label: '工具库', value: 'tools', icon: <AppstoreOutlined /> },
-              { label: '投稿/发布', value: 'submit', icon: <UploadOutlined /> }
-            ]}
-          />
         </Flex>
       </Header>
       <Content className="app-content">
         {viewMode === 'tools' ? (
           <RegistryHero tools={tools} loading={loadingTools} onSubmit={() => setViewMode('submit')} />
         ) : null}
+        {viewMode === 'submit' ? <SubmitPageHeader onBack={goHome} /> : null}
         {viewMode === 'tools' ? <OverviewStats tools={tools} loading={loadingTools} /> : null}
         {toolError ? <Alert className="tool-load-alert" type="error" showIcon message="工具数据加载失败" description={toolError} /> : null}
         {viewMode === 'tools' && (
@@ -170,6 +171,19 @@ export function ToolHubPage() {
         {viewMode === 'submit' && <SubmissionWorkbench />}
       </Content>
     </Layout>
+  );
+}
+
+function SubmitPageHeader({ onBack }: { onBack: () => void }) {
+  return (
+    <section className="view-return-panel" aria-label="Submission page navigation">
+      <Button icon={<ArrowLeftOutlined />} onClick={onBack}>返回工具库</Button>
+      <div className="view-return-copy">
+        <Text className="eyebrow">Submission Console</Text>
+        <Title level={4}>提交或发布工具</Title>
+        <Text type="secondary">处理新工具入库、版本发布、资源校验和审核流转。</Text>
+      </div>
+    </section>
   );
 }
 

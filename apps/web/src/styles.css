@@ -59,6 +59,13 @@ body {
   line-height: 1.18;
 }
 
+.app-header-inner {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 !important;
+  align-items: center;
+}
+
 .eyebrow {
   color: var(--color-primary);
   font-size: 12px;
@@ -69,6 +76,28 @@ body {
 
 .brand-lockup {
   min-width: 0;
+}
+
+.brand-lockup-interactive {
+  width: fit-content;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.brand-lockup-interactive:focus-visible {
+  outline: 2px solid rgba(74, 168, 255, 0.72);
+  outline-offset: 6px;
+}
+
+.brand-lockup .ant-space {
+  min-width: 0;
+}
+
+.brand-lockup .ant-typography {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .brand-mark {
@@ -90,48 +119,34 @@ body {
   font-size: 12px;
 }
 
-.primary-nav .ant-segmented-item {
-  min-height: 34px;
-}
-
-.primary-nav.ant-segmented {
-  color: var(--color-muted);
-  background: #202026;
-}
-
-.primary-nav .ant-segmented-item-selected {
-  color: #ffffff;
-  background: #373742;
-}
-
-.global-search {
-  flex: 1 1 420px;
-  max-width: 760px;
-  min-width: 260px;
-}
-
-.global-search .ant-input-group-wrapper,
-.global-search .ant-input-wrapper,
-.global-search .ant-input-affix-wrapper,
-.global-search .ant-input,
-.global-search .ant-input-search-button {
-  min-height: 44px;
-}
-
-.global-search .ant-input-search-button {
-  color: #ffffff;
-  background: #303039;
-  border-color: var(--color-border);
-}
-
-.global-search .ant-input-search-button .anticon {
-  color: #dadae4;
-}
-
 .app-content {
   width: min(1440px, 100%);
   margin: 0 auto;
   padding: 28px 28px 48px;
+}
+
+.view-return-panel {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 18px;
+  padding: 16px 18px;
+  background: #17171d;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+.view-return-panel .ant-btn {
+  flex: 0 0 auto;
+}
+
+.view-return-copy {
+  min-width: 0;
+}
+
+.view-return-copy h4.ant-typography {
+  margin: 2px 0 4px;
+  color: #ffffff !important;
 }
 
 .registry-hero {
@@ -1307,6 +1322,11 @@ body {
 }
 
 @media (max-width: 920px) {
+  .app-header-inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px !important;
+  }
+
   .marketplace-layout {
     grid-template-columns: 1fr;
   }
@@ -1343,6 +1363,15 @@ body {
   .app-content {
     padding-left: 16px;
     padding-right: 16px;
+  }
+
+  .app-header-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .view-return-panel {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .stats-grid,
