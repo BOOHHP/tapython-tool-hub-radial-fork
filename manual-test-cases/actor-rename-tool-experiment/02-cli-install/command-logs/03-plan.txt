@@ -1,0 +1,22 @@
+Install Plan: Actor Rename Tool 1.2.0
+──────────────────────────────────────────────────
+
+Checks:
+  TAPython directory: ✓ found (/Users/radial/github/tapython-tool-hub/manual-test-cases/actor-rename-tool-experiment/02-cli-install/tmp-project/TA/TAPython)
+  MenuConfig writable: ✓
+
+Install target: /Users/radial/github/tapython-tool-hub/manual-test-cases/actor-rename-tool-experiment/02-cli-install/tmp-project/TA/TAPython/Python/ActorRenameTool
+
+Files (4):
+  + MenuConfig.snippet.json
+  + ActorRenameTool/ActorRenameTool.json
+  + ActorRenameTool/ActorRenameTool.py
+  + ActorRenameTool/__init__.py
+
+MenuConfig merge:
+  Target: /Users/radial/github/tapython-tool-hub/manual-test-cases/actor-rename-tool-experiment/02-cli-install/tmp-project/TA/TAPython/UI/MenuConfig.json
+  Mount point: OnToolBarChameleon
+  Items to add (1):
+    + Actor Rename Tool → ../Python/ActorRenameTool/ActorRenameTool.json
+
+Next: tapython-tool-hub install actor-rename-tool --hub http://127.0.0.1:8787 --project "manual-test-cases/actor-rename-tool-experiment/02-cli-install/tmp-project" --yes

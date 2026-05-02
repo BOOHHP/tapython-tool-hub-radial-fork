@@ -1,0 +1,8 @@
+Archive:  manual-test-cases/actor-rename-tool-experiment/03-manual-zip-install/zip-package/actor-rename-tool-1.2.0.zip
+ extracting: manual-test-cases/actor-rename-tool-experiment/03-manual-zip-install/extracted/ActorRenameTool/__init__.py  
+ extracting: manual-test-cases/actor-rename-tool-experiment/03-manual-zip-install/extracted/ActorRenameTool/ActorRenameTool.json  
+ extracting: manual-test-cases/actor-rename-tool-experiment/03-manual-zip-install/extracted/ActorRenameTool/ActorRenameTool.py  
+ extracting: manual-test-cases/actor-rename-tool-experiment/03-manual-zip-install/extracted/manifest.json  
+ extracting: manual-test-cases/actor-rename-tool-experiment/03-manual-zip-install/extracted/MenuConfig.snippet.json  
+ extracting: manual-test-cases/actor-rename-tool-experiment/03-manual-zip-install/extracted/README.md  
+ extracting: manual-test-cases/actor-rename-tool-experiment/03-manual-zip-install/extracted/tool.md  

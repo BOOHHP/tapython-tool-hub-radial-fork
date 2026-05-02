@@ -1,0 +1,4 @@
+Slug                       Name                       Version  Category       Risk  
+-------------------------  -------------------------  -------  -------------  ------
+actor-rename-tool          Actor Rename Tool          1.2.0    level-editing  medium
+test-selection-audit-tool  Test Selection Audit Tool  0.2.0    validation     low   

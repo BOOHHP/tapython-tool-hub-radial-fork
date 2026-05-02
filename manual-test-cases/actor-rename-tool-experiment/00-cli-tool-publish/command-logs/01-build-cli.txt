@@ -1,0 +1,12 @@
+
+> tapython-tool-hub@0.1.0 build-cli
+> npm run build -w @tapython-tool-hub/shared -w @tapython-tool-hub/cli
+
+
+> @tapython-tool-hub/shared@0.1.0 build
+> tsc -p tsconfig.json
+
+
+> @tapython-tool-hub/cli@0.1.0 build
+> tsc -p tsconfig.json
+

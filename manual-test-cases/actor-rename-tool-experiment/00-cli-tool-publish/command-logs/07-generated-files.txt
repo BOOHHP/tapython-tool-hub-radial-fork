@@ -1,0 +1,8 @@
+manual-test-cases/actor-rename-tool-experiment/00-cli-tool-publish/generated-data/ActorRenameTool/ActorRenameTool.json
+manual-test-cases/actor-rename-tool-experiment/00-cli-tool-publish/generated-data/ActorRenameTool/ActorRenameTool.py
+manual-test-cases/actor-rename-tool-experiment/00-cli-tool-publish/generated-data/ActorRenameTool/__init__.py
+manual-test-cases/actor-rename-tool-experiment/00-cli-tool-publish/generated-data/MenuConfig.snippet.json
+manual-test-cases/actor-rename-tool-experiment/00-cli-tool-publish/generated-data/README.md
+manual-test-cases/actor-rename-tool-experiment/00-cli-tool-publish/generated-data/actor-rename-tool-1.2.0.zip
+manual-test-cases/actor-rename-tool-experiment/00-cli-tool-publish/generated-data/manifest.json
+manual-test-cases/actor-rename-tool-experiment/00-cli-tool-publish/generated-data/tool.md

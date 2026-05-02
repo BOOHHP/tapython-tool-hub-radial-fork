@@ -1,0 +1,5 @@
+manual-test-cases/actor-rename-tool-experiment/03-manual-zip-install/tmp-project/TA/TAPython/Python/ActorRenameTool/ActorRenameTool/ActorRenameTool.json
+manual-test-cases/actor-rename-tool-experiment/03-manual-zip-install/tmp-project/TA/TAPython/Python/ActorRenameTool/ActorRenameTool/ActorRenameTool.py
+manual-test-cases/actor-rename-tool-experiment/03-manual-zip-install/tmp-project/TA/TAPython/Python/ActorRenameTool/ActorRenameTool/__init__.py
+manual-test-cases/actor-rename-tool-experiment/03-manual-zip-install/tmp-project/TA/TAPython/Python/ActorRenameTool/MenuConfig.snippet.json
+manual-test-cases/actor-rename-tool-experiment/03-manual-zip-install/tmp-project/TA/TAPython/UI/MenuConfig.json

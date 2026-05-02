@@ -1,0 +1,17 @@
+tapython-tool-hub 0.1.0
+
+Usage:
+  tapython-tool-hub --version
+  tapython-tool-hub hub ping --hub <url>
+  tapython-tool-hub search <query> --hub <url>
+  tapython-tool-hub show <slug> --hub <url>
+  tapython-tool-hub plan <slug> --hub <url> --project <path>
+  tapython-tool-hub download <slug> --hub <url> [--version <ver>] --output <dir>
+  tapython-tool-hub verify --manifest <path> --package <path>
+  tapython-tool-hub install <slug|url> --hub <url> --project <path> [--dry-run] [--yes]
+  tapython-tool-hub uninstall <slug> --project <path> [--yes]
+
+Global flags:
+  --json        Output structured JSON for Agent consumption
+  --version     Print version
+  --help        Show this help

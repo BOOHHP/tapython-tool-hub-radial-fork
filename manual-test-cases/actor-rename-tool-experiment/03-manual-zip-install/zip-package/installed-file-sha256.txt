@@ -1,0 +1,4 @@
+9cf40aa1a81c3b5389763bb096965fe3660c8f9c821be759d293a1fb4a173744  manual-test-cases/actor-rename-tool-experiment/03-manual-zip-install/tmp-project/TA/TAPython/Python/ActorRenameTool/MenuConfig.snippet.json
+cb494ae01d85c81f73e93bcd703a7af23cae5c55c5d5cc31d2bac5df3135528d  manual-test-cases/actor-rename-tool-experiment/03-manual-zip-install/tmp-project/TA/TAPython/Python/ActorRenameTool/ActorRenameTool/ActorRenameTool.json
+2b25cd17b441b338ec2bfc48085673fd568ca96d2fadaf6d4b719fd28e1b72a8  manual-test-cases/actor-rename-tool-experiment/03-manual-zip-install/tmp-project/TA/TAPython/Python/ActorRenameTool/ActorRenameTool/ActorRenameTool.py
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  manual-test-cases/actor-rename-tool-experiment/03-manual-zip-install/tmp-project/TA/TAPython/Python/ActorRenameTool/ActorRenameTool/__init__.py

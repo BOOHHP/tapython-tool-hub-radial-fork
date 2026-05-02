@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "tools": [
+    {
+      "slug": "actor-rename-tool",
+      "displayName": "Actor Rename Tool",
+      "version": "1.2.0",
+      "installedAt": "2026-05-02T03:42:37.521Z",
+      "installDir": "/Users/radial/github/tapython-tool-hub/manual-test-cases/actor-rename-tool-experiment/02-cli-install/tmp-project/TA/TAPython/Python/ActorRenameTool",
+      "files": [
+        {
+          "path": "MenuConfig.snippet.json",
+          "sha256": "9cf40aa1a81c3b5389763bb096965fe3660c8f9c821be759d293a1fb4a173744"
+        },
+        {
+          "path": "ActorRenameTool/ActorRenameTool.json",
+          "sha256": "cb494ae01d85c81f73e93bcd703a7af23cae5c55c5d5cc31d2bac5df3135528d"
+        },
+        {
+          "path": "ActorRenameTool/ActorRenameTool.py",
+          "sha256": "2b25cd17b441b338ec2bfc48085673fd568ca96d2fadaf6d4b719fd28e1b72a8"
+        },
+        {
+          "path": "ActorRenameTool/__init__.py",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "menuConfig": {
+        "target": "/Users/radial/github/tapython-tool-hub/manual-test-cases/actor-rename-tool-experiment/02-cli-install/tmp-project/TA/TAPython/UI/MenuConfig.json",
+        "mountPoint": "OnToolBarChameleon",
+        "itemsAdded": [
+          {
+            "name": "Actor Rename Tool",
+            "ChameleonTools": "../Python/ActorRenameTool/ActorRenameTool.json",
+            "ExtensionHookName": "OnToolBarChameleon"
+          }
+        ],
+        "backup": "/Users/radial/github/tapython-tool-hub/manual-test-cases/actor-rename-tool-experiment/02-cli-install/tmp-project/TA/TAPython/UI/MenuConfig.json.bak.1777693357520"
+      },
+      "hub": "http://127.0.0.1:8787"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+Install Plan: Actor Rename Tool 1.2.0
+──────────────────────────────────────────────────
+
+Checks:
+  TAPython directory: ✓
+  Package hash valid: ✓
+  MenuConfig writable: ✓
+
+Install target: /Users/radial/github/tapython-tool-hub/manual-test-cases/actor-rename-tool-experiment/02-cli-install/tmp-project/TA/TAPython/Python/ActorRenameTool
+
+Files (4):
+  + MenuConfig.snippet.json
+  + ActorRenameTool/ActorRenameTool.json
+  + ActorRenameTool/ActorRenameTool.py
+  + ActorRenameTool/__init__.py
+
+MenuConfig merge:
+  Mount point: OnToolBarChameleon
+  Items to add: 1
+
+✓ Installed Actor Rename Tool 1.2.0 to /Users/radial/github/tapython-tool-hub/manual-test-cases/actor-rename-tool-experiment/02-cli-install/tmp-project/TA/TAPython/Python/ActorRenameTool
+  Files written: 4
+  MenuConfig items added: 1
+
+Post-install steps:
+  1. Reload TAPython 或重启 UE 编辑器
+  2. 在 Chameleon 工具栏中确认工具入口可见

@@ -1,0 +1,5 @@
+manual-test-cases/actor-rename-tool-experiment/00-cli-tool-publish/source-data/ActorRenameTool.json
+manual-test-cases/actor-rename-tool-experiment/00-cli-tool-publish/source-data/ActorRenameTool.py
+manual-test-cases/actor-rename-tool-experiment/00-cli-tool-publish/source-data/MenuConfig.snippet.json
+manual-test-cases/actor-rename-tool-experiment/00-cli-tool-publish/source-data/__init__.py
+manual-test-cases/actor-rename-tool-experiment/00-cli-tool-publish/source-data/actor-rename-tool.md

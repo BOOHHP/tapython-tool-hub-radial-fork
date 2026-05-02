@@ -1,0 +1,8 @@
+✓ All files verified successfully.
+
+Files checked: 4
+
+  ✓ MenuConfig.snippet.json
+  ✓ ActorRenameTool/ActorRenameTool.json
+  ✓ ActorRenameTool/ActorRenameTool.py
+  ✓ ActorRenameTool/__init__.py

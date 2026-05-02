@@ -1,0 +1,12 @@
+Archive:  manual-test-cases/actor-rename-tool-experiment/03-manual-zip-install/zip-package/actor-rename-tool-1.2.0.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+        0  04-30-2026 00:00   ActorRenameTool/__init__.py
+     2629  04-30-2026 00:00   ActorRenameTool/ActorRenameTool.json
+     2656  04-30-2026 00:00   ActorRenameTool/ActorRenameTool.py
+     2203  04-30-2026 00:00   manifest.json
+      148  04-30-2026 00:00   MenuConfig.snippet.json
+     2767  04-30-2026 00:00   README.md
+     2766  04-30-2026 00:00   tool.md
+---------                     -------
+    13169                     7 files

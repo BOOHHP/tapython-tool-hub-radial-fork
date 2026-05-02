@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "ActorRenameTool",
+  "displayName": "Actor Rename Tool",
+  "version": "1.2.0",
+  "author": "WeiXuLu",
+  "description": "场景 Actor 批量重命名与 Tag 管理工具",
+  "category": "level-editing",
+  "tags": [
+    "actor",
+    "batch-rename",
+    "tag",
+    "chameleon",
+    "level-editing"
+  ],
+  "compatibility": {
+    "unrealEngine": [
+      "5.3",
+      "5.4",
+      "5.5"
+    ],
+    "tapython": [
+      "1.2+"
+    ],
+    "plugins": [
+      "TAPython"
+    ]
+  },
+  "dependencies": [],
+  "mountPoint": "OnToolBarChameleon",
+  "installPath": "<Project>/TA/TAPython/Python/ActorRenameTool/",
+  "entryJson": "ActorRenameTool/ActorRenameTool.json",
+  "riskLevel": "medium",
+  "files": [
+    {
+      "path": "MenuConfig.snippet.json",
+      "sha256": "9cf40aa1a81c3b5389763bb096965fe3660c8f9c821be759d293a1fb4a173744",
+      "size": 148
+    },
+    {
+      "path": "ActorRenameTool/ActorRenameTool.json",
+      "sha256": "cb494ae01d85c81f73e93bcd703a7af23cae5c55c5d5cc31d2bac5df3135528d",
+      "size": 2629
+    },
+    {
+      "path": "ActorRenameTool/ActorRenameTool.py",
+      "sha256": "2b25cd17b441b338ec2bfc48085673fd568ca96d2fadaf6d4b719fd28e1b72a8",
+      "size": 2656
+    },
+    {
+      "path": "ActorRenameTool/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    }
+  ],
+  "menuConfigMerge": {
+    "target": "<Project>/TA/TAPython/UI/MenuConfig.json",
+    "mountPoint": "OnToolBarChameleon",
+    "itemsToAdd": [
+      {
+        "name": "Actor Rename Tool",
+        "ChameleonTools": "../Python/ActorRenameTool/ActorRenameTool.json",
+        "ExtensionHookName": "OnToolBarChameleon"
+      }
+    ]
+  },
+  "preInstallChecks": [
+    "确认项目已安装 TAPython",
+    "确认 MenuConfig.json 可写",
+    "确认目标目录不存在同名未备份工具"
+  ],
+  "postInstallSteps": [
+    "Reload TAPython 或重启 UE 编辑器",
+    "在 Chameleon 工具栏中确认工具入口可见"
+  ],
+  "uninstallSteps": [
+    "删除 <Project>/TA/TAPython/Python/ActorRenameTool/",
+    "从 MenuConfig.json 移除对应 items 项"
+  ],
+  "createdAt": "2026-04-30",
+  "updatedAt": "2026-04-30"
+}

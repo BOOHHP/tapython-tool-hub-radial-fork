@@ -1,0 +1,98 @@
+{
+  "TabLabel": "Actor Rename Tool",
+  "InitTabSize": [520, 700],
+  "InitPyCmd": "import importlib; from ActorRenameTool import ActorRenameTool; importlib.reload(ActorRenameTool); ActorRenameTool.instance = ActorRenameTool.ActorRenameController(%JsonPath)",
+  "OnClosePyCmd": "from ActorRenameTool import ActorRenameTool; ActorRenameTool.instance = None",
+  "Root": {
+    "SVerticalBox": {
+      "Slots": [
+        {
+          "AutoHeight": true,
+          "STextBlock": {
+            "Text": "Actor Rename Tool"
+          }
+        },
+        {
+          "AutoHeight": true,
+          "SEditableTextBox": {
+            "Aka": "input_find",
+            "HintText": "查找字符串"
+          }
+        },
+        {
+          "AutoHeight": true,
+          "SEditableTextBox": {
+            "Aka": "input_replace",
+            "HintText": "替换字符串"
+          }
+        },
+        {
+          "AutoHeight": true,
+          "SCheckBox": {
+            "Aka": "chk_case_sensitive",
+            "IsChecked": true
+          }
+        },
+        {
+          "AutoHeight": true,
+          "SButton": {
+            "Aka": "btn_find_replace",
+            "Text": "执行查找替换",
+            "OnClick": "ActorRenameTool.instance.execute_find_replace()"
+          }
+        },
+        {
+          "AutoHeight": true,
+          "SEditableTextBox": {
+            "Aka": "input_base_name",
+            "HintText": "批量重命名基础名"
+          }
+        },
+        {
+          "AutoHeight": true,
+          "SEditableTextBox": {
+            "Aka": "input_start_index",
+            "Text": "1"
+          }
+        },
+        {
+          "AutoHeight": true,
+          "SEditableTextBox": {
+            "Aka": "input_padding",
+            "Text": "2"
+          }
+        },
+        {
+          "AutoHeight": true,
+          "SButton": {
+            "Aka": "btn_batch_rename",
+            "Text": "执行批量重命名",
+            "OnClick": "ActorRenameTool.instance.execute_batch_rename()"
+          }
+        },
+        {
+          "AutoHeight": true,
+          "SButton": {
+            "Aka": "btn_refresh",
+            "Text": "刷新选中列表",
+            "OnClick": "ActorRenameTool.instance.refresh_actor_list()"
+          }
+        },
+        {
+          "AutoHeight": true,
+          "SMultiLineEditableText": {
+            "Aka": "txt_actor_list",
+            "IsReadOnly": true
+          }
+        },
+        {
+          "AutoHeight": true,
+          "STextBlock": {
+            "Aka": "txt_status",
+            "Text": "就绪。请在场景中选中目标 Actor。"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,1 @@
+e5d531e07a00b5b6b1ed74fdbffd675d9998090aa8b2f1747d91db543648feb8  manual-test-cases/actor-rename-tool-experiment/03-manual-zip-install/zip-package/actor-rename-tool-1.2.0.zip

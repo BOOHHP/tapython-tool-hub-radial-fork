@@ -1,0 +1,45 @@
+
+> @tapython-tool-hub/cli@0.1.0 test
+> node --import tsx --test "src/__tests__/*.test.ts"
+
+▶ hash
+  ✔ sha256Buffer computes correct hash for empty buffer (0.3575ms)
+  ✔ sha256Buffer computes correct hash for known input (0.052ms)
+  ✔ verifySha256 returns true for matching hashes (0.0545ms)
+  ✔ verifySha256 returns false for non-matching hashes (0.051542ms)
+  ✔ verifySha256 returns false for different length strings (0.036167ms)
+✔ hash (0.930042ms)
+▶ ledger
+  ✔ readLedger returns empty ledger when file does not exist (3.623292ms)
+  ✔ writeLedger creates file and readLedger reads it back (3.213458ms)
+  ✔ addToolToLedger adds a new tool (0.96675ms)
+  ✔ addToolToLedger replaces existing tool by slug (0.713125ms)
+  ✔ findInstalledTool finds by slug (0.711708ms)
+  ✔ removeToolFromLedger removes and returns the tool (0.573417ms)
+✔ ledger (10.342417ms)
+▶ menuConfig
+  ✔ adds new items to empty config (0.303084ms)
+  ✔ skips duplicate items (0.06275ms)
+  ✔ handles missing mount point key (0.045625ms)
+  ✔ adds only non-duplicate items when mixed (0.043459ms)
+✔ menuConfig (0.841583ms)
+▶ paths
+  ✔ expandInstallPath replaces <Project> placeholder (0.289375ms)
+  ✔ resolveInside allows safe relative paths (0.06725ms)
+  ✔ resolveInside rejects path traversal (0.149125ms)
+  ✔ resolveInside rejects absolute path outside base (0.044167ms)
+  ✔ resolveInside allows the base directory itself (0.0375ms)
+✔ paths (0.9705ms)
+▶ zip
+  ✔ reads entries from a generated ZIP file (2.214792ms)
+  ✔ entry content matches manifest sha256 (1.079ms)
+  ✔ throws on invalid buffer (0.201916ms)
+✔ zip (3.859125ms)
+ℹ tests 23
+ℹ suites 5
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 92.199334

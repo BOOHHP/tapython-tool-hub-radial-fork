@@ -1,0 +1,5 @@
+{
+  "name": "Actor Rename Tool",
+  "ChameleonTools": "../Python/ActorRenameTool/ActorRenameTool.json",
+  "ExtensionHookName": "OnToolBarChameleon"
+}

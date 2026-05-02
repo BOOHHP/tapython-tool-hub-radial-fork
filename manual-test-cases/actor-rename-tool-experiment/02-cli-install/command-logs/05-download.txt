@@ -1,0 +1,4 @@
+Downloaded Actor Rename Tool 1.2.0 to /Users/radial/github/tapython-tool-hub/manual-test-cases/actor-rename-tool-experiment/02-cli-install/downloads
+
+  manifest.json (2.2 KB)
+  actor-rename-tool-1.2.0.zip (13.7 KB)

@@ -1,0 +1,50 @@
+{
+  "tool": {
+    "slug": "actor-rename-tool",
+    "displayName": "Actor Rename Tool",
+    "version": "1.2.0"
+  },
+  "downloads": {
+    "manifest": "/downloads/actor-rename-tool/1.2.0/manifest.json",
+    "package": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.zip",
+    "readme": "/downloads/actor-rename-tool/1.2.0/README.md",
+    "markdown": "/downloads/actor-rename-tool/1.2.0/tool.md"
+  },
+  "checks": {
+    "hashValid": true,
+    "pathExists": true,
+    "tapythonDirExists": true,
+    "menuConfigWritable": true
+  },
+  "filePlan": [
+    {
+      "path": "MenuConfig.snippet.json",
+      "action": "add"
+    },
+    {
+      "path": "ActorRenameTool/ActorRenameTool.json",
+      "action": "add"
+    },
+    {
+      "path": "ActorRenameTool/ActorRenameTool.py",
+      "action": "add"
+    },
+    {
+      "path": "ActorRenameTool/__init__.py",
+      "action": "add"
+    }
+  ],
+  "menuConfigDiff": {
+    "target": "/Users/radial/github/tapython-tool-hub/manual-test-cases/actor-rename-tool-experiment/02-cli-install/tmp-project/TA/TAPython/UI/MenuConfig.json",
+    "mountPoint": "OnToolBarChameleon",
+    "itemsToAdd": [
+      {
+        "name": "Actor Rename Tool",
+        "ChameleonTools": "../Python/ActorRenameTool/ActorRenameTool.json",
+        "ExtensionHookName": "OnToolBarChameleon"
+      }
+    ]
+  },
+  "warnings": [],
+  "nextCommand": "tapython-tool-hub install actor-rename-tool --hub http://127.0.0.1:8787 --project \"manual-test-cases/actor-rename-tool-experiment/02-cli-install/tmp-project\" --yes"
+}

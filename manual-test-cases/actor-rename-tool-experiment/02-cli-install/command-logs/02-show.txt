@@ -1,0 +1,31 @@
+Actor Rename Tool (actor-rename-tool)
+────────────────────────────────────────
+Version:      1.2.0
+Status:       approved
+Category:     level-editing
+Risk:         medium
+Author:       WeiXuLu (Technical Art)
+Install Path: <Project>/TA/TAPython/Python/ActorRenameTool/
+Mount Point:  OnToolBarChameleon
+Entry JSON:   ActorRenameTool/ActorRenameTool.json
+UE Versions:  5.3, 5.4, 5.5
+TAPython:     1.2+
+Tags:         actor, batch-rename, tag, chameleon, level-editing
+
+Description:  场景 Actor 批量重命名与 Tag 管理工具，支持查找替换、批量编号重命名、Tag 添加与清除。
+
+Features:
+  • 选中 Actor 名称查找替换
+  • 按基础名和编号批量重命名
+  • 添加名称同名 Tag
+  • 清除或批量添加编号 Tag
+  • 预览当前选中 Actor 和 Tags
+
+Downloads:
+  Manifest: http://127.0.0.1:8787/downloads/actor-rename-tool/1.2.0/manifest.json
+  Package:  http://127.0.0.1:8787/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.zip
+  SHA256:   e5d531e07a00b5b6b1ed74fdbffd675d9998090aa8b2f1747d91db543648feb8
+
+Versions (2):
+  1.2.0 (2026-04-30) - 补充 Tag 管理、选中 Actor 预览和更完整的状态反馈。
+  1.0.0 (2026-04-20) - 首版提供 Actor 查找替换和基础批量编号重命名。
