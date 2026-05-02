@@ -66,6 +66,7 @@ export async function run(ctx: CommandContext): Promise<void> {
       project: { type: 'string' },
       version: { type: 'string' },
       'dry-run': { type: 'boolean' },
+      report: { type: 'string' },
       yes: { type: 'boolean', short: 'y' },
       json: { type: 'boolean' },
       'allow-remote-package': { type: 'boolean' },
@@ -85,6 +86,7 @@ export async function run(ctx: CommandContext): Promise<void> {
   const json = ctx.json || Boolean(values.json);
   const allowRemote = Boolean(values['allow-remote-package']);
   const requestedVersion = values.version as string | undefined;
+  const reportPath = values.report as string | undefined;
 
   const isUrl = /^https?:\/\//.test(target);
   let hub = ((values.hub as string) ?? '').replace(/\/$/, '');
@@ -179,13 +181,18 @@ export async function run(ctx: CommandContext): Promise<void> {
     menuConfigDiff: { target: menuConfigPath, mountPoint: manifest.menuConfigMerge.mountPoint, itemsToAdd: menuDiff.itemsToAdd },
     warnings,
     nextCommand: `tapython-tool-hub install ${toolMeta.slug} --hub ${hub} --project "${projectRoot}" --yes`,
+    nextHumanStep: dryRun ? 'Save or review this dry-run plan; run the install command only after confirming file overwrites and MenuConfig changes.' : 'Confirm the prompt to write files, or rerun with --dry-run before changing the project.',
   };
 
   if (dryRun) {
+    if (reportPath) {
+      await writeReport(reportPath, plan);
+    }
     if (json) {
       output('json', '', plan);
     } else {
       printInstallPlan(plan, installDir);
+      if (reportPath) printHuman(`Report written: ${path.resolve(reportPath)}`);
     }
     return;
   }
@@ -300,6 +307,8 @@ function printInstallPlan(plan: InstallPlan, installDir: string): void {
     'MenuConfig merge:',
     `  Mount point: ${plan.menuConfigDiff.mountPoint}`,
     `  Items to add: ${(plan.menuConfigDiff.itemsToAdd as unknown[]).length}`,
+    '',
+    `Next: ${plan.nextHumanStep}`,
   ];
 
   if (plan.warnings.length > 0) {
@@ -307,6 +316,12 @@ function printInstallPlan(plan: InstallPlan, installDir: string): void {
   }
 
   printHuman(lines);
+}
+
+async function writeReport(reportPath: string, plan: InstallPlan): Promise<void> {
+  const absoluteReportPath = path.resolve(reportPath);
+  await fs.mkdir(path.dirname(absoluteReportPath), { recursive: true });
+  await fs.writeFile(absoluteReportPath, JSON.stringify(plan, null, 2) + '\n', 'utf8');
 }
 
 function buildWarnings(

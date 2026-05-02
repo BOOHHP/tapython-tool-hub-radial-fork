@@ -4,6 +4,7 @@ import path from 'node:path';
 import type { CommandContext } from '../lib/types.js';
 import { CliError } from '../lib/types.js';
 import { fetchJson, fetchBuffer, resolveUrl } from '../lib/http.js';
+import { sha256Buffer, verifySha256 } from '../lib/hash.js';
 import { output, printHuman } from '../lib/output.js';
 
 interface ToolDetailForDownload {
@@ -12,7 +13,7 @@ interface ToolDetailForDownload {
     displayName: string;
     versions: Array<{
       version: string;
-      downloads: { manifest: string; package: string; readme: string };
+      downloads: { manifest: string; package: string; readme: string; packageSha256?: string };
     }>;
   };
 }
@@ -60,8 +61,8 @@ export async function run(ctx: CommandContext): Promise<void> {
   const manifestPath = path.join(absOutput, 'manifest.json');
   await fs.writeFile(manifestPath, manifestBuffer);
 
-  const results: Array<{ file: string; size: number }> = [
-    { file: 'manifest.json', size: manifestBuffer.length },
+  const results: Array<{ file: string; path: string; size: number; sha256?: string; sha256Valid?: boolean }> = [
+    { file: 'manifest.json', path: manifestPath, size: manifestBuffer.length },
   ];
 
   if (version.downloads.package) {
@@ -70,7 +71,14 @@ export async function run(ctx: CommandContext): Promise<void> {
     const packageName = path.basename(version.downloads.package);
     const packagePath = path.join(absOutput, packageName);
     await fs.writeFile(packagePath, packageBuffer);
-    results.push({ file: packageName, size: packageBuffer.length });
+    const actualSha256 = sha256Buffer(packageBuffer);
+    results.push({
+      file: packageName,
+      path: packagePath,
+      size: packageBuffer.length,
+      sha256: actualSha256,
+      sha256Valid: version.downloads.packageSha256 ? verifySha256(actualSha256, version.downloads.packageSha256) : undefined,
+    });
   }
 
   if (json) {
@@ -81,7 +89,11 @@ export async function run(ctx: CommandContext): Promise<void> {
   printHuman([
     `Downloaded ${data.tool.displayName} ${version.version} to ${absOutput}`,
     '',
-    ...results.map(r => `  ${r.file} (${formatSize(r.size)})`),
+    ...results.map(r => `  ${r.file} (${formatSize(r.size)}) -> ${r.path}`),
+    '',
+    ...results.filter(r => r.sha256).map(r => `  sha256 ${r.file}: ${r.sha256} (${r.sha256Valid === undefined ? 'no expected hash' : r.sha256Valid ? 'verified' : 'mismatch'})`),
+    '',
+    'Next: use the ZIP path and manifest path above for audit, install, or offline transfer.',
   ]);
 }
 

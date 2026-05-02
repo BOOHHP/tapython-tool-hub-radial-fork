@@ -46,3 +46,7 @@ export function getApiUrl(path: string): string {
   }
   return `${apiBaseUrl}${path.startsWith('/') ? path : `/${path}`}`;
 }
+
+export function getApiBaseUrl(): string {
+  return apiBaseUrl;
+}

@@ -233,6 +233,24 @@ The SQL migration is idempotent. A dedicated migration runner is planned for Pha
 
 Submission and review routes are currently trusted-LAN oriented. Add authorization before exposing them outside a trusted network.
 
+## CLI Operator Commands
+
+Useful human/Agent workflows:
+
+```bash
+tapython-tool-hub doctor --hub http://127.0.0.1:8787 --project /path/to/UEProject
+tapython-tool-hub plan actor-rename-tool --hub http://127.0.0.1:8787 --project /path/to/UEProject
+tapython-tool-hub download actor-rename-tool --hub http://127.0.0.1:8787 --output ./audit-package
+tapython-tool-hub install actor-rename-tool --hub http://127.0.0.1:8787 --project /path/to/UEProject --dry-run --report install-plan.json
+tapython-tool-hub uninstall actor-rename-tool --project /path/to/UEProject
+```
+
+- `doctor` checks hub reachability, TAPython directory presence, MenuConfig writability, and CLI version.
+- `plan` prints the install target, file actions, MenuConfig merge, warnings, and the next human step.
+- `download` writes local manifest/ZIP files and reports the package sha256 verification result.
+- `install --dry-run --report <file>` saves the install plan as JSON for audit or AI review.
+- `uninstall` previews removed files, removed MenuConfig items, and the MenuConfig backup location before writing.
+
 ## CLI Safety Model
 
 The CLI enforces these safety invariants:

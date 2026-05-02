@@ -52,6 +52,7 @@ export async function run(ctx: CommandContext): Promise<void> {
       filesToRemove: filesToRemove.map(f => f.path),
       menuItemsToRemove,
       installDir: installed.installDir,
+      menuConfigBackup: installed.menuConfig.target ? `${installed.menuConfig.target}.bak.<timestamp>` : undefined,
     });
     return;
   }
@@ -68,6 +69,9 @@ export async function run(ctx: CommandContext): Promise<void> {
       '',
       `MenuConfig items to remove (${menuItemsToRemove.length}):`,
       ...menuItemsToRemove.map(item => `  - ${item.name} → ${item.ChameleonTools}`),
+      '',
+      `MenuConfig backup: ${installed.menuConfig.target}.bak.<timestamp>`,
+      ...(installed.files.some(file => file.backup) ? ['Existing install backups:', ...installed.files.filter(file => file.backup).map(file => `  - ${file.path}: ${file.backup}`)] : []),
     ]);
 
     if (!process.stdin.isTTY) {

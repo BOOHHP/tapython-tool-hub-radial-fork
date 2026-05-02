@@ -11,8 +11,8 @@ import { run as runDownload } from './commands/download.js';
 import { run as runVerify } from './commands/verify.js';
 import { run as runInstall } from './commands/install.js';
 import { run as runUninstall } from './commands/uninstall.js';
-
-const VERSION = '0.1.0';
+import { run as runDoctor } from './commands/doctor.js';
+import { VERSION } from './lib/version.js';
 
 const COMMANDS: Record<string, (ctx: CommandContext) => Promise<void>> = {
   search: runSearch,
@@ -22,6 +22,7 @@ const COMMANDS: Record<string, (ctx: CommandContext) => Promise<void>> = {
   verify: runVerify,
   install: runInstall,
   uninstall: runUninstall,
+  doctor: runDoctor,
 };
 
 async function main(): Promise<void> {
@@ -90,7 +91,8 @@ Usage:
   tapython-tool-hub plan <slug> --hub <url> --project <path>
   tapython-tool-hub download <slug> --hub <url> [--version <ver>] --output <dir>
   tapython-tool-hub verify --manifest <path> --package <path>
-  tapython-tool-hub install <slug|url> --hub <url> --project <path> [--dry-run] [--yes]
+  tapython-tool-hub doctor --hub <url> --project <path>
+  tapython-tool-hub install <slug|url> --hub <url> --project <path> [--dry-run] [--report <file>] [--yes]
   tapython-tool-hub uninstall <slug> --project <path> [--yes]
 
 Global flags:

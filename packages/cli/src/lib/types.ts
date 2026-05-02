@@ -35,4 +35,5 @@ export interface InstallPlan {
   menuConfigDiff: { target: string; mountPoint: string; itemsToAdd: unknown[] };
   warnings: string[];
   nextCommand: string;
+  nextHumanStep: string;
 }

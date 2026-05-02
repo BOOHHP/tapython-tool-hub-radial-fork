@@ -87,6 +87,7 @@ export async function run(ctx: CommandContext): Promise<void> {
     },
     warnings: buildWarnings(tapython.exists, menuConfigStatus, filePlan),
     nextCommand: `tapython-tool-hub install ${slug} --hub ${hub} --project "${projectRoot}" --yes`,
+    nextHumanStep: 'Review overwritten files and MenuConfig items; if the plan looks correct, run the install command.',
   };
 
   if (json) {
@@ -115,7 +116,7 @@ export async function run(ctx: CommandContext): Promise<void> {
     lines.push('', 'Warnings:', ...plan.warnings.map(w => `  ⚠ ${w}`));
   }
 
-  lines.push('', `Next: ${plan.nextCommand}`);
+  lines.push('', `Next: ${plan.nextHumanStep}`, `Command: ${plan.nextCommand}`);
   printHuman(lines);
 }
 

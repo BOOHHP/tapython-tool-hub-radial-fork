@@ -233,6 +233,24 @@ DATABASE_URL="postgres://localhost/tapython_tool_hub" npm run dev:api
 
 投稿和审核路由当前面向可信内网试用；如果要暴露到非可信网络，需要先补鉴权。
 
+## CLI 运维命令
+
+常用的人类/Agent 工作流：
+
+```bash
+tapython-tool-hub doctor --hub http://127.0.0.1:8787 --project /path/to/UEProject
+tapython-tool-hub plan actor-rename-tool --hub http://127.0.0.1:8787 --project /path/to/UEProject
+tapython-tool-hub download actor-rename-tool --hub http://127.0.0.1:8787 --output ./audit-package
+tapython-tool-hub install actor-rename-tool --hub http://127.0.0.1:8787 --project /path/to/UEProject --dry-run --report install-plan.json
+tapython-tool-hub uninstall actor-rename-tool --project /path/to/UEProject
+```
+
+- `doctor` 一次性检查 hub 连通性、TAPython 目录、MenuConfig 可写性和 CLI 版本。
+- `plan` 输出安装目标、文件动作、MenuConfig 合并、警告和下一步人工操作建议。
+- `download` 写出本地 manifest/ZIP，并报告 ZIP 包 sha256 校验结果。
+- `install --dry-run --report <file>` 将安装计划保存为 JSON，便于审计或交给 AI 复核。
+- `uninstall` 写入前预览将删除的文件、将移除的 MenuConfig 项和 MenuConfig 备份位置。
+
 ## CLI 安全模型
 
 CLI 执行以下安全不变量：

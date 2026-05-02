@@ -20,7 +20,9 @@ import {
   Badge,
   Button,
   Card,
+  Checkbox,
   Col,
+  Collapse,
   Descriptions,
   Divider,
   Empty,
@@ -36,7 +38,8 @@ import {
   Tabs,
   Tag,
   Timeline,
-  Typography
+  Typography,
+  message
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useEffect, useMemo, useState } from 'react';
@@ -45,13 +48,15 @@ import { SubmissionWorkbench } from '../features/submissions/SubmissionWorkbench
 import { buildFileDiff, buildManifestDiff } from '../features/tools/diff';
 import { riskColor, statusColor } from '../features/tools/display';
 import { useToolFilters } from '../hooks/useToolFilters';
-import { getApiUrl, getCategories, getRiskLevels, getStatuses, getTools } from '../services/toolRegistry';
+import { getApiBaseUrl, getApiUrl, getCategories, getRiskLevels, getStatuses, getTools } from '../services/toolRegistry';
 
 const { Header, Content } = Layout;
 const { Paragraph, Text, Title } = Typography;
 
 type ViewMode = 'tools' | 'tool' | 'submit';
 type ToolViewMode = 'detail' | 'compare';
+type InstallMode = 'ai' | 'cli' | 'zip';
+type CliPlatform = 'posix' | 'windows' | 'download';
 
 export function ToolHubPage() {
   const [viewMode, setViewMode] = useState<ViewMode>('tools');
@@ -105,7 +110,7 @@ export function ToolHubPage() {
             onChange={(value) => setViewMode(value as 'tools' | 'submit')}
             options={[
               { label: '工具库', value: 'tools', icon: <AppstoreOutlined /> },
-              { label: '投稿', value: 'submit', icon: <UploadOutlined /> }
+              { label: '投稿/发布', value: 'submit', icon: <UploadOutlined /> }
             ]}
           />
         </Flex>
@@ -443,10 +448,10 @@ function ToolOverview({ tool }: { tool: ToolRecord }) {
         <Descriptions.Item label="挂载点">{tool.mountPoint}</Descriptions.Item>
         <Descriptions.Item label="入口 JSON">{tool.entryJson}</Descriptions.Item>
         <Descriptions.Item label="源文档模式">{tool.sourceMode ?? 'json'}</Descriptions.Item>
-        <Descriptions.Item label="源文档" span={2}>
+        <Descriptions.Item label="源文档" span={{ xs: 1, md: 2 }}>
           {tool.sourceDocument}
         </Descriptions.Item>
-        <Descriptions.Item label="安装路径" span={2}>
+        <Descriptions.Item label="安装路径" span={{ xs: 1, md: 2 }}>
           {tool.installPath}
         </Descriptions.Item>
         <Descriptions.Item label="Unreal Engine">{tool.compatibility.unrealEngine.join(', ')}</Descriptions.Item>
@@ -466,20 +471,17 @@ function ToolOverview({ tool }: { tool: ToolRecord }) {
 }
 
 function InstallGuide({ tool }: { tool: ToolRecord }) {
+  const [messageApi, contextHolder] = message.useMessage();
+  const [installMode, setInstallMode] = useState<InstallMode>('ai');
+  const [cliPlatform, setCliPlatform] = useState<CliPlatform>('posix');
+  const [checkedSteps, setCheckedSteps] = useState<string[]>([]);
+  const [fallbackCopyText, setFallbackCopyText] = useState('');
   const latestVersion = tool.versions[0];
   const latestManifest = latestVersion.manifest;
   const packageUrl = latestVersion.downloads.package ? getApiUrl(latestVersion.downloads.package) : '';
   const packageSha256 = latestVersion.downloads.packageSha256 || '';
   const packageSize = latestVersion.downloads.packageSize || 0;
-
-  const platform = useMemo(() => {
-    const ua = navigator.userAgent.toLowerCase();
-    if (ua.includes('win')) return 'windows';
-    if (ua.includes('mac')) return 'macos';
-    return 'linux';
-  }, []);
-
-  const hubBaseUrl = window.location.origin;
+  const hubBaseUrl = getApiBaseUrl();
   const aiPrompt = `请帮我从 TAPython Tool Hub 安装工具：${tool.slug}。
 
 1. 先检查本机是否可用 tapython-tool-hub CLI：执行 tapython-tool-hub --version。
@@ -492,65 +494,126 @@ function InstallGuide({ tool }: { tool: ToolRecord }) {
 推荐命令：
 tapython-tool-hub install ${tool.slug} --hub ${hubBaseUrl} --project "<Project>" --dry-run`;
 
+  const cliDryRunCmd = `tapython-tool-hub install ${tool.slug} --hub ${hubBaseUrl} --project "<Project>" --dry-run`;
   const cliInstallCmd = `tapython-tool-hub install ${tool.slug} --hub ${hubBaseUrl} --project "<Project>"`;
+  const cliBootstrapCommands: Record<CliPlatform, string> = {
+    posix: `curl -fsSL ${hubBaseUrl}/install/cli.sh | bash -s -- --cli-only`,
+    windows: `irm ${hubBaseUrl}/install/cli.ps1 | iex`,
+    download: `${hubBaseUrl}/downloads/cli/latest`
+  };
+  const packageChecklist = [
+    { label: 'manifest', ok: Boolean(latestVersion.downloads.manifest) },
+    { label: 'README', ok: Boolean(latestVersion.downloads.readme) },
+    { label: 'tool.md', ok: Boolean(latestVersion.downloads.markdown) },
+    { label: 'MenuConfig', ok: latestManifest.menuConfigMerge.itemsToAdd.length > 0 },
+    { label: 'Python', ok: latestManifest.files.some((file) => file.path.toLowerCase().endsWith('.py')) },
+    { label: 'UI JSON', ok: latestManifest.files.some((file) => file.path.toLowerCase().endsWith('.json')) }
+  ];
+  const manualStepOptions = tool.summary.installSteps.map((step, index) => ({ label: step, value: `${index}` }));
 
-  const handleCopyPrompt = () => {
-    navigator.clipboard.writeText(aiPrompt);
+  const copyText = async (text: string, successMessage: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setFallbackCopyText('');
+      messageApi.success(successMessage);
+    } catch {
+      setFallbackCopyText(text);
+      messageApi.warning('剪贴板写入失败，请从下方文本框手动选择复制。');
+    }
   };
 
   return (
     <Card>
+      {contextHolder}
       <Alert
         type="warning"
         showIcon
-        message="安装前需要预览写入文件和 MenuConfig 合并项"
+        message="先预览，再安装"
         description="站点不直接写用户项目目录。手动安装或 Agent 安装都应先确认目标路径、同名工具和 MenuConfig diff。"
       />
       <Divider />
-      <div className="install-option-grid">
-        <div className="install-option">
+      <Segmented
+        block
+        className="install-mode-selector"
+        value={installMode}
+        onChange={(value) => setInstallMode(value as InstallMode)}
+        options={[
+          { label: 'AI 帮我安装', value: 'ai', icon: <RobotOutlined /> },
+          { label: '终端安装', value: 'cli', icon: <CodeOutlined /> },
+          { label: '下载 ZIP', value: 'zip', icon: <CloudDownloadOutlined /> }
+        ]}
+      />
+      <div className="install-option-grid install-option-grid-single">
+        {installMode === 'ai' ? (
+        <div className="install-option install-option-active">
           <Space align="start" size={12}>
             <span className="install-option-icon"><RobotOutlined /></span>
             <Space direction="vertical" size={8} className="full-width">
-              <Title level={5}>方式一：复制提示词给 AI 助手</Title>
+              <Title level={5}>我想让 AI 帮我安装</Title>
               <Paragraph type="secondary">
-                将以下提示词粘贴给任意 AI 助手（Copilot、Claude、Kimi、OpenClaw 等），
-                助手会自动检查 CLI、读取 API、校验文件并展示安装计划，待你确认后执行。
+                复制提示词后，AI 助手会使用 Hub API：<Text code>{hubBaseUrl}</Text>。
               </Paragraph>
               <pre className="code-block ai-prompt-block">{aiPrompt}</pre>
-              <Button type="primary" icon={<CopyOutlined />} onClick={handleCopyPrompt}>
+              <Button type="primary" icon={<CopyOutlined />} onClick={() => void copyText(aiPrompt, 'AI 安装提示词已复制')}>
                 复制 AI 安装提示词
               </Button>
+              <Collapse
+                ghost
+                items={[{
+                  key: 'ai-details',
+                  label: '查看完整步骤',
+                  children: <Timeline items={[
+                    { children: '检查 tapython-tool-hub CLI 是否可用。' },
+                    { children: '读取工具 API、manifest 和 ZIP 包。' },
+                    { children: '校验 sha256，并先输出 dry-run 安装计划。' },
+                    { children: '确认目标项目、写入文件和 MenuConfig diff 后再安装。' }
+                  ]} />
+                }]}
+              />
             </Space>
           </Space>
         </div>
-        <div className="install-option">
+        ) : null}
+        {installMode === 'cli' ? (
+        <div className="install-option install-option-active">
           <Space align="start" size={12}>
             <span className="install-option-icon"><CodeOutlined /></span>
             <Space direction="vertical" size={8} className="full-width">
-              <Title level={5}>方式二：终端 CLI 安装</Title>
+              <Title level={5}>终端安装，适合可运行命令的项目环境</Title>
               <Paragraph type="secondary">
-                CLI 默认先展示安装计划并要求确认；AI 助手或 CI 场景可使用 --dry-run 获取预览。
+                建议先复制 dry-run 命令预览安装计划，再执行安装命令。
               </Paragraph>
+              <Text strong>预览命令</Text>
+              <pre className="inline-code-block">{cliDryRunCmd}</pre>
+              <Button icon={<CopyOutlined />} onClick={() => void copyText(cliDryRunCmd, 'dry-run 命令已复制')}>复制预览命令</Button>
+              <Text strong>安装命令</Text>
               <pre className="inline-code-block">{cliInstallCmd}</pre>
-              <Paragraph type="secondary">
-                如果尚未安装 CLI，请先执行：
-              </Paragraph>
-              {platform === 'windows' ? (
-                <pre className="inline-code-block">{`irm ${hubBaseUrl}/install/cli.ps1 | iex`}</pre>
-              ) : (
-                <pre className="inline-code-block">{`curl -fsSL ${hubBaseUrl}/install/cli.sh | bash -s -- --cli-only`}</pre>
-              )}
+              <Button icon={<CopyOutlined />} onClick={() => void copyText(cliInstallCmd, '安装命令已复制')}>复制安装命令</Button>
+              <Divider className="compact-divider" />
+              <Text strong>如果尚未安装 CLI</Text>
+              <Segmented
+                value={cliPlatform}
+                onChange={(value) => setCliPlatform(value as CliPlatform)}
+                options={[
+                  { label: 'macOS/Linux', value: 'posix' },
+                  { label: 'Windows PowerShell', value: 'windows' },
+                  { label: '仅下载 CLI 包', value: 'download' }
+                ]}
+              />
+              <pre className="inline-code-block">{cliBootstrapCommands[cliPlatform]}</pre>
+              <Button icon={<CopyOutlined />} onClick={() => void copyText(cliBootstrapCommands[cliPlatform], 'CLI 获取命令已复制')}>复制 CLI 命令</Button>
             </Space>
           </Space>
         </div>
-        <div className="install-option">
+        ) : null}
+        {installMode === 'zip' ? (
+        <div className="install-option install-option-active">
           <Space align="start" size={12}>
             <span className="install-option-icon"><CloudDownloadOutlined /></span>
             <Space direction="vertical" size={8} className="full-width">
-              <Title level={5}>方式三：ZIP 包安装</Title>
+              <Title level={5}>下载 ZIP，适合离线或手动审计</Title>
               <Paragraph type="secondary">
-                完整包包含 manifest、README、tool.md 和工具核心资源，适合手动解压、离线分发或内网镜像。
+                下载后先核对 sha256，再按清单逐项确认文件和 MenuConfig 合并项。
               </Paragraph>
               {packageUrl ? (
                 <Space direction="vertical" size={4}>
@@ -559,9 +622,10 @@ tapython-tool-hub install ${tool.slug} --hub ${hubBaseUrl} --project "<Project>"
                   </Button>
                   {packageSha256 ? (
                     <Space direction="vertical" size={2}>
-                      <Text type="secondary" copyable={{ text: packageSha256 }}>
+                      <Text type="secondary">
                         sha256: {packageSha256.slice(0, 16)}…
                       </Text>
+                      <Button size="small" icon={<CopyOutlined />} onClick={() => void copyText(packageSha256, 'sha256 已复制')}>复制 sha256</Button>
                       {packageSize > 0 && (
                         <Text type="secondary">大小: {formatBytes(packageSize)}</Text>
                       )}
@@ -569,13 +633,27 @@ tapython-tool-hub install ${tool.slug} --hub ${hubBaseUrl} --project "<Project>"
                   ) : null}
                 </Space>
               ) : <Text type="secondary">当前版本暂无完整包。</Text>}
+              <div className="zip-checklist">
+                {packageChecklist.map((item) => (
+                  <Tag key={item.label} color={item.ok ? 'green' : 'default'}>{item.label}{item.ok ? ' 已包含' : ' 未发现'}</Tag>
+                ))}
+              </div>
             </Space>
           </Space>
         </div>
+        ) : null}
       </div>
+      {fallbackCopyText ? (
+        <Input.TextArea className="copy-fallback" rows={4} value={fallbackCopyText} readOnly />
+      ) : null}
       <Divider />
       <Title level={4}>手动安装步骤</Title>
-      <Timeline items={tool.summary.installSteps.map((step) => ({ children: step }))} />
+      <Checkbox.Group
+        className="manual-step-checklist"
+        value={checkedSteps}
+        options={manualStepOptions}
+        onChange={(values) => setCheckedSteps(values.map(String))}
+      />
       <Title level={4}>MenuConfig 合并项</Title>
       <pre className="code-block">{JSON.stringify(latestManifest.menuConfigMerge.itemsToAdd, null, 2)}</pre>
     </Card>
@@ -601,7 +679,7 @@ function ManifestPanel({ manifest }: { manifest: ToolManifest }) {
         <Descriptions bordered column={{ xs: 1, md: 2 }} size="small">
           <Descriptions.Item label="版本">{manifest.version}</Descriptions.Item>
           <Descriptions.Item label="风险">{manifest.riskLevel}</Descriptions.Item>
-          <Descriptions.Item label="安装路径" span={2}>
+          <Descriptions.Item label="安装路径" span={{ xs: 1, md: 2 }}>
             {manifest.installPath}
           </Descriptions.Item>
           <Descriptions.Item label="挂载点">{manifest.mountPoint}</Descriptions.Item>
