@@ -56,10 +56,10 @@ export function buildFileDiff(fromFiles: ToolFileManifest[], toFiles: ToolFileMa
 
 function stringifyDiffValue(value: unknown): string {
   if (Array.isArray(value)) {
-    return value.join(', ');
+    return value.length === 0 ? '[]' : JSON.stringify(value, null, 2);
   }
   if (value && typeof value === 'object') {
-    return JSON.stringify(value);
+    return JSON.stringify(value, null, 2);
   }
   return String(value ?? '');
 }

@@ -104,3 +104,13 @@ These routes are currently internal/trusted-LAN oriented. They need route tests 
 3. Move tool reads toward PostgreSQL-first with static JSON fallback.
 4. Add minimal authorization for review approval and publish actions.
 5. Split the frontend submission workbench into smaller feature components before adding more admin UI.
+
+## 2026-05-02 UI/UX Optimization Notes
+
+Core operations completed in this pass:
+
+1. Reworked the web app into a dark Unreal/Fab-style marketplace experience with a channel hero, global search, sidebar filters, shelf-like tool cards, and dark Ant Design component overrides.
+2. Clarified the tool catalog card flow: cards now focus on browsing and opening details, while manifest inspection and copying live in the detail Manifest panel.
+3. Improved detail and comparison views: Manifest file lists, full Manifest JSON, version comparison fields, file paths, and hashes now use wrapped monospace blocks/tables to avoid overflow.
+4. Polished submission/review UX: new-tool vs new-version modes stay distinct, validation details wrap cleanly, and review action buttons have reliable dark-theme hover, focus, and disabled states.
+5. Verified the pass with browser checks on the catalog, detail Manifest panel, version comparison, and submission review queue, plus TypeScript checks, production build, and whitespace validation.

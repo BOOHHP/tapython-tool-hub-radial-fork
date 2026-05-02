@@ -101,11 +101,26 @@ export function ToolHubPage() {
     <Layout className="app-shell">
       <Header className="app-header">
         <Flex align="center" justify="space-between" gap={16} wrap="wrap">
-          <Space direction="vertical" size={0}>
-            <Text className="eyebrow">TAPython Tool Hub</Text>
-            <Title level={3}>编辑器工具分享站</Title>
-          </Space>
+          <Flex align="center" gap={12} className="brand-lockup">
+            <span className="brand-mark"><ApiOutlined /></span>
+            <Space direction="vertical" size={0}>
+              <Text className="eyebrow">TAPython Tool Hub</Text>
+              <Title level={3}>Unreal 编辑器工具库</Title>
+              <Text type="secondary" className="header-subtitle">面向 TAPython / Unreal Editor 的工具发布与安装审计</Text>
+            </Space>
+          </Flex>
+          <Input.Search
+            className="global-search"
+            placeholder="搜索工具、标签、作者或 Unreal API"
+            allowClear
+            value={query}
+            onChange={(event) => {
+              setQuery(event.target.value);
+              if (viewMode !== 'tools') setViewMode('tools');
+            }}
+          />
           <Segmented
+            className="primary-nav"
             value={viewMode === 'submit' ? 'submit' : 'tools'}
             onChange={(value) => setViewMode(value as 'tools' | 'submit')}
             options={[
@@ -116,6 +131,9 @@ export function ToolHubPage() {
         </Flex>
       </Header>
       <Content className="app-content">
+        {viewMode === 'tools' ? (
+          <RegistryHero tools={tools} loading={loadingTools} onSubmit={() => setViewMode('submit')} />
+        ) : null}
         <OverviewStats tools={tools} loading={loadingTools} />
         {toolError ? <Alert className="tool-load-alert" type="error" showIcon message="工具数据加载失败" description={toolError} /> : null}
         {viewMode === 'tools' && (
@@ -153,6 +171,49 @@ export function ToolHubPage() {
         {viewMode === 'submit' && <SubmissionWorkbench />}
       </Content>
     </Layout>
+  );
+}
+
+function RegistryHero({ tools, loading, onSubmit }: { tools: ToolRecord[]; loading: boolean; onSubmit: () => void }) {
+  const approvedTools = tools.filter((tool) => tool.status === 'approved').length;
+  const pendingTools = tools.filter((tool) => tool.status === 'pending').length;
+
+  return (
+    <section className="registry-hero" aria-label="Tool registry overview">
+      <div className="registry-hero-copy">
+        <Text className="eyebrow">Unreal Engine Channel</Text>
+        <Title level={2}>即插即用的编辑器工具内容库</Title>
+        <Paragraph>
+          为 Unreal Editor 工作流收集、审核和分发 TAPython 工具；可先预览 Manifest、风险和安装计划，再选择 AI、CLI 或 ZIP 获取。
+        </Paragraph>
+        <div className="channel-proof-list">
+          <span><CheckCircleOutlined /> 审核通过后发布</span>
+          <span><CheckCircleOutlined /> 版本与文件 hash 可追溯</span>
+          <span><CheckCircleOutlined /> 可直接用于编辑器项目</span>
+        </div>
+        <div className="channel-tags" aria-label="Unreal tool tags">
+          {['EditorUtilities', 'Plugin', 'Python', 'MenuConfig', 'UMG', 'Level', 'Pipeline'].map((tag) => <Tag key={tag}>{tag}</Tag>)}
+        </div>
+        <Space wrap>
+          <Button type="primary" icon={<AppstoreOutlined />}>浏览工具库</Button>
+          <Button icon={<UploadOutlined />} onClick={onSubmit}>提交或发布工具</Button>
+        </Space>
+      </div>
+      <div className="registry-hero-panel" aria-label="Registry health summary">
+        <div>
+          <Text type="secondary">Approved</Text>
+          <Text strong>{loading ? '-' : approvedTools}</Text>
+        </div>
+        <div>
+          <Text type="secondary">Pending</Text>
+          <Text strong>{loading ? '-' : pendingTools}</Text>
+        </div>
+        <div>
+          <Text type="secondary">Install Modes</Text>
+          <Text strong>AI / CLI / ZIP</Text>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -211,89 +272,150 @@ function ToolCatalog({
   setStatus,
   onOpenTool
 }: ToolCatalogProps) {
-  return (
-    <Space direction="vertical" size={16} className="full-width">
-      <Card>
-        <Flex gap={12} wrap="wrap" align="center">
-          <Input.Search
-            className="search-input"
-            placeholder="搜索工具名、标签、作者、Unreal API 或控件 Aka"
-            allowClear
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-          />
-          <Select
-            className="filter-select"
-            allowClear
-            placeholder="分类"
-            value={category}
-            onChange={setCategory}
-            options={categories.map((value) => ({ value, label: value }))}
-          />
-          <Select
-            className="filter-select"
-            allowClear
-            placeholder="风险等级"
-            value={riskLevel}
-            onChange={setRiskLevel}
-            options={riskLevels.map((value) => ({ value, label: value }))}
-          />
-          <Select
-            className="filter-select"
-            allowClear
-            placeholder="审核状态"
-            value={status}
-            onChange={setStatus}
-            options={statuses.map((value) => ({ value, label: value }))}
-          />
-        </Flex>
-      </Card>
+  const categoryCounts = categories.map((item) => ({
+    category: item,
+    count: filteredTools.filter((tool) => tool.category === item).length
+  }));
 
-      {loading ? (
-        <Card loading />
-      ) : filteredTools.length === 0 ? (
-        <Card>
-          <Empty description="没有找到匹配工具" />
+  return (
+    <section className="marketplace-layout">
+      <aside className="channel-sidebar" aria-label="Tool categories">
+        <Title level={3}>Unreal Tools</Title>
+        <Text className="sidebar-section-label">产品类型</Text>
+        <button className={`sidebar-row${category ? '' : ' sidebar-row-active'}`} type="button" onClick={() => setCategory(undefined)}>
+          <span>所有工具</span>
+          <span>{filteredTools.length}</span>
+        </button>
+        {categoryCounts.map((item) => (
+          <button
+            className={`sidebar-row${category === item.category ? ' sidebar-row-active' : ''}`}
+            type="button"
+            key={item.category}
+            onClick={() => setCategory(item.category)}
+          >
+            <span>{item.category}</span>
+            <span>{item.count}</span>
+          </button>
+        ))}
+        <Divider />
+        <Text className="sidebar-section-label">安装方式</Text>
+        <div className="sidebar-chip-list">
+          <Tag>AI</Tag>
+          <Tag>CLI</Tag>
+          <Tag>ZIP</Tag>
+        </div>
+      </aside>
+
+      <Space direction="vertical" size={16} className="full-width shelf-content">
+        <Card className="catalog-toolbar">
+          <Flex justify="space-between" align="center" gap={12} wrap="wrap" className="catalog-toolbar-header">
+            <Space direction="vertical" size={0}>
+              <Title level={4}>精选 Unreal 编辑器工具</Title>
+              <Text type="secondary">按名称、分类、风险和审核状态快速定位可安装工具。</Text>
+            </Space>
+            <Tag>{filteredTools.length} 个结果</Tag>
+          </Flex>
+          <Flex gap={12} wrap="wrap" align="center">
+            <Input.Search
+              className="search-input"
+              placeholder="搜索工具名、标签、作者、Unreal API 或控件 Aka"
+              allowClear
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+            <Select
+              className="filter-select"
+              allowClear
+              placeholder="分类"
+              value={category}
+              onChange={setCategory}
+              options={categories.map((value) => ({ value, label: value }))}
+            />
+            <Select
+              className="filter-select"
+              allowClear
+              placeholder="风险等级"
+              value={riskLevel}
+              onChange={setRiskLevel}
+              options={riskLevels.map((value) => ({ value, label: value }))}
+            />
+            <Select
+              className="filter-select"
+              allowClear
+              placeholder="审核状态"
+              value={status}
+              onChange={setStatus}
+              options={statuses.map((value) => ({ value, label: value }))}
+            />
+          </Flex>
         </Card>
-      ) : (
-        <section className="tool-grid">
-          {filteredTools.map((tool) => (
-            <Card
-              key={tool.slug}
-              className="tool-card"
-              title={tool.displayName}
-              extra={<Tag color={statusColor[tool.status]}>{tool.status}</Tag>}
-              actions={[
-                <Button type="link" onClick={() => onOpenTool(tool)} key="detail">
-                  查看详情
-                </Button>,
-                <Button type="link" href={getApiUrl(tool.downloads.latestManifest)} target="_blank" key="manifest">
-                  manifest
-                </Button>
-              ]}
-            >
-              <Paragraph className="tool-description">{tool.description}</Paragraph>
-              <Space wrap size={[4, 8]}>
-                <Tag color="blue">{tool.category}</Tag>
-                <Tag color={riskColor[tool.riskLevel]}>风险 {tool.riskLevel}</Tag>
-                <Tag>{tool.versions[0]?.version}</Tag>
-              </Space>
-              <Divider />
-              <Space direction="vertical" size={8} className="full-width">
-                <Text type="secondary">作者：{tool.author}</Text>
-                <Text type="secondary">挂载点：{tool.mountPoint}</Text>
-                <Text type="secondary">UE：{tool.compatibility.unrealEngine.join(', ')}</Text>
-                <Flex gap={4} wrap="wrap">
-                  {tool.tags.map((tag) => (
-                    <Tag key={tag}>{tag}</Tag>
-                  ))}
-                </Flex>
-              </Space>
-            </Card>
-          ))}
-        </section>
-      )}
-    </Space>
+
+        {loading ? (
+          <Card loading />
+        ) : filteredTools.length === 0 ? (
+          <Card>
+            <Empty description="没有找到匹配工具" />
+          </Card>
+        ) : (
+          <section className="tool-grid">
+            {filteredTools.map((tool) => (
+              <Card
+                key={tool.slug}
+                className="tool-card"
+                title={(
+                  <Flex align="center" gap={10} className="tool-card-title">
+                    <span className="tool-card-mark">{tool.displayName.slice(0, 1).toUpperCase()}</span>
+                    <Space direction="vertical" size={0}>
+                      <Text strong>{tool.displayName}</Text>
+                      <Text type="secondary">{tool.author}</Text>
+                    </Space>
+                  </Flex>
+                )}
+                extra={<Tag color={statusColor[tool.status]}>{tool.status}</Tag>}
+              >
+                <Paragraph className="tool-description">{tool.description}</Paragraph>
+                <div className="tool-meta-grid">
+                  <div>
+                    <Text type="secondary">版本</Text>
+                    <Text strong>{tool.versions[0]?.version ?? '-'}</Text>
+                  </div>
+                  <div>
+                    <Text type="secondary">风险</Text>
+                    <Tag color={riskColor[tool.riskLevel]}>风险 {tool.riskLevel}</Tag>
+                  </div>
+                  <div>
+                    <Text type="secondary">挂载点</Text>
+                    <Text>{tool.mountPoint}</Text>
+                  </div>
+                  <div>
+                    <Text type="secondary">UE</Text>
+                    <Text>{tool.compatibility.unrealEngine.join(', ')}</Text>
+                  </div>
+                </div>
+                <Space wrap size={[4, 8]} className="tool-card-category-row">
+                  <Tag>{tool.category}</Tag>
+                  <Tag>{tool.ownerTeam}</Tag>
+                </Space>
+                <div className="tool-card-footer">
+                  <Space direction="vertical" size={6} className="tool-card-footer-meta">
+                    <Text type="secondary">{tool.slug}</Text>
+                    <Flex gap={4} wrap="wrap">
+                      {tool.tags.slice(0, 4).map((tag) => (
+                        <Tag key={tag}>{tag}</Tag>
+                      ))}
+                      {tool.tags.length > 4 ? <Tag>+{tool.tags.length - 4}</Tag> : null}
+                    </Flex>
+                  </Space>
+                  <Button type="primary" onClick={() => onOpenTool(tool)}>
+                    查看详情
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </section>
+        )}
+      </Space>
+    </section>
   );
 }
 
@@ -305,7 +427,7 @@ function ToolDetail({ tool, onBack, onCompare }: { tool: ToolRecord; onBack: () 
   return (
     <Space direction="vertical" size={18} className="full-width detail-page">
       <Flex className="detail-breadcrumb" align="center" gap={8} wrap="wrap">
-        <Button type="text" icon={<ArrowLeftOutlined />} onClick={onBack}>
+        <Button className="detail-back-button" icon={<ArrowLeftOutlined />} onClick={onBack}>
           返回
         </Button>
         <Text type="secondary">工具 /</Text>
@@ -667,14 +789,26 @@ function formatBytes(bytes: number): string {
 }
 
 function ManifestPanel({ manifest }: { manifest: ToolManifest }) {
+  const [messageApi, contextHolder] = message.useMessage();
+  const manifestText = JSON.stringify(manifest, null, 2);
   const fileColumns: ColumnsType<ToolFileManifest> = [
-    { title: '文件', dataIndex: 'path', key: 'path' },
-    { title: 'SHA256', dataIndex: 'sha256', key: 'sha256' },
-    { title: '大小', dataIndex: 'size', key: 'size', render: (value) => `${value} B` }
+    { title: '文件', dataIndex: 'path', key: 'path', render: (value: string) => <Text className="diff-inline-code">{value}</Text> },
+    { title: 'SHA256', dataIndex: 'sha256', key: 'sha256', render: renderHashValue },
+    { title: '大小', dataIndex: 'size', key: 'size', width: 120, render: (value) => `${value} B` }
   ];
+
+  const copyManifest = async () => {
+    try {
+      await navigator.clipboard.writeText(manifestText);
+      messageApi.success('Manifest 已复制');
+    } catch {
+      messageApi.warning('剪贴板写入失败，请从完整 Manifest 面板中手动选择复制。');
+    }
+  };
 
   return (
     <Space direction="vertical" size={16} className="full-width">
+      {contextHolder}
       <Card>
         <Descriptions bordered column={{ xs: 1, md: 2 }} size="small">
           <Descriptions.Item label="版本">{manifest.version}</Descriptions.Item>
@@ -687,10 +821,13 @@ function ManifestPanel({ manifest }: { manifest: ToolManifest }) {
         </Descriptions>
       </Card>
       <Card title="文件清单">
-        <Table rowKey="path" columns={fileColumns} dataSource={manifest.files} pagination={false} size="small" />
+        <Table className="diff-table manifest-file-table" rowKey="path" columns={fileColumns} dataSource={manifest.files} pagination={false} size="small" />
       </Card>
-      <Card title="完整 Manifest">
-        <pre className="code-block">{JSON.stringify(manifest, null, 2)}</pre>
+      <Card
+        title="完整 Manifest"
+        extra={<Button icon={<CopyOutlined />} onClick={() => void copyManifest()}>复制 Manifest</Button>}
+      >
+        <pre className="code-block">{manifestText}</pre>
       </Card>
     </Space>
   );
@@ -741,9 +878,9 @@ function CompareView({ tool, onBack }: { tool: ToolRecord; onBack: () => void })
   const fileRows = buildFileDiff(from.manifest.files, to.manifest.files);
 
   const fieldColumns: ColumnsType<ManifestDiffRow> = [
-    { title: '字段', dataIndex: 'label', key: 'label', width: 180 },
-    { title: `From ${from.version}`, dataIndex: 'fromValue', key: 'fromValue' },
-    { title: `To ${to.version}`, dataIndex: 'toValue', key: 'toValue' },
+    { title: '字段', dataIndex: 'label', key: 'label', width: 150, render: (value: string) => <Text strong>{value}</Text> },
+    { title: `From ${from.version}`, dataIndex: 'fromValue', key: 'fromValue', render: renderDiffValue },
+    { title: `To ${to.version}`, dataIndex: 'toValue', key: 'toValue', render: renderDiffValue },
     {
       title: '状态',
       dataIndex: 'changed',
@@ -754,7 +891,7 @@ function CompareView({ tool, onBack }: { tool: ToolRecord; onBack: () => void })
   ];
 
   const fileColumns: ColumnsType<FileDiffRow> = [
-    { title: '文件', dataIndex: 'path', key: 'path' },
+    { title: '文件', dataIndex: 'path', key: 'path', render: (value: string) => <Text className="diff-inline-code">{value}</Text> },
     {
       title: '状态',
       dataIndex: 'status',
@@ -762,8 +899,8 @@ function CompareView({ tool, onBack }: { tool: ToolRecord; onBack: () => void })
       width: 120,
       render: (value) => <Tag color={value === 'unchanged' ? 'default' : value === 'added' ? 'green' : value === 'removed' ? 'red' : 'orange'}>{value}</Tag>
     },
-    { title: 'From Hash', dataIndex: 'fromHash', key: 'fromHash' },
-    { title: 'To Hash', dataIndex: 'toHash', key: 'toHash' }
+    { title: 'From Hash', dataIndex: 'fromHash', key: 'fromHash', render: renderHashValue },
+    { title: 'To Hash', dataIndex: 'toHash', key: 'toHash', render: renderHashValue }
   ];
 
   return (
@@ -796,12 +933,20 @@ function CompareView({ tool, onBack }: { tool: ToolRecord; onBack: () => void })
         </Flex>
       </Card>
       <Card title="Manifest 字段差异">
-        <Table rowKey="key" columns={fieldColumns} dataSource={fieldRows} pagination={false} size="small" />
+        <Table className="diff-table manifest-diff-table" rowKey="key" columns={fieldColumns} dataSource={fieldRows} pagination={false} size="small" />
       </Card>
       <Card title="ZIP 包级文件差异">
-        <Table rowKey="path" columns={fileColumns} dataSource={fileRows} pagination={false} size="small" />
+        <Table className="diff-table file-diff-table" rowKey="path" columns={fileColumns} dataSource={fileRows} pagination={false} size="small" />
       </Card>
     </Space>
   );
+}
+
+function renderDiffValue(value: string) {
+  return <pre className="diff-value-block">{value || '-'}</pre>;
+}
+
+function renderHashValue(value?: string) {
+  return <Text className="diff-inline-code">{value || '-'}</Text>;
 }
 

@@ -130,9 +130,10 @@ export function SubmissionWorkbench() {
   return (
     <Space direction="vertical" size={16} className="full-width submission-workbench">
       {contextHolder}
-      <Card>
+      <Card className="release-desk-card">
         <Flex justify="space-between" align="flex-start" gap={16} wrap="wrap">
           <Space direction="vertical" size={8}>
+            <Text className="eyebrow">Release Desk</Text>
             <Title level={4}>投稿/发布工作台</Title>
             <Text type="secondary">提交新工具或发布新版本，校验通过后由审核队列发布兼容产物。</Text>
           </Space>
@@ -174,7 +175,7 @@ export function SubmissionWorkbench() {
       </Card>
 
       <section className="submission-grid">
-        <Card id="submission-form" title={modeCopy.title}>
+        <Card id="submission-form" className="release-form-card" title={modeCopy.title}>
           <Alert type={submissionMode === 'new-tool' ? 'info' : 'warning'} showIcon message={modeCopy.title} description={modeCopy.description} />
           <Divider className="compact-divider" />
           <Form form={form} layout="vertical" onFinish={submit} disabled={loading}>
@@ -223,6 +224,7 @@ export function SubmissionWorkbench() {
         </Card>
 
         <Card
+          className="review-queue-card"
           title="审核队列"
           extra={<Button icon={<ReloadOutlined />} onClick={refresh} loading={loading}>刷新</Button>}
         >
@@ -254,8 +256,9 @@ export function SubmissionWorkbench() {
                           {submission.validationReport.valid ? 'validation passed' : 'validation failed'}
                         </Tag>
                       </Space>
-                      <Space wrap>
+                      <Space wrap className="review-action-group">
                         <Button
+                          className="review-action-button review-action-approve"
                           icon={<CheckCircleOutlined />}
                           type="primary"
                           disabled={!submission.validationReport.valid || submission.status === 'approved'}
@@ -264,6 +267,7 @@ export function SubmissionWorkbench() {
                           通过并发布
                         </Button>
                         <Button
+                          className="review-action-button review-action-reject"
                           icon={<CloseCircleOutlined />}
                           danger
                           disabled={submission.status === 'rejected'}
@@ -284,11 +288,16 @@ export function SubmissionWorkbench() {
                           action={<Button size="small" icon={<CopyOutlined />} onClick={() => void copyValidationIssues(submission)}>复制详情</Button>}
                         />
                         <Collapse
+                          className="validation-detail-panel"
                           size="small"
                           items={submission.validationReport.issues.map((issue, index) => ({
                             key: `${index}`,
                             label: `${issue.level}${issue.path ? ` · ${issue.path}` : ''}`,
-                            children: <Paragraph copyable={{ text: `${issue.path ? `${issue.path}: ` : ''}${issue.message}` }}>{issue.message}</Paragraph>
+                            children: (
+                              <Paragraph className="validation-issue-message" copyable={{ text: `${issue.path ? `${issue.path}: ` : ''}${issue.message}` }}>
+                                {issue.message}
+                              </Paragraph>
+                            )
                           }))}
                         />
                       </Space>
