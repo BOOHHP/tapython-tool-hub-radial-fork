@@ -1,0 +1,147 @@
+name: CLI CI/CD
+
+on:
+  pull_request:
+    paths:
+      - 'packages/cli/**'
+      - 'packages/shared/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.base.json'
+      - '.github/workflows/cli-release.yml'
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*'
+      - 'cli-v*'
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag to publish, for example v1.0.0 or cli-v1.0.0'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cli-release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-cli:
+    name: Build CLI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build CLI
+        run: npm run build-cli
+
+      - name: Test CLI
+        run: npm run test -w @tapython-tool-hub/cli
+
+      - name: Prepare CLI release assets
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          version="$(node -p "require('./packages/cli/package.json').version")"
+          asset_name="tapython-tool-hub-cli-${version}"
+
+          rm -rf release-cli artifacts
+          mkdir -p "release-cli/${asset_name}" artifacts
+
+          cp -R packages/cli/dist "release-cli/${asset_name}/dist"
+          chmod +x "release-cli/${asset_name}/dist/index.js"
+
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const cliPackage = require('./packages/cli/package.json');
+          const releasePackage = {
+            name: cliPackage.name,
+            version: cliPackage.version,
+            type: cliPackage.type,
+            bin: cliPackage.bin,
+            exports: cliPackage.exports,
+            engines: {
+              node: '>=20'
+            }
+          };
+          fs.writeFileSync(
+            path.join('release-cli', `tapython-tool-hub-cli-${cliPackage.version}`, 'package.json'),
+            `${JSON.stringify(releasePackage, null, 2)}\n`
+          );
+          NODE
+
+          cat > "release-cli/${asset_name}/README.md" <<'EOF'
+          # TAPython Tool Hub CLI
+
+          This archive contains the built `tapython-tool-hub` CLI.
+
+          ## Run directly
+
+          ```bash
+          node dist/index.js --version
+          node dist/index.js search actor --hub https://<tool-hub-domain>
+          ```
+
+          ## Link locally
+
+          ```bash
+          npm link .
+          tapython-tool-hub --version
+          ```
+          EOF
+
+          tar -czf "artifacts/${asset_name}.tar.gz" -C release-cli "${asset_name}"
+          (cd release-cli && zip -qr "../artifacts/${asset_name}.zip" "${asset_name}")
+          sha256sum artifacts/* > artifacts/SHA256SUMS.txt
+
+      - name: Upload workflow artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: tapython-tool-hub-cli
+          path: artifacts/*
+          if-no-files-found: error
+
+      - name: Resolve release tag
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "RELEASE_TAG=${{ inputs.release_tag }}" >> "$GITHUB_ENV"
+          else
+            echo "RELEASE_TAG=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+          fi
+
+      - name: Publish GitHub Release assets
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" artifacts/* --clobber
+          else
+            gh release create "$RELEASE_TAG" artifacts/* \
+              --title "TAPython Tool Hub CLI ${RELEASE_TAG}" \
+              --target "$GITHUB_SHA" \
+              --generate-notes
+          fi

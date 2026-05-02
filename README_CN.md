@@ -125,6 +125,36 @@ npm run build-cli
 npm run test -w @tapython-tool-hub/cli
 ```
 
+CLI 发布产物由 `CLI CI/CD` GitHub Actions workflow 生成。Pull Request 会构建并测试 CLI，`master` 推送和 tag 推送会运行发布 workflow。推送 `v1.0.0` 或 `cli-v1.0.0` 这类 tag 时，workflow 会把 CLI 压缩包上传到 GitHub Releases：
+
+- `tapython-tool-hub-cli-<version>.tar.gz`
+- `tapython-tool-hub-cli-<version>.zip`
+- `SHA256SUMS.txt`
+
+也可以手动运行 workflow，并通过 `release_tag` 输入重新上传某个 Release 的产物。
+
+## 1.0.0 发布
+
+1.0.0 里程碑计划见 [docs/release-1.0.0-plan.md](docs/release-1.0.0-plan.md)，用户可见变更见 [CHANGELOG.md](CHANGELOG.md)。创建 release tag 前先运行本地发布门禁：
+
+```bash
+npm run build:api
+npm run build-cli
+npm run test -w @tapython-tool-hub/api
+npm run test -w @tapython-tool-hub/cli
+npm run build
+```
+
+通过后推送里程碑 tag：
+
+```bash
+git tag v1.0.0
+git push origin master
+git push origin v1.0.0
+```
+
+tag 会触发 CLI CI/CD workflow，并把可下载 CLI 产物和 `SHA256SUMS.txt` 上传到 GitHub Releases。
+
 ## 常用命令
 
 | 命令 | 用途 |

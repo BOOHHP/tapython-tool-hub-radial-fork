@@ -7,4 +7,5 @@ packages/*/dist/
 *.local
 public/downloads/
 apps/web/public/downloads/
+graphify-out/cache/
 .github/prompts/ui-ux-pro-max

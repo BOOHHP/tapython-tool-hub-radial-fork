@@ -125,6 +125,36 @@ npm run build-cli
 npm run test -w @tapython-tool-hub/cli
 ```
 
+CLI release artifacts are produced by the `CLI CI/CD` GitHub Actions workflow. Pull requests build and test the CLI, while `master` pushes and tags run the release workflow. Tags such as `v1.0.0` or `cli-v1.0.0` publish downloadable CLI archives to GitHub Releases:
+
+- `tapython-tool-hub-cli-<version>.tar.gz`
+- `tapython-tool-hub-cli-<version>.zip`
+- `SHA256SUMS.txt`
+
+The workflow can also be run manually with a `release_tag` input when a release needs to be republished.
+
+## 1.0.0 Release
+
+The 1.0.0 milestone is tracked in [docs/release-1.0.0-plan.md](docs/release-1.0.0-plan.md), with user-facing changes summarized in [CHANGELOG.md](CHANGELOG.md). Before creating the release tag, run the local release gate:
+
+```bash
+npm run build:api
+npm run build-cli
+npm run test -w @tapython-tool-hub/api
+npm run test -w @tapython-tool-hub/cli
+npm run build
+```
+
+Create the milestone release by pushing the tag:
+
+```bash
+git tag v1.0.0
+git push origin master
+git push origin v1.0.0
+```
+
+The tag triggers the CLI CI/CD workflow and uploads the downloadable CLI archives plus `SHA256SUMS.txt` to GitHub Releases.
+
 ## Common Commands
 
 | Command | Purpose |
