@@ -29,7 +29,7 @@ call npm run build:api
 if errorlevel 1 goto :fail
 
 echo [tapython-tool-hub] starting API window...
-start "tapython-tool-hub api" cmd /k "cd /d "%REPO_ROOT%" && set API_HOST=%API_HOST% && set API_PORT=%API_PORT% && npm run start -w @tapython-tool-hub/api"
+start "tapython-tool-hub api" cmd /k "cd /d "%REPO_ROOT%" && set "API_HOST=%API_HOST%" && set "API_PORT=%API_PORT%" && npm run start -w @tapython-tool-hub/api"
 
 echo [tapython-tool-hub] starting Web window...
 start "tapython-tool-hub web" cmd /k "cd /d "%REPO_ROOT%" && npm run preview -w @tapython-tool-hub/web -- --host 0.0.0.0 --port %WEB_PORT%"
