@@ -1,6 +1,6 @@
 import type { ToolRecord } from '@tapython-tool-hub/shared';
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8787';
+import { apiBaseUrl } from './apiBaseUrl';
 
 interface ToolIndexResponse {
   tools: Array<{ slug: string; apiUrl: string }>;

@@ -94,6 +94,12 @@ npm run dev:api
 npm run dev
 ```
 
+To expose the Vite dev server to other devices on your LAN, start the web app with an explicit host:
+
+```bash
+npm run dev -w @tapython-tool-hub/web -- --host 0.0.0.0
+```
+
 Default development URLs:
 
 ```text
@@ -101,7 +107,7 @@ API: http://127.0.0.1:8787
 Web: http://localhost:5174/ or the Vite-reported fallback port
 ```
 
-The web app uses `VITE_API_BASE_URL` when set, otherwise it defaults to `http://127.0.0.1:8787`.
+The web app uses `VITE_API_BASE_URL` when set. Without it, Vite dev/preview falls back to the current page hostname on port `8787`, and other deployments fall back to the current site origin.
 
 Production build:
 
@@ -365,6 +371,14 @@ npm run build:api
 npm run build
 npm run start:api
 ```
+
+On Windows you can launch a production-style build plus preview pair with `scripts\start-production.bat`:
+
+```bat
+scripts\start-production.bat 10.2.13.8 5174 8787
+```
+
+Arguments are `<public IP or hostname> <web port> <api port>`.
 
 Serve `dist/` with nginx or another static server and route API/download requests to `apps/api`, or configure `VITE_API_BASE_URL` to point at the API host.
 

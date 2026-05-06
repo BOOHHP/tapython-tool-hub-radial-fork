@@ -1,6 +1,6 @@
 import type { ReviewSubmissionRequest, SubmissionRecord, ToolSubmissionRequest } from '@tapython-tool-hub/shared';
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8787';
+import { apiBaseUrl } from './apiBaseUrl';
 
 export async function listSubmissions(): Promise<SubmissionRecord[]> {
   const response = await fetch(`${apiBaseUrl}/api/submissions`);

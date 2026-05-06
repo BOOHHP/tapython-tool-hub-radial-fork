@@ -94,6 +94,12 @@ npm run dev:api
 npm run dev
 ```
 
+如需让其他局域网设备直接访问开发中的前端，请显式暴露 Vite host：
+
+```bash
+npm run dev -w @tapython-tool-hub/web -- --host 0.0.0.0
+```
+
 默认开发地址：
 
 ```text
@@ -101,7 +107,7 @@ API: http://127.0.0.1:8787
 Web: http://localhost:5174/ 或 Vite 实际提示的备用端口
 ```
 
-前端读取 `VITE_API_BASE_URL`；未配置时默认使用 `http://127.0.0.1:8787`。
+前端读取 `VITE_API_BASE_URL`；未配置时，Vite dev/preview 默认回退到“当前页面主机名 + `:8787`”，其他部署默认回退到当前站点 origin。
 
 生产构建：
 
@@ -365,6 +371,14 @@ npm run build:api
 npm run build
 npm run start:api
 ```
+
+Windows 可直接使用 `scripts\start-production.bat` 启动一套生产构建和预览服务：
+
+```bat
+scripts\start-production.bat 10.2.13.8 5174 8787
+```
+
+参数依次为：`<对外访问 IP 或主机名> <Web 端口> <API 端口>`。
 
 将 `dist/` 交给 nginx 或其他静态服务器，并把 API/downloads 请求转发到 `apps/api`；也可以通过 `VITE_API_BASE_URL` 指向独立 API 主机。
 
