@@ -131,7 +131,12 @@ export function ToolHubPage() {
       </Header>
       <Content className="app-content">
         {viewMode === 'tools' ? (
-          <RegistryHero tools={tools} loading={loadingTools} onSubmit={() => setViewMode('submit')} />
+          <RegistryHero
+            tools={tools}
+            loading={loadingTools}
+            onBrowse={() => scrollToElement('tool-catalog')}
+            onSubmit={() => setViewMode('submit')}
+          />
         ) : null}
         {viewMode === 'submit' ? <SubmitPageHeader onBack={goHome} /> : null}
         {viewMode === 'tools' ? <OverviewStats tools={tools} loading={loadingTools} /> : null}
@@ -147,6 +152,7 @@ export function ToolHubPage() {
             categories={categories}
             riskLevels={riskLevels}
             statuses={statuses}
+            totalTools={tools}
             setQuery={setQuery}
             setCategory={setCategory}
             setRiskLevel={setRiskLevel}
@@ -174,6 +180,13 @@ export function ToolHubPage() {
   );
 }
 
+function scrollToElement(id: string) {
+  const element = document.getElementById(id);
+  if (!element) return;
+  const top = element.getBoundingClientRect().top + window.scrollY - 18;
+  window.scrollTo({ top, behavior: 'smooth' });
+}
+
 function SubmitPageHeader({ onBack }: { onBack: () => void }) {
   return (
     <section className="view-return-panel" aria-label="Submission page navigation">
@@ -187,7 +200,7 @@ function SubmitPageHeader({ onBack }: { onBack: () => void }) {
   );
 }
 
-function RegistryHero({ tools, loading, onSubmit }: { tools: ToolRecord[]; loading: boolean; onSubmit: () => void }) {
+function RegistryHero({ tools, loading, onBrowse, onSubmit }: { tools: ToolRecord[]; loading: boolean; onBrowse: () => void; onSubmit: () => void }) {
   const approvedTools = tools.filter((tool) => tool.status === 'approved').length;
   const pendingTools = tools.filter((tool) => tool.status === 'pending').length;
 
@@ -208,21 +221,21 @@ function RegistryHero({ tools, loading, onSubmit }: { tools: ToolRecord[]; loadi
           {['EditorUtilities', 'Plugin', 'Python', 'MenuConfig', 'UMG', 'Level', 'Pipeline'].map((tag) => <Tag key={tag}>{tag}</Tag>)}
         </div>
         <Space wrap>
-          <Button type="primary" icon={<AppstoreOutlined />}>浏览工具库</Button>
+          <Button type="primary" icon={<AppstoreOutlined />} onClick={onBrowse}>浏览工具库</Button>
           <Button icon={<UploadOutlined />} onClick={onSubmit}>提交或发布工具</Button>
         </Space>
       </div>
       <div className="registry-hero-panel" aria-label="Registry health summary">
         <div>
-          <Text type="secondary">Approved</Text>
+          <Text type="secondary">已发布</Text>
           <Text strong>{loading ? '-' : approvedTools}</Text>
         </div>
         <div>
-          <Text type="secondary">Pending</Text>
+          <Text type="secondary">待审核</Text>
           <Text strong>{loading ? '-' : pendingTools}</Text>
         </div>
         <div>
-          <Text type="secondary">Install Modes</Text>
+          <Text type="secondary">安装通道</Text>
           <Text strong>AI / CLI / ZIP</Text>
         </div>
       </div>
@@ -270,6 +283,7 @@ interface ToolCatalogProps {
   categories: string[];
   riskLevels: string[];
   statuses: string[];
+  totalTools: ToolRecord[];
   setQuery: (value: string) => void;
   setCategory: (value?: string) => void;
   setRiskLevel: (value?: string) => void;
@@ -287,25 +301,33 @@ function ToolCatalog({
   categories,
   riskLevels,
   statuses,
+  totalTools,
   setQuery,
   setCategory,
   setRiskLevel,
   setStatus,
   onOpenTool
 }: ToolCatalogProps) {
+  const activeFilterCount = [query.trim(), category, riskLevel, status].filter(Boolean).length;
   const categoryCounts = categories.map((item) => ({
     category: item,
-    count: filteredTools.filter((tool) => tool.category === item).length
+    count: totalTools.filter((tool) => tool.category === item).length
   }));
+  const resetFilters = () => {
+    setQuery('');
+    setCategory(undefined);
+    setRiskLevel(undefined);
+    setStatus(undefined);
+  };
 
   return (
-    <section className="marketplace-layout">
+    <section className="marketplace-layout" id="tool-catalog">
       <aside className="channel-sidebar" aria-label="Tool categories">
         <Title level={3}>Unreal Tools</Title>
         <Text className="sidebar-section-label">产品类型</Text>
         <button className={`sidebar-row${category ? '' : ' sidebar-row-active'}`} type="button" onClick={() => setCategory(undefined)}>
           <span>所有工具</span>
-          <span>{filteredTools.length}</span>
+          <span>{totalTools.length}</span>
         </button>
         {categoryCounts.map((item) => (
           <button
@@ -334,11 +356,15 @@ function ToolCatalog({
               <Title level={4}>精选 Unreal 编辑器工具</Title>
               <Text type="secondary">按名称、分类、风险和审核状态快速定位可安装工具。</Text>
             </Space>
-            <Tag>{filteredTools.length} 个结果</Tag>
+            <Space wrap>
+              {activeFilterCount > 0 ? <Button size="small" onClick={resetFilters}>清空筛选</Button> : null}
+              <Tag>{filteredTools.length} 个结果</Tag>
+            </Space>
           </Flex>
           <Flex gap={12} wrap="wrap" align="center">
             <Input.Search
               className="search-input"
+              aria-label="搜索工具"
               placeholder="搜索工具名、标签、作者、Unreal API 或控件 Aka"
               allowClear
               value={query}

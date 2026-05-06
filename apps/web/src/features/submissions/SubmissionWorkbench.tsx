@@ -124,7 +124,11 @@ export function SubmissionWorkbench() {
     if (!currentNotes || generatedNotes.includes(currentNotes)) {
       form.setFieldValue('notes', submissionModeCopy[mode].noteTemplate);
     }
-    document.getElementById('submission-form')?.scrollIntoView({ behavior: 'smooth' });
+    const formElement = document.getElementById('submission-form');
+    if (formElement) {
+      const top = formElement.getBoundingClientRect().top + window.scrollY - 18;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
   };
 
   const importMarkdownFile = async (file: File) => {

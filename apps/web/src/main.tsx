@@ -15,7 +15,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           colorPrimary: '#2563eb',
           borderRadius: 6,
           fontFamily:
-            '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+            '"Segoe UI", "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif'
         }
       }}
     >
