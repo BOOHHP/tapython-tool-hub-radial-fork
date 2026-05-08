@@ -64,6 +64,22 @@ export class FileSubmissionRepository implements SubmissionRepository {
     return next;
   }
 
+  async delete(id: string): Promise<boolean> {
+    if (!idPattern.test(id)) {
+      return false;
+    }
+
+    try {
+      await fs.rm(this.getPath(id));
+      return true;
+    } catch (error) {
+      if (isNotFoundError(error)) {
+        return false;
+      }
+      throw error;
+    }
+  }
+
   private async read(filePath: string): Promise<SubmissionRecord> {
     return submissionRecordSchema.parse(JSON.parse(await fs.readFile(filePath, 'utf8')));
   }

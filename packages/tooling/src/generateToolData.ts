@@ -122,8 +122,10 @@ async function buildToolFromMarkdown(data: ToolData, markdown: string, sourcePat
   const assetFiles = await extractCodeAssets(markdown, path.dirname(sourcePath));
   const codeAssets = assetFiles.map(stripAssetContent);
   const latestManifest = buildManifest(data, version, codeAssets, data.updatedAt ?? data.releasedAt);
-  const previousVersions = (data.previousVersions ?? []).map((previous: ToolData) => ({
-    version: previous.version,
+  const previousVersions = (data.previousVersions ?? [])
+    .filter((previous: ToolData) => previous.version !== version)
+    .map((previous: ToolData) => ({
+      version: previous.version,
     releasedAt: previous.releasedAt,
     author: previous.author ?? data.author,
     changeSummary: previous.changeSummary,
@@ -137,11 +139,11 @@ async function buildToolFromMarkdown(data: ToolData, markdown: string, sourcePat
         tags: previous.manifestOverrides?.tags ?? data.tags,
         files: previous.files ?? data.files
       },
-      previous.version,
-      previous.files,
-      previous.releasedAt
-    )
-  }));
+        previous.version,
+        previous.files,
+        previous.releasedAt
+      )
+    }));
 
   return {
     slug,

@@ -5,4 +5,5 @@ export interface SubmissionRepository {
   get(id: string): Promise<SubmissionRecord | undefined>;
   create(request: ToolSubmissionRequest, validationReport: ValidationReport): Promise<SubmissionRecord>;
   save(submission: SubmissionRecord): Promise<SubmissionRecord>;
+  delete(id: string): Promise<boolean>;
 }

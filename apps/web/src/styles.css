@@ -279,6 +279,18 @@ li,
   width: 100%;
 }
 
+.admin-console .ant-card {
+  border-color: rgba(88, 166, 255, 0.14);
+}
+
+.admin-reviewer-input {
+  max-width: 220px;
+}
+
+.admin-filter-select {
+  min-width: 150px;
+}
+
 .stats-grid {
   display: flex;
   flex-wrap: wrap;

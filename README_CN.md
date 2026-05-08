@@ -265,9 +265,12 @@ DATABASE_URL="postgres://localhost/tapython_tool_hub" npm run dev:api
 | `GET` | `/api/submissions` | 投稿列表。 |
 | `POST` | `/api/submissions` | 创建并校验 Markdown-first 投稿。 |
 | `GET` | `/api/submissions/<id>` | 查看单个投稿。 |
-| `POST` | `/api/submissions/<id>/review` | 审核通过、拒绝或要求修改。 |
+| `GET` | `/api/admin/submissions` | 后台管理投稿列表。 |
+| `POST` | `/api/admin/submissions/<id>/review` | 后台审核通过、拒绝或要求修改。 |
+| `DELETE` | `/api/admin/submissions/<id>` | 后台删除单个投稿记录。 |
+| `PATCH` | `/api/admin/tools/<slug>` | 后台修改已发布工具状态和可编辑信息。 |
 
-投稿和审核路由当前面向可信内网试用；如果要暴露到非可信网络，需要先补鉴权。
+投稿路由面向投稿用户展示状态；审核与发布能力已移动到 `/api/admin/*`。如果要暴露到非可信网络，需要先给后台路由补鉴权。
 
 ## CLI 运维命令
 

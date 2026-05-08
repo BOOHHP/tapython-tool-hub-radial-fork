@@ -1,6 +1,5 @@
 import {
   CheckCircleOutlined,
-  CloseCircleOutlined,
   CopyOutlined,
   InboxOutlined,
   ReloadOutlined,
@@ -9,7 +8,7 @@ import {
 import { Alert, Button, Card, Collapse, Divider, Empty, Flex, Form, Input, List, Segmented, Space, Tag, Timeline, Typography, Upload, message } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import type { SubmissionAssetPayload, SubmissionRecord, ToolSubmissionRequest } from '@tapython-tool-hub/shared';
-import { createSubmission, listSubmissions, reviewSubmission } from '../../services/submissionWorkflow';
+import { createSubmission, listSubmissions } from '../../services/submissionWorkflow';
 import { statusColor } from '../tools/display';
 
 const { Paragraph, Text, Title } = Typography;
@@ -54,7 +53,6 @@ export function SubmissionWorkbench() {
   const [assets, setAssets] = useState<SubmissionAssetPayload[]>([]);
   const [submissions, setSubmissions] = useState<SubmissionRecord[]>([]);
   const [loading, setLoading] = useState(false);
-  const [reviewer, setReviewer] = useState('TA Reviewer');
   const [filter, setFilter] = useState<SubmissionFilter>('all');
   const [submissionMode, setSubmissionMode] = useState<SubmissionMode>('new-tool');
   const modeCopy = submissionModeCopy[submissionMode];
@@ -90,19 +88,6 @@ export function SubmissionWorkbench() {
       messageApi.success(submission.validationReport.valid ? '投稿已进入待审核队列' : '投稿已保存为草稿，校验未通过');
     } catch (error) {
       messageApi.error(getSubmissionErrorMessage(error));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const review = async (submission: SubmissionRecord, decision: 'approved' | 'rejected' | 'changes_requested') => {
-    setLoading(true);
-    try {
-      const updated = await reviewSubmission(submission.id, { reviewer, decision });
-      setSubmissions((current) => current.map((item) => item.id === updated.id ? updated : item));
-      messageApi.success(decision === 'approved' ? '已审核通过并发布兼容产物' : '审核状态已更新');
-    } catch (error) {
-      messageApi.error(error instanceof Error ? error.message : String(error));
     } finally {
       setLoading(false);
     }
@@ -252,11 +237,10 @@ export function SubmissionWorkbench() {
 
         <Card
           className="review-queue-card"
-          title="审核队列"
+          title="我的投稿状态"
           extra={<Button icon={<ReloadOutlined />} onClick={refresh} loading={loading}>刷新</Button>}
         >
           <Space direction="vertical" size={12} className="full-width">
-            <Input value={reviewer} onChange={(event) => setReviewer(event.target.value)} placeholder="审核人" />
             <Segmented
               value={filter}
               onChange={(value) => setFilter(value as SubmissionFilter)}
@@ -282,26 +266,6 @@ export function SubmissionWorkbench() {
                         <Tag color={submission.validationReport.valid ? 'green' : 'red'}>
                           {submission.validationReport.valid ? 'validation passed' : 'validation failed'}
                         </Tag>
-                      </Space>
-                      <Space wrap className="review-action-group">
-                        <Button
-                          className="review-action-button review-action-approve"
-                          icon={<CheckCircleOutlined />}
-                          type="primary"
-                          disabled={!submission.validationReport.valid || submission.status === 'approved'}
-                          onClick={() => review(submission, 'approved')}
-                        >
-                          通过并发布
-                        </Button>
-                        <Button
-                          className="review-action-button review-action-reject"
-                          icon={<CloseCircleOutlined />}
-                          danger
-                          disabled={submission.status === 'rejected'}
-                          onClick={() => review(submission, 'rejected')}
-                        >
-                          拒绝
-                        </Button>
                       </Space>
                     </Flex>
                     <Paragraph type="secondary">提交人：{submission.submitter} · {new Date(submission.updatedAt).toLocaleString()}</Paragraph>

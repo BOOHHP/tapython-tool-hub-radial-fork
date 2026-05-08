@@ -11,6 +11,7 @@ import {
   FileSearchOutlined,
   RobotOutlined,
   SafetyCertificateOutlined,
+  SettingOutlined,
   StarOutlined,
   UploadOutlined
 } from '@ant-design/icons';
@@ -43,6 +44,7 @@ import {
 import type { ColumnsType } from 'antd/es/table';
 import { useEffect, useMemo, useState } from 'react';
 import type { FileDiffRow, ManifestDiffRow, ToolFileManifest, ToolManifest, ToolRecord, ToolVersion } from '@tapython-tool-hub/shared';
+import { AdminConsole } from '../features/admin/AdminConsole';
 import { SubmissionWorkbench } from '../features/submissions/SubmissionWorkbench';
 import { buildFileDiff, buildManifestDiff } from '../features/tools/diff';
 import { riskColor, statusColor } from '../features/tools/display';
@@ -52,7 +54,7 @@ import { getApiBaseUrl, getApiUrl, getCategories, getRiskLevels, getStatuses, ge
 const { Header, Content } = Layout;
 const { Paragraph, Text, Title } = Typography;
 
-type ViewMode = 'tools' | 'tool' | 'submit';
+type ViewMode = 'tools' | 'tool' | 'submit' | 'admin';
 type ToolViewMode = 'detail' | 'compare';
 type InstallMode = 'ai' | 'cli' | 'zip';
 type CliPlatform = 'posix' | 'windows' | 'download';
@@ -76,29 +78,24 @@ export function ToolHubPage() {
     setViewMode('tools');
   };
 
-  useEffect(() => {
-    let active = true;
+  const refreshTools = () => {
     setLoadingTools(true);
     getTools()
       .then((loadedTools) => {
-        if (active) {
-          setTools(loadedTools);
-          setToolError(undefined);
-        }
+        setTools(loadedTools);
+        setToolError(undefined);
       })
       .catch((error) => {
-        if (active) {
-          setToolError(error instanceof Error ? error.message : String(error));
-        }
+        setToolError(error instanceof Error ? error.message : String(error));
       })
       .finally(() => {
-        if (active) {
-          setLoadingTools(false);
-        }
+        setLoadingTools(false);
       });
-    return () => {
-      active = false;
-    };
+  };
+
+  useEffect(() => {
+    refreshTools();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -136,9 +133,11 @@ export function ToolHubPage() {
             loading={loadingTools}
             onBrowse={() => scrollToElement('tool-catalog')}
             onSubmit={() => setViewMode('submit')}
+            onAdmin={() => setViewMode('admin')}
           />
         ) : null}
         {viewMode === 'submit' ? <SubmitPageHeader onBack={goHome} /> : null}
+        {viewMode === 'admin' ? <AdminPageHeader onBack={goHome} /> : null}
         {viewMode === 'tools' ? <OverviewStats tools={tools} loading={loadingTools} /> : null}
         {toolError ? <Alert className="tool-load-alert" type="error" showIcon message="工具数据加载失败" description={toolError} /> : null}
         {viewMode === 'tools' && (
@@ -175,6 +174,7 @@ export function ToolHubPage() {
           <CompareView tool={selectedTool} onBack={() => setToolViewMode('detail')} />
         )}
         {viewMode === 'submit' && <SubmissionWorkbench />}
+        {viewMode === 'admin' && <AdminConsole tools={tools} loadingTools={loadingTools} onToolsChanged={refreshTools} />}
       </Content>
     </Layout>
   );
@@ -200,7 +200,20 @@ function SubmitPageHeader({ onBack }: { onBack: () => void }) {
   );
 }
 
-function RegistryHero({ tools, loading, onBrowse, onSubmit }: { tools: ToolRecord[]; loading: boolean; onBrowse: () => void; onSubmit: () => void }) {
+function AdminPageHeader({ onBack }: { onBack: () => void }) {
+  return (
+    <section className="view-return-panel" aria-label="Admin page navigation">
+      <Button icon={<ArrowLeftOutlined />} onClick={onBack}>返回工具库</Button>
+      <div className="view-return-copy">
+        <Text className="eyebrow">Admin Console</Text>
+        <Title level={4}>后台管理</Title>
+        <Text type="secondary">实时读取投稿与发布工具数据，处理审核、删除和发布信息维护。</Text>
+      </div>
+    </section>
+  );
+}
+
+function RegistryHero({ tools, loading, onBrowse, onSubmit, onAdmin }: { tools: ToolRecord[]; loading: boolean; onBrowse: () => void; onSubmit: () => void; onAdmin: () => void }) {
   const approvedTools = tools.filter((tool) => tool.status === 'approved').length;
   const pendingTools = tools.filter((tool) => tool.status === 'pending').length;
 
@@ -223,6 +236,7 @@ function RegistryHero({ tools, loading, onBrowse, onSubmit }: { tools: ToolRecor
         <Space wrap>
           <Button type="primary" icon={<AppstoreOutlined />} onClick={onBrowse}>浏览工具库</Button>
           <Button icon={<UploadOutlined />} onClick={onSubmit}>提交或发布工具</Button>
+          <Button icon={<SettingOutlined />} onClick={onAdmin}>后台管理</Button>
         </Space>
       </div>
       <div className="registry-hero-panel" aria-label="Registry health summary">

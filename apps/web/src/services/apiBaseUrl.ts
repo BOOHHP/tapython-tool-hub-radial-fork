@@ -7,7 +7,7 @@ function resolveDefaultApiBaseUrl(): string {
 
   const { origin, port, protocol, hostname } = window.location;
 
-  if (devLikePorts.has(port)) {
+  if (import.meta.env.DEV || devLikePorts.has(port)) {
     return `${protocol}//${hostname}:8787`;
   }
 
