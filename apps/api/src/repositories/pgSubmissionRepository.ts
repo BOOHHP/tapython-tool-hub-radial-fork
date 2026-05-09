@@ -114,6 +114,11 @@ export class PgSubmissionRepository implements SubmissionRepository {
     }
   }
 
+  async delete(id: string): Promise<boolean> {
+    const { rowCount } = await this.pool.query('delete from submissions where id = $1', [id]);
+    return (rowCount ?? 0) > 0;
+  }
+
   private async toRecord(row: SubmissionRow, client: Pool | PoolClient = this.pool): Promise<SubmissionRecord> {
     const { rows } = await client.query<ReviewRow>(
       `select id, reviewer, decision, comment, created_at

@@ -1,0 +1,6 @@
+{
+  "name": "Scene Tools",
+  "tooltip": "场景工具集：按范围和类型批量选择，以及隐藏/显示 Actor 可见性控制。",
+  "ChameleonTools": "../Python/SceneTools/SceneTools.json",
+  "ExtensionHookName": "OnToolBarChameleon"
+}

@@ -203,3 +203,13 @@ export const reviewSubmissionRequestSchema = z.object({
   decision: reviewDecisionSchema,
   comment: z.string().optional()
 });
+
+export const adminUpdateToolRequestSchema = z.object({
+  displayName: z.string().min(1).optional(),
+  description: z.string().min(1).optional(),
+  category: z.string().min(1).optional(),
+  ownerTeam: z.string().min(1).optional(),
+  status: toolStatusSchema.optional(),
+  riskLevel: riskLevelSchema.optional(),
+  tags: z.array(z.string().min(1)).optional()
+});

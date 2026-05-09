@@ -1,0 +1,6 @@
+{
+  "name": "Asset Tools",
+  "tooltip": "资产整理工具集：纹理、材质、静态网格等 Content Browser 资产治理。",
+  "ChameleonTools": "../Python/AssetOrganizer/AssetOrganizer.json",
+  "ExtensionHookName": "OnToolBarChameleon"
+}

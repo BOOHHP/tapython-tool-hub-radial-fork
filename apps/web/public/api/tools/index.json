@@ -1,8 +1,100 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-02T06:07:11.473Z",
-  "total": 2,
+  "generatedAt": "2026-05-09T06:40:07.668Z",
+  "total": 4,
   "tools": [
+    {
+      "slug": "asset-organizer",
+      "name": "AssetOrganizer",
+      "displayName": "Asset Tools",
+      "description": "资产整理工具集，当前提供非 POT（Power-of-Two）纹理的批量扫描与修复功能，支持多目录扫描、内容浏览器路径快捷选取、结果列表同步及修复报告导出，后续将持续扩展纹理、材质、静态网格等资产治理功能。",
+      "category": "asset-management",
+      "author": "WuJunFeng",
+      "ownerTeam": "Scene Team B",
+      "status": "approved",
+      "riskLevel": "medium",
+      "tags": [
+        "asset",
+        "texture",
+        "power-of-two",
+        "asset-management",
+        "content-browser"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/AssetOrganizer/",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-05-09",
+      "apiUrl": "/api/tools/asset-organizer.json",
+      "sourceDocument": "data/tool-docs/asset-organizer/asset-organizer.md",
+      "sourceMode": "markdown-with-external-files",
+      "downloads": {
+        "latestManifest": "/downloads/asset-organizer/1.0.0/manifest.json",
+        "latestReadme": "/downloads/asset-organizer/1.0.0/README.md",
+        "latestMarkdown": "/downloads/asset-organizer/1.0.0/tool.md",
+        "latestPackage": "/downloads/asset-organizer/1.0.0/asset-organizer-1.0.0.zip",
+        "latestPackageSha256": "899f9416b31b188b39271a013573551f28945ff680080c017b822808fc0d15fb",
+        "latestPackageSize": 98923,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "scene-tools",
+      "name": "SceneTools",
+      "displayName": "Scene Tools",
+      "description": "场景工具集，提供按范围与类型批量选择 Actor、变换归零、落地吸附、渲染属性批量修改、接受贴花开关、贴花转平面、无效 Actor 清理及对齐/阵列分布等场景批处理功能。",
+      "category": "level-editing",
+      "author": "WuJunFeng",
+      "ownerTeam": "Scene Team B",
+      "status": "approved",
+      "riskLevel": "medium",
+      "tags": [
+        "scene",
+        "actor",
+        "batch",
+        "transform",
+        "ground-snap",
+        "render",
+        "level-editing"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/SceneTools/",
+      "latestVersion": "1.1.0",
+      "updatedAt": "2026-05-09",
+      "apiUrl": "/api/tools/scene-tools.json",
+      "sourceDocument": "data/tool-docs/scene-tools/scene-tools.md",
+      "sourceMode": "markdown-with-external-files",
+      "downloads": {
+        "latestManifest": "/downloads/scene-tools/1.1.0/manifest.json",
+        "latestReadme": "/downloads/scene-tools/1.1.0/README.md",
+        "latestMarkdown": "/downloads/scene-tools/1.1.0/tool.md",
+        "latestPackage": "/downloads/scene-tools/1.1.0/scene-tools-1.1.0.zip",
+        "latestPackageSha256": "6a2489bf3b41d3ab33a5a474e1414e33fdf32e6822c9cd00c95547d02d212466",
+        "latestPackageSize": 342972,
+        "latestPackageAvailable": true
+      }
+    },
     {
       "slug": "actor-rename-tool",
       "name": "ActorRenameTool",
@@ -45,8 +137,8 @@
         "latestReadme": "/downloads/actor-rename-tool/1.2.0/README.md",
         "latestMarkdown": "/downloads/actor-rename-tool/1.2.0/tool.md",
         "latestPackage": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.zip",
-        "latestPackageSha256": "e5d531e07a00b5b6b1ed74fdbffd675d9998090aa8b2f1747d91db543648feb8",
-        "latestPackageSize": 14021,
+        "latestPackageSha256": "36ecc95e77e30c965ed68d8e81df18c38d2dd91d1100b4f35ab1effa9cfc111c",
+        "latestPackageSize": 14318,
         "latestPackageAvailable": true
       }
     },
@@ -91,8 +183,8 @@
         "latestReadme": "/downloads/test-selection-audit-tool/0.2.0/README.md",
         "latestMarkdown": "/downloads/test-selection-audit-tool/0.2.0/tool.md",
         "latestPackage": "/downloads/test-selection-audit-tool/0.2.0/test-selection-audit-tool-0.2.0.zip",
-        "latestPackageSha256": "8054bdba598ea296e38bbf268b35fdaeffc62866445013d4b959d8be0d8f133f",
-        "latestPackageSize": 11319,
+        "latestPackageSha256": "c8b1d8aca4d0c49656803d7e951e2cc38eed64e183c88655c6ae9d54ff108460",
+        "latestPackageSize": 11533,
         "latestPackageAvailable": true
       }
     }

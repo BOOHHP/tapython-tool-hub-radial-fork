@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-02T06:07:11.469Z",
+  "generatedAt": "2026-05-09T06:40:07.626Z",
   "tool": {
     "slug": "actor-rename-tool",
     "name": "ActorRenameTool",
@@ -42,8 +42,8 @@
       "latestReadme": "/downloads/actor-rename-tool/1.2.0/README.md",
       "latestMarkdown": "/downloads/actor-rename-tool/1.2.0/tool.md",
       "latestPackage": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.zip",
-      "latestPackageSha256": "e5d531e07a00b5b6b1ed74fdbffd675d9998090aa8b2f1747d91db543648feb8",
-      "latestPackageSize": 14021,
+      "latestPackageSha256": "36ecc95e77e30c965ed68d8e81df18c38d2dd91d1100b4f35ab1effa9cfc111c",
+      "latestPackageSize": 14318,
       "latestPackageAvailable": true
     },
     "summary": {
@@ -83,22 +83,22 @@
         "安装时会修改项目 MenuConfig.json。"
       ]
     },
-    "documentationMarkdown": "# Actor Rename Tool\n\n> 场景 Actor 批量重命名与 Tag 管理工具，支持查找替换、批量编号重命名、Tag 添加与清除。\n\n## 快速开始\n\n1. 将 `ActorRenameTool/` 文件夹复制到 `<Project>/TA/TAPython/Python/` 目录下。\n2. 将下方菜单配置合并到 `<Project>/TA/TAPython/UI/MenuConfig.json` 的 `OnToolBarChameleon` 挂载点。\n3. 重启 UE 编辑器或通过 TAPython 菜单 Reload，即可在工具栏看到工具入口。\n\n## 文件清单\n\n| 文件 | 用途 | 存放路径 |\n|------|------|----------|\n| `ActorRenameTool.json` | UI 界面定义 | `Python/ActorRenameTool/` |\n| `ActorRenameTool.py` | 业务逻辑 | `Python/ActorRenameTool/` |\n| `__init__.py` | 模块初始化 | `Python/ActorRenameTool/` |\n| `MenuConfig.snippet.json` | 菜单挂载片段 | `TA/TAPython/UI/` |\n\n## 架构简述\n\n- 工具名称：`ActorRenameTool`\n- 挂载点：`OnToolBarChameleon`\n- 核心 API：`unreal.EditorLevelLibrary.get_selected_level_actors()`、`actor.get_actor_label()`、`actor.set_actor_label()`、`actor.tags`、`unreal.PythonBPLib.get_chameleon_data()`\n- 核心控件 Aka：`input_find`、`input_replace`、`chk_case_sensitive`、`input_base_name`、`input_start_index`、`input_padding`、`txt_actor_list`、`txt_status`\n\n## MenuConfig\n\n```json menuconfig path=MenuConfig.snippet.json\n@file:MenuConfig.snippet.json\n```\n\n## View\n\nUI 定义较长，采用外部文件模式维护。构建脚本会读取引用文件并计算 hash。\n\n```json chameleon-ui path=ActorRenameTool/ActorRenameTool.json\n@file:ActorRenameTool.json\n```\n\n## Controller\n\nPython Controller 较长，采用外部文件模式维护。Agent 安装时会将该文件写入目标工具目录。\n\n```python controller path=ActorRenameTool/ActorRenameTool.py\n@file:ActorRenameTool.py\n```\n\n## 使用说明\n\n1. 在 UE 编辑器工具栏点击 Chameleon 下拉菜单中的 Actor Rename Tool。\n2. 在场景视口或 World Outliner 中选中需要操作的 Actor。\n3. 根据需求执行查找替换、批量重命名、Tag 添加或清理。\n4. 点击刷新按钮可查看当前选中 Actor 的名称和 Tag 信息。\n5. 所有操作结果会在底部状态栏显示。\n\n## 注意事项\n\n- 操作前请确认选中范围，批量重命名会覆盖 Actor 显示名称。\n- 查找替换留空替换字段时，相当于删除匹配字符串。\n- 清除所有 Tag 操作不可撤销，请谨慎使用。\n- 安装时会修改 `MenuConfig.json`，建议让 Agent 展示合并 diff 后再执行。\n\n## Agent 安装指令\n\nAgent 可以直接读取本 Markdown，解析 front matter、文件清单、MenuConfig 片段和外部文件引用，生成安装预览。安装前必须展示将写入的目标路径、文件列表、hash 校验结果和 MenuConfig 合并 diff。",
+    "documentationMarkdown": "# Actor Rename Tool\r\n\r\n> 场景 Actor 批量重命名与 Tag 管理工具，支持查找替换、批量编号重命名、Tag 添加与清除。\r\n\r\n## 快速开始\r\n\r\n1. 将 `ActorRenameTool/` 文件夹复制到 `<Project>/TA/TAPython/Python/` 目录下。\r\n2. 将下方菜单配置合并到 `<Project>/TA/TAPython/UI/MenuConfig.json` 的 `OnToolBarChameleon` 挂载点。\r\n3. 重启 UE 编辑器或通过 TAPython 菜单 Reload，即可在工具栏看到工具入口。\r\n\r\n## 文件清单\r\n\r\n| 文件 | 用途 | 存放路径 |\r\n|------|------|----------|\r\n| `ActorRenameTool.json` | UI 界面定义 | `Python/ActorRenameTool/` |\r\n| `ActorRenameTool.py` | 业务逻辑 | `Python/ActorRenameTool/` |\r\n| `__init__.py` | 模块初始化 | `Python/ActorRenameTool/` |\r\n| `MenuConfig.snippet.json` | 菜单挂载片段 | `TA/TAPython/UI/` |\r\n\r\n## 架构简述\r\n\r\n- 工具名称：`ActorRenameTool`\r\n- 挂载点：`OnToolBarChameleon`\r\n- 核心 API：`unreal.EditorLevelLibrary.get_selected_level_actors()`、`actor.get_actor_label()`、`actor.set_actor_label()`、`actor.tags`、`unreal.PythonBPLib.get_chameleon_data()`\r\n- 核心控件 Aka：`input_find`、`input_replace`、`chk_case_sensitive`、`input_base_name`、`input_start_index`、`input_padding`、`txt_actor_list`、`txt_status`\r\n\r\n## MenuConfig\r\n\r\n```json menuconfig path=MenuConfig.snippet.json\r\n@file:MenuConfig.snippet.json\r\n```\r\n\r\n## View\r\n\r\nUI 定义较长，采用外部文件模式维护。构建脚本会读取引用文件并计算 hash。\r\n\r\n```json chameleon-ui path=ActorRenameTool/ActorRenameTool.json\r\n@file:ActorRenameTool.json\r\n```\r\n\r\n## Controller\r\n\r\nPython Controller 较长，采用外部文件模式维护。Agent 安装时会将该文件写入目标工具目录。\r\n\r\n```python controller path=ActorRenameTool/ActorRenameTool.py\r\n@file:ActorRenameTool.py\r\n```\r\n\r\n## 使用说明\r\n\r\n1. 在 UE 编辑器工具栏点击 Chameleon 下拉菜单中的 Actor Rename Tool。\r\n2. 在场景视口或 World Outliner 中选中需要操作的 Actor。\r\n3. 根据需求执行查找替换、批量重命名、Tag 添加或清理。\r\n4. 点击刷新按钮可查看当前选中 Actor 的名称和 Tag 信息。\r\n5. 所有操作结果会在底部状态栏显示。\r\n\r\n## 注意事项\r\n\r\n- 操作前请确认选中范围，批量重命名会覆盖 Actor 显示名称。\r\n- 查找替换留空替换字段时，相当于删除匹配字符串。\r\n- 清除所有 Tag 操作不可撤销，请谨慎使用。\r\n- 安装时会修改 `MenuConfig.json`，建议让 Agent 展示合并 diff 后再执行。\r\n\r\n## Agent 安装指令\r\n\r\nAgent 可以直接读取本 Markdown，解析 front matter、文件清单、MenuConfig 片段和外部文件引用，生成安装预览。安装前必须展示将写入的目标路径、文件列表、hash 校验结果和 MenuConfig 合并 diff。",
     "codeAssets": [
       {
         "path": "MenuConfig.snippet.json",
-        "sha256": "9cf40aa1a81c3b5389763bb096965fe3660c8f9c821be759d293a1fb4a173744",
-        "size": 148
+        "sha256": "384342d4a661a4794792e42f2b7468ed70c1fc23bff28802c150fb0ec05aebf4",
+        "size": 152
       },
       {
         "path": "ActorRenameTool/ActorRenameTool.json",
-        "sha256": "cb494ae01d85c81f73e93bcd703a7af23cae5c55c5d5cc31d2bac5df3135528d",
-        "size": 2629
+        "sha256": "7f84932266b7e088d964fa86bc183bc476384590b6c3492042f8b8e0e2a5edb8",
+        "size": 2726
       },
       {
         "path": "ActorRenameTool/ActorRenameTool.py",
-        "sha256": "2b25cd17b441b338ec2bfc48085673fd568ca96d2fadaf6d4b719fd28e1b72a8",
-        "size": 2656
+        "sha256": "01f0e78d468a0e3d3c0f2679c9235a9d26cea79d33221ddbd871dbf10ef6fe13",
+        "size": 2722
       },
       {
         "path": "ActorRenameTool/__init__.py",
@@ -118,8 +118,8 @@
           "readme": "/downloads/actor-rename-tool/1.2.0/README.md",
           "markdown": "/downloads/actor-rename-tool/1.2.0/tool.md",
           "package": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.zip",
-          "packageSha256": "e5d531e07a00b5b6b1ed74fdbffd675d9998090aa8b2f1747d91db543648feb8",
-          "packageSize": 14021,
+          "packageSha256": "36ecc95e77e30c965ed68d8e81df18c38d2dd91d1100b4f35ab1effa9cfc111c",
+          "packageSize": 14318,
           "packageAvailable": true
         },
         "manifest": {
@@ -158,18 +158,18 @@
           "files": [
             {
               "path": "MenuConfig.snippet.json",
-              "sha256": "9cf40aa1a81c3b5389763bb096965fe3660c8f9c821be759d293a1fb4a173744",
-              "size": 148
+              "sha256": "384342d4a661a4794792e42f2b7468ed70c1fc23bff28802c150fb0ec05aebf4",
+              "size": 152
             },
             {
               "path": "ActorRenameTool/ActorRenameTool.json",
-              "sha256": "cb494ae01d85c81f73e93bcd703a7af23cae5c55c5d5cc31d2bac5df3135528d",
-              "size": 2629
+              "sha256": "7f84932266b7e088d964fa86bc183bc476384590b6c3492042f8b8e0e2a5edb8",
+              "size": 2726
             },
             {
               "path": "ActorRenameTool/ActorRenameTool.py",
-              "sha256": "2b25cd17b441b338ec2bfc48085673fd568ca96d2fadaf6d4b719fd28e1b72a8",
-              "size": 2656
+              "sha256": "01f0e78d468a0e3d3c0f2679c9235a9d26cea79d33221ddbd871dbf10ef6fe13",
+              "size": 2722
             },
             {
               "path": "ActorRenameTool/__init__.py",

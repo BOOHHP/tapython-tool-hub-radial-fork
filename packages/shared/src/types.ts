@@ -176,3 +176,13 @@ export interface ReviewSubmissionRequest {
   decision: ReviewDecision;
   comment?: string;
 }
+
+export interface AdminUpdateToolRequest {
+  displayName?: string;
+  description?: string;
+  category?: string;
+  ownerTeam?: string;
+  status?: ToolStatus;
+  riskLevel?: RiskLevel;
+  tags?: string[];
+}

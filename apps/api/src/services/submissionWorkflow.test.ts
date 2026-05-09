@@ -47,6 +47,24 @@ test('blocks approving an already published slug and version', async () => {
   }
 });
 
+test('reports a clear validation error when request slug differs from markdown slug', async () => {
+  const context = await createContext();
+  try {
+    const request = validSubmission('markdown-slug', '1.0.0');
+    const submission = await context.workflow.createSubmission({
+      ...request,
+      slug: 'form-slug'
+    });
+
+    assert.equal(submission.status, 'draft');
+    assert.equal(submission.validationReport.valid, false);
+    assert.equal(submission.validationReport.issues[0]?.path, 'slug');
+    assert.match(submission.validationReport.issues[0]?.message ?? '', /form-slug.*markdown-slug|slug.*不一致/);
+  } finally {
+    await context.cleanup();
+  }
+});
+
 test('records rejected reviews without publishing artifacts', async () => {
   const context = await createContext();
   try {
@@ -71,7 +89,7 @@ test('records rejected reviews without publishing artifacts', async () => {
 test('publishes compatible API and downloads after approval', async () => {
   const context = await createContext();
   try {
-    const submission = await context.workflow.createSubmission(validSubmission('phase-f-published', '1.0.0'));
+    const submission = await context.workflow.createSubmission(validSubmission('phase-f-published', '1.0.0', 'pending'));
     const reviewed = await context.workflow.reviewSubmission(submission.id, {
       reviewer: 'TA Reviewer',
       decision: 'approved'
@@ -82,11 +100,13 @@ test('publishes compatible API and downloads after approval', async () => {
 
     const toolDoc = await fs.readFile(path.join(context.config.toolDocsRoot, 'phase-f-published', 'phase-f-published.md'), 'utf8');
     assert.match(toolDoc, /Phase F Published/);
+    assert.match(toolDoc, /^status: approved$/m);
 
     const apiPayload = JSON.parse(await fs.readFile(path.join(context.config.toolApiRoot, 'phase-f-published.json'), 'utf8')) as {
-      tool?: { slug?: string };
+      tool?: { slug?: string; status?: string };
     };
     assert.equal(apiPayload.tool?.slug, 'phase-f-published');
+    assert.equal(apiPayload.tool?.status, 'approved');
 
     const readme = await fs.readFile(path.join(context.config.downloadRoot, 'phase-f-published', '1.0.0', 'README.md'), 'utf8');
     assert.match(readme, /Phase F Published/);
@@ -116,7 +136,7 @@ async function createContext(): Promise<{ config: ApiConfig; workflow: Submissio
   };
 }
 
-function validSubmission(slug: string, version: string): ToolSubmissionRequest {
+function validSubmission(slug: string, version: string, status = 'approved'): ToolSubmissionRequest {
   const displayName = toDisplayName(slug);
   return {
     slug,
@@ -132,7 +152,7 @@ releasedAt: "2026-05-01"
 updatedAt: "2026-05-01"
 author: QA Team
 ownerTeam: QA
-status: approved
+status: ${status}
 description: ${displayName} submission test.
 category: qa
 riskLevel: low

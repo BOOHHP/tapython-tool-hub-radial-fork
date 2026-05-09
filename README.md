@@ -265,9 +265,12 @@ The SQL migration is idempotent. A dedicated migration runner is planned for Pha
 | `GET` | `/api/submissions` | List submissions. |
 | `POST` | `/api/submissions` | Create and validate a Markdown-first submission. |
 | `GET` | `/api/submissions/<id>` | Read one submission. |
-| `POST` | `/api/submissions/<id>/review` | Approve, reject, or request changes. |
+| `GET` | `/api/admin/submissions` | Admin submission list. |
+| `POST` | `/api/admin/submissions/<id>/review` | Admin approve, reject, or request changes. |
+| `DELETE` | `/api/admin/submissions/<id>` | Admin delete one submission record. |
+| `PATCH` | `/api/admin/tools/<slug>` | Admin update published tool status and editable metadata. |
 
-Submission and review routes are currently trusted-LAN oriented. Add authorization before exposing them outside a trusted network.
+Submission routes are visible to submitters; review and publishing routes live under `/api/admin/*`. Add authorization before exposing admin routes outside a trusted network.
 
 ## CLI Operator Commands
 
