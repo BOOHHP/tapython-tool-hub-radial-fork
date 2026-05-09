@@ -3,9 +3,9 @@ schemaVersion: 1.0.0
 slug: scene-tools
 name: SceneTools
 displayName: Scene Tools
-version: 1.0.0
-releasedAt: '2026-05-08'
-updatedAt: '2026-05-08'
+version: 1.1.0
+releasedAt: '2026-05-09'
+updatedAt: '2026-05-09'
 author: WuJunFeng
 ownerTeam: Scene Team B
 status: approved
@@ -35,7 +35,7 @@ dependencies: []
 mountPoint: OnToolBarChameleon
 installPath: <Project>/TA/TAPython/Python/SceneTools/
 entryJson: SceneTools/SceneTools.json
-changeSummary: 首版发布
+changeSummary: 无效 Actor 清理面板新增结果列表与报告导出功能
 summary:
   features:
     - 按物件类型（静态网格体、蓝图、灯光、贴花、摄像机、触发器）和范围（当前/所有关卡）批量选择 Actor
@@ -45,7 +45,7 @@ summary:
     - 批量修改渲染属性（Actor/组件隐藏、投射阴影、绘制距离等）
     - 批量开关静态网格组件的接受贴花属性
     - 贴花转平面模型（可选保留材质及隐藏源贴花）
-    - 无效 Actor 扫描、标记与软删除（支持多关卡选择）
+    - 无效 Actor 扫描、标记与软删除（支持多关卡选择、结果列表展示、报告导出）
     - 多轴 Actor 批量对齐、等距分布与阵列操作
   unrealApis:
     - unreal.EditorActorSubsystem
@@ -60,6 +60,7 @@ summary:
     - unreal.PythonBPLib.get_chameleon_data
     - unreal.PythonBPLib.set_timer
     - unreal.PythonBPLib.clear_timer
+    - unreal.Paths.project_saved_dir
     - unreal.get_editor_subsystem
     - unreal.register_slate_post_tick_callback
     - unreal.unregister_slate_post_tick_callback
@@ -93,6 +94,10 @@ summary:
     - btn_invalid_actor_select_results
     - btn_invalid_actor_mark
     - btn_invalid_actor_soft_delete
+    - txt_invalid_actor_result_info
+    - btn_invalid_actor_select_selected_results
+    - btn_invalid_actor_export_report
+    - list_invalid_actor_results
     - txt_invalid_actor_preview
     - input_decal_plane_suffix
     - chk_decal_plane_copy_material
@@ -136,14 +141,15 @@ summary:
     - 确认项目已安装 TAPython 插件
     - 将 SceneTools/ 文件夹复制到 <Project>/TA/TAPython/Python/
     - >-
-      将 MenuConfig.snippet.json 的条目合并到 <Project>/TA/TAPython/UI/MenuConfig.json
-      的 OnToolBarChameleon.items 数组中
+      将 MenuConfig.snippet.json 的条目合并到 MenuConfig.json 的
+      OnToolBarChameleon.items 数组中
     - 在 UE 编辑器中 Reload TAPython 或重启编辑器
   riskNotes:
     - 变换重置操作通过 ScopedEditorTransaction 封装，支持 Ctrl+Z 撤销
     - 渲染属性修改、接受贴花开关、对齐/分布操作通过事务封装，支持撤销
     - Actor 软删除操作将 Actor 移动到指定文件夹，不可通过 Ctrl+Z 撤销，请提前确认
     - 贴花转平面会在场景中新建 StaticMeshActor，如勾选隐藏源贴花则不可一键撤销
+    - 无效 Actor 扫描报告导出到项目 Saved 目录，不影响资产
 menuConfigMerge:
   target: <Project>/TA/TAPython/UI/MenuConfig.json
   mountPoint: OnToolBarChameleon
@@ -178,11 +184,24 @@ previousVersions:
       - path: SceneTools/__init__.py
         sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
         size: 0
+  - version: 1.1.0
+    releasedAt: '2026-05-09'
+    changeSummary: 无效 Actor 清理面板新增结果列表与报告导出功能
+    files:
+      - path: SceneTools/SceneTools.json
+        sha256: 549cd29af2a7421f9cd5020a346f6e6854d201ab0d3dca8d01297405d76e7888
+        size: 139931
+      - path: SceneTools/SceneTools.py
+        sha256: ed075183d3a2219134f26b2eaa962f37583c9d652c85d246421ad18890601eb6
+        size: 187126
+      - path: SceneTools/__init__.py
+        sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+        size: 0
 ---
 
 # Scene Tools
 
-> 场景工具集，覆盖 Actor 批量选择、变换归零、落地吸附、渲染属性修改、贴花处理、无效 Actor 清理、对齐/分布阵列等高频场景批处理需求。
+> 场景工具集，覆盖 Actor 批量选择、变换归零、落地吸附、渲染属性修改、贴花处理、无效 Actor 清理（含结果列表与报告导出）、对齐/分布阵列等高频场景批处理需求。
 
 ## 快速开始
 
@@ -220,7 +239,8 @@ previousVersions:
   - `unreal.SystemLibrary.line_trace_single_by_profile`（落地射线检测）
   - `unreal.ScopedEditorTransaction`（Ctrl+Z 撤销支持）
   - `unreal.PythonBPLib.set_timer` / `clear_timer`（分帧任务调度）
-- **核心控件 Aka**（共 66 个）：`scene_tools_scroll`、`chk_scope_current`、`chk_scope_all`、`chk_static_mesh`、`chk_blueprint`、`btn_execute`、`txt_status` 等
+  - `unreal.Paths.project_saved_dir`（报告导出路径）
+- **核心控件 Aka**（共 70 个）：`scene_tools_scroll`、`chk_scope_current`、`list_invalid_actor_results`、`btn_invalid_actor_export_report`、`txt_status` 等
 
 ## MenuConfig
 
@@ -274,7 +294,9 @@ previousVersions:
 ### 无效 Actor 清理
 1. 展开"无效 Actor 清理"面板，刷新并选择目标关卡。
 2. 配置检测规则（空 Actor、缺失静态网格体）。
-3. 执行**预览扫描** → **标记**（打 Tag）或**软删除**（移动到指定文件夹）。
+3. 执行**预览扫描** → 在结果列表中查看详情 → 可点击**同步到内容浏览器**定位 Actor。
+4. 确认后执行**标记**（打 Tag）或**软删除**（移动到指定文件夹）。
+5. 点击**导出报告**将扫描结果保存为文本文件（路径：`<ProjectSaved>/InvalidActorReport_<时间戳>.txt`）。
 
 ### 对齐 / 分布 / 阵列
 1. 选中两个或以上 Actor。
@@ -287,6 +309,7 @@ previousVersions:
 - **Actor 软删除**（将 Actor 移动到特定文件夹）**不可通过 Ctrl+Z 撤销**，请在执行前确认目标 Actor 列表。
 - 贴花转平面勾选"隐藏源贴花"后，源 DecalActor 将被隐藏，如需恢复需手动操作。
 - 分帧任务（大批量处理时自动开启）执行期间请勿关闭工具窗口。
+- 无效 Actor 扫描报告导出到项目 `Saved/` 目录，不修改任何资产，可安全使用。
 - 工具依赖 TAPython 提供的 `PythonBPLib`，请确保项目已安装并启用 TAPython 插件。
 
 ## Agent 安装指令
@@ -297,4 +320,4 @@ Agent 可按以下方式读取本文档并完成安装：
 2. **展开 `@file:` 引用**：将 `SceneTools.json`、`SceneTools.py`、`__init__.py` 写入 `installPath`。
 3. **合并 MenuConfig**：读取 `menuConfigMerge.target` 指向的 JSON 文件，在 `OnToolBarChameleon.items` 数组末尾追加 `menuConfigMerge.itemsToAdd` 中的条目（若同名条目已存在则跳过）。
 4. **校验安装**：确认上述文件存在后，提示用户 Reload TAPython 或重启 UE 编辑器。
-5. **文件完整性校验**（可选）：对照 `previousVersions[0].files` 中的 sha256 值验证写入文件是否一致。
+5. **文件完整性校验**（可选）：对照 `previousVersions` 中当前版本（`1.1.0`）的 sha256 值验证写入文件是否一致。

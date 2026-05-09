@@ -2,10 +2,18 @@ import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import matter from 'gray-matter';
 import { generateToolData } from '@tapython-tool-hub/tooling';
 import type { ReviewRecord, ReviewSubmissionRequest, SubmissionRecord, ToolSubmissionRequest, ValidationIssue, ValidationReport } from '@tapython-tool-hub/shared';
 import type { ApiConfig } from '../config/env.js';
 import type { SubmissionRepository } from '../repositories/submissionRepository.js';
+
+interface GeneratedToolApiPayload {
+  tool?: {
+    slug?: string;
+    versions?: Array<{ version: string }>;
+  };
+}
 
 export class SubmissionWorkflow {
   constructor(
@@ -65,11 +73,26 @@ export class SubmissionWorkflow {
         downloadRoot
       });
 
-      const generatedTool = JSON.parse(await fs.readFile(path.join(apiRoot, `${request.slug}.json`), 'utf8')) as {
-        tool?: { versions?: Array<{ version: string }> };
-      };
-      const submittedVersion = generatedTool.tool?.versions?.[0]?.version;
-      if (submittedVersion && await versionAlreadyPublished(this.config.toolApiRoot, request.slug, submittedVersion)) {
+      const { payload: generatedTool, generatedSlugs } = await readGeneratedToolApi(apiRoot, request.slug);
+      const generatedSlug = generatedTool?.tool?.slug;
+      if (!generatedTool) {
+        issues.push({
+          level: 'error',
+          path: 'slug',
+          message: generatedSlugs.length > 0
+            ? `提交表单 slug (${request.slug}) 与 Markdown front matter slug (${generatedSlugs.join(', ')}) 不一致；请保持一致。`
+            : `未生成工具 API 文件 ${request.slug}.json，请检查 Markdown front matter slug。`
+        });
+      } else if (generatedSlug && generatedSlug !== request.slug) {
+        issues.push({
+          level: 'error',
+          path: 'slug',
+          message: `提交表单 slug (${request.slug}) 与 Markdown front matter slug (${generatedSlug}) 不一致；请保持一致。`
+        });
+      }
+
+      const submittedVersion = generatedTool?.tool?.versions?.[0]?.version;
+      if (submittedVersion && await versionAlreadyPublished(this.config.toolApiRoot, generatedSlug ?? request.slug, submittedVersion)) {
         issues.push({
           level: 'error',
           path: 'version',
@@ -93,7 +116,10 @@ export class SubmissionWorkflow {
   }
 
   private async publish(submission: SubmissionRecord): Promise<void> {
-    await writeSubmittedFiles(path.join(this.config.toolDocsRoot, submission.slug), submission);
+    await writeSubmittedFiles(path.join(this.config.toolDocsRoot, submission.slug), {
+      ...submission,
+      markdown: markMarkdownApproved(submission.markdown)
+    });
     await generateToolData({
       root: this.config.repoRoot,
       toolDataRoot: this.config.toolDataRoot,
@@ -102,6 +128,14 @@ export class SubmissionWorkflow {
       downloadRoot: this.config.downloadRoot
     });
   }
+}
+
+function markMarkdownApproved(markdown: string): string {
+  const parsed = matter(markdown);
+  return matter.stringify(parsed.content, {
+    ...parsed.data,
+    status: 'approved'
+  });
 }
 
 async function writeSubmittedFiles(toolDocsRoot: string, request: Pick<ToolSubmissionRequest, 'slug' | 'markdown' | 'assets'>): Promise<void> {
@@ -123,6 +157,40 @@ async function versionAlreadyPublished(toolApiRoot: string, slug: string, versio
   } catch (error) {
     if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
       return false;
+    }
+    throw error;
+  }
+}
+
+async function readGeneratedToolApi(apiRoot: string, requestedSlug: string): Promise<{ payload?: GeneratedToolApiPayload; generatedSlugs: string[] }> {
+  try {
+    const payload = JSON.parse(await fs.readFile(path.join(apiRoot, `${requestedSlug}.json`), 'utf8')) as GeneratedToolApiPayload;
+    return { payload, generatedSlugs: [payload.tool?.slug ?? requestedSlug] };
+  } catch (error) {
+    if (!(error instanceof Error && 'code' in error && error.code === 'ENOENT')) {
+      throw error;
+    }
+  }
+
+  const generatedSlugs = await listGeneratedToolSlugs(apiRoot);
+  if (generatedSlugs.length !== 1) {
+    return { generatedSlugs };
+  }
+
+  const payload = JSON.parse(await fs.readFile(path.join(apiRoot, `${generatedSlugs[0]}.json`), 'utf8')) as GeneratedToolApiPayload;
+  return { payload, generatedSlugs };
+}
+
+async function listGeneratedToolSlugs(apiRoot: string): Promise<string[]> {
+  try {
+    const entries = await fs.readdir(apiRoot, { withFileTypes: true });
+    return entries
+      .filter((entry) => entry.isFile() && entry.name.endsWith('.json') && entry.name !== 'index.json')
+      .map((entry) => entry.name.slice(0, -'.json'.length))
+      .sort();
+  } catch (error) {
+    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+      return [];
     }
     throw error;
   }

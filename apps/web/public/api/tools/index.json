@@ -1,8 +1,53 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-08T08:41:43.521Z",
-  "total": 3,
+  "generatedAt": "2026-05-09T06:40:07.668Z",
+  "total": 4,
   "tools": [
+    {
+      "slug": "asset-organizer",
+      "name": "AssetOrganizer",
+      "displayName": "Asset Tools",
+      "description": "资产整理工具集，当前提供非 POT（Power-of-Two）纹理的批量扫描与修复功能，支持多目录扫描、内容浏览器路径快捷选取、结果列表同步及修复报告导出，后续将持续扩展纹理、材质、静态网格等资产治理功能。",
+      "category": "asset-management",
+      "author": "WuJunFeng",
+      "ownerTeam": "Scene Team B",
+      "status": "approved",
+      "riskLevel": "medium",
+      "tags": [
+        "asset",
+        "texture",
+        "power-of-two",
+        "asset-management",
+        "content-browser"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/AssetOrganizer/",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-05-09",
+      "apiUrl": "/api/tools/asset-organizer.json",
+      "sourceDocument": "data/tool-docs/asset-organizer/asset-organizer.md",
+      "sourceMode": "markdown-with-external-files",
+      "downloads": {
+        "latestManifest": "/downloads/asset-organizer/1.0.0/manifest.json",
+        "latestReadme": "/downloads/asset-organizer/1.0.0/README.md",
+        "latestMarkdown": "/downloads/asset-organizer/1.0.0/tool.md",
+        "latestPackage": "/downloads/asset-organizer/1.0.0/asset-organizer-1.0.0.zip",
+        "latestPackageSha256": "899f9416b31b188b39271a013573551f28945ff680080c017b822808fc0d15fb",
+        "latestPackageSize": 98923,
+        "latestPackageAvailable": true
+      }
+    },
     {
       "slug": "scene-tools",
       "name": "SceneTools",
@@ -35,18 +80,18 @@
       },
       "mountPoint": "OnToolBarChameleon",
       "installPath": "<Project>/TA/TAPython/Python/SceneTools/",
-      "latestVersion": "1.0.0",
-      "updatedAt": "2026-05-08",
+      "latestVersion": "1.1.0",
+      "updatedAt": "2026-05-09",
       "apiUrl": "/api/tools/scene-tools.json",
       "sourceDocument": "data/tool-docs/scene-tools/scene-tools.md",
       "sourceMode": "markdown-with-external-files",
       "downloads": {
-        "latestManifest": "/downloads/scene-tools/1.0.0/manifest.json",
-        "latestReadme": "/downloads/scene-tools/1.0.0/README.md",
-        "latestMarkdown": "/downloads/scene-tools/1.0.0/tool.md",
-        "latestPackage": "/downloads/scene-tools/1.0.0/scene-tools-1.0.0.zip",
-        "latestPackageSha256": "40ac2bf6744dabfadbfee22fffa9393611f52e39bcf76c2f71d087293ec7b76e",
-        "latestPackageSize": 319735,
+        "latestManifest": "/downloads/scene-tools/1.1.0/manifest.json",
+        "latestReadme": "/downloads/scene-tools/1.1.0/README.md",
+        "latestMarkdown": "/downloads/scene-tools/1.1.0/tool.md",
+        "latestPackage": "/downloads/scene-tools/1.1.0/scene-tools-1.1.0.zip",
+        "latestPackageSha256": "6a2489bf3b41d3ab33a5a474e1414e33fdf32e6822c9cd00c95547d02d212466",
+        "latestPackageSize": 342972,
         "latestPackageAvailable": true
       }
     },

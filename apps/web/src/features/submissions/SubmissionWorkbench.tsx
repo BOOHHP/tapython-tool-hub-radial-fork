@@ -79,6 +79,17 @@ export function SubmissionWorkbench() {
   }, []);
 
   const submit = async (values: ToolSubmissionRequest) => {
+    const markdownSlug = extractMarkdownSlug(values.markdown);
+    if (markdownSlug && markdownSlug !== values.slug) {
+      const errorMessage = `表单 slug (${values.slug}) 与 Markdown front matter slug (${markdownSlug}) 不一致，请保持一致。`;
+      form.setFields([
+        { name: 'slug', errors: [errorMessage] },
+        { name: 'markdown', errors: [errorMessage] }
+      ]);
+      messageApi.error(errorMessage);
+      return;
+    }
+
     setLoading(true);
     try {
       const submission = await createSubmission({ ...values, assets });
@@ -119,6 +130,14 @@ export function SubmissionWorkbench() {
   const importMarkdownFile = async (file: File) => {
     const content = await file.text();
     form.setFieldValue('markdown', content);
+    const markdownSlug = extractMarkdownSlug(content);
+    if (markdownSlug && !form.getFieldValue('slug')) {
+      form.setFieldValue('slug', markdownSlug);
+    }
+    const markdownSubmitter = extractMarkdownSubmitter(content);
+    if (markdownSubmitter && !form.getFieldValue('submitter')) {
+      form.setFieldValue('submitter', markdownSubmitter);
+    }
     void form.validateFields(['markdown']).catch(() => undefined);
     messageApi.success(`已导入 ${file.name}`);
     return Upload.LIST_IGNORE;
@@ -313,6 +332,39 @@ function formatValidationIssues(submission: SubmissionRecord): string {
   return submission.validationReport.issues
     .map((issue) => `${issue.level}${issue.path ? ` ${issue.path}` : ''}: ${issue.message}`)
     .join('\n');
+}
+
+function extractMarkdownSlug(markdown: string): string | undefined {
+  return extractMarkdownFrontMatterValue(markdown, 'slug');
+}
+
+function extractMarkdownSubmitter(markdown: string): string | undefined {
+  return extractMarkdownFrontMatterValue(markdown, 'author') ?? extractMarkdownFrontMatterValue(markdown, 'ownerTeam');
+}
+
+function extractMarkdownFrontMatterValue(markdown: string, fieldName: string): string | undefined {
+  const frontMatterMatch = markdown.match(/^---\s*[\r\n]+([\s\S]*?)[\r\n]+---/);
+  if (!frontMatterMatch) {
+    return undefined;
+  }
+
+  const escapedFieldName = fieldName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const fieldMatch = frontMatterMatch[1].match(new RegExp(`^${escapedFieldName}:\\s*(.+?)\\s*$`, 'm'));
+  return normalizeFrontMatterScalar(fieldMatch?.[1]);
+}
+
+function normalizeFrontMatterScalar(value: string | undefined): string | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  const trimmed = value.trim();
+  const quote = trimmed[0];
+  if ((quote === '"' || quote === "'") && trimmed.endsWith(quote)) {
+    return trimmed.slice(1, -1).trim() || undefined;
+  }
+
+  return trimmed.replace(/\s+#.*$/, '').trim() || undefined;
 }
 
 function getSubmissionErrorMessage(error: unknown): string {

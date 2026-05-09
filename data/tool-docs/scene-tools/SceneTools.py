@@ -1,4 +1,5 @@
 import os
+import time
 
 import unreal
 
@@ -57,6 +58,8 @@ class SceneToolsController:
         self._last_invalid_actor_report = {}
         self._invalid_actor_level_entries = []
         self._invalid_actor_selected_level_indexes = []
+        self._invalid_actor_result_entries = []
+        self._invalid_actor_selected_result_indexes = []
         self._last_align_distribution_plan = []
         self._last_align_distribution_report = {}
         self._align_axis_updating = False
@@ -548,6 +551,7 @@ class SceneToolsController:
 
             plan, summary = self._build_invalid_actor_cleanup_plan(scan_actors, settings)
             self._last_invalid_actor_plan = plan
+            self._refresh_invalid_actor_result_list(plan, summary)
             self.data.set_text("txt_invalid_actor_preview", self._format_invalid_actor_preview(plan, summary))
 
             msg = (
@@ -576,6 +580,7 @@ class SceneToolsController:
 
             refreshed_plan, refreshed_summary = self._build_invalid_actor_cleanup_plan(scan_actors, settings)
             self._last_invalid_actor_plan = refreshed_plan
+            self._refresh_invalid_actor_result_list(refreshed_plan, refreshed_summary)
             preview_text = self._format_invalid_actor_preview(refreshed_plan, refreshed_summary)
             self.data.set_text("txt_invalid_actor_preview", preview_text + "\n\n" + self._format_invalid_actor_report(report))
 
@@ -605,6 +610,7 @@ class SceneToolsController:
 
             refreshed_plan, refreshed_summary = self._build_invalid_actor_cleanup_plan(scan_actors, settings)
             self._last_invalid_actor_plan = refreshed_plan
+            self._refresh_invalid_actor_result_list(refreshed_plan, refreshed_summary)
             preview_text = self._format_invalid_actor_preview(refreshed_plan, refreshed_summary)
             self.data.set_text("txt_invalid_actor_preview", preview_text + "\n\n" + self._format_invalid_actor_soft_delete_report(report))
 
@@ -639,6 +645,186 @@ class SceneToolsController:
             error_msg = f"选中无效 Actor 结果失败：{str(e)}"
             unreal.log_error(f"SceneTools select_last_invalid_actor_results: {error_msg}")
             self.data.set_text("txt_status", error_msg)
+
+    def select_selected_invalid_actor_results(self):
+        try:
+            if not self._invalid_actor_result_entries:
+                msg = "没有可选中的扫描结果，请先执行预览扫描。"
+                self.data.set_text("txt_status", msg)
+                return
+
+            selected_indexes = self._get_list_view_selected_indexes("list_invalid_actor_results")
+            if selected_indexes:
+                self._set_invalid_actor_selected_result_indexes(selected_indexes, update_selection=False)
+            entries = self._get_selected_invalid_actor_result_entries()
+            if not entries:
+                msg = "请先在扫描结果明细中选择一个或多个无效 Actor。"
+                self.data.set_text("txt_status", msg)
+                return
+
+            self._select_invalid_actor_result_entries(entries, "所选扫描结果")
+        except Exception as e:
+            error_msg = f"选中所选无效 Actor 结果失败：{str(e)}"
+            unreal.log_error(f"SceneTools select_selected_invalid_actor_results: {error_msg}")
+            self.data.set_text("txt_status", error_msg)
+
+    def on_invalid_actor_result_selection_changed(self, item=None, index=None):
+        try:
+            selected_indexes = self._get_list_view_selected_indexes("list_invalid_actor_results")
+            if not selected_indexes:
+                fallback_index = self._get_single_list_view_selected_index("list_invalid_actor_results", index)
+                if fallback_index >= 0:
+                    selected_indexes = [fallback_index]
+            selected_indexes = [i for i in selected_indexes if 0 <= i < len(self._invalid_actor_result_entries)]
+            if not selected_indexes:
+                return
+            self._set_invalid_actor_selected_result_indexes(selected_indexes, update_selection=False)
+            self.data.set_text("txt_status", f"已选择 {len(selected_indexes)} 条无效 Actor 明细，可点击“选中所选结果”定位。")
+        except Exception as e:
+            error_msg = f"更新无效 Actor 明细选择失败：{str(e)}"
+            unreal.log_error(f"SceneTools on_invalid_actor_result_selection_changed: {error_msg}")
+            self.data.set_text("txt_status", error_msg)
+
+    def on_invalid_actor_result_double_click(self, item=None, index=None):
+        try:
+            try:
+                selected_index = int(index)
+            except Exception:
+                selected_index = self._get_single_list_view_selected_index("list_invalid_actor_results", None)
+            if selected_index < 0 or selected_index >= len(self._invalid_actor_result_entries):
+                return
+            self._set_invalid_actor_selected_result_indexes([selected_index], update_selection=True)
+            self._select_invalid_actor_result_entries([self._invalid_actor_result_entries[selected_index]], "双击扫描结果")
+        except Exception as e:
+            error_msg = f"双击选中无效 Actor 结果失败：{str(e)}"
+            unreal.log_error(f"SceneTools on_invalid_actor_result_double_click: {error_msg}")
+            self.data.set_text("txt_status", error_msg)
+
+    def export_invalid_actor_report(self):
+        try:
+            if not self._last_invalid_actor_plan:
+                msg = "没有可导出的无效 Actor 扫描结果，请先执行预览扫描。"
+                self.data.set_text("txt_status", msg)
+                return
+            summary = self._summarize_invalid_actor_cleanup_plan(self._last_invalid_actor_plan)
+            summary["scope_label"] = self._infer_last_invalid_actor_scope_label()
+            summary["source_actor_count"] = len(self._last_invalid_actor_plan)
+            batch_report = self._build_invalid_actor_batch_report(self._last_invalid_actor_plan, summary)
+            report_text = self._format_batch_report_text(batch_report, max_rows=500)
+            if self._last_invalid_actor_report:
+                report_text += "\n\n" + self._format_invalid_actor_execution_report_for_export(self._last_invalid_actor_report)
+
+            file_path = self._export_batch_report_text("InvalidActorReport", report_text)
+
+            msg = f"无效 Actor 报告已导出：{file_path}"
+            self.data.set_text("txt_status", msg)
+            unreal.log(f"SceneTools: {msg}")
+        except Exception as e:
+            error_msg = f"导出无效 Actor 报告失败：{str(e)}"
+            unreal.log_error(f"SceneTools export_invalid_actor_report: {error_msg}")
+            self.data.set_text("txt_status", error_msg)
+
+    # ------------------------------------------------------------------
+    # 通用批处理报告底座 v1
+    # ------------------------------------------------------------------
+
+    def _make_batch_report(self, title, scope="", total=0, counters=None):
+        return {
+            "title": title,
+            "scope": scope,
+            "total": int(total or 0),
+            "counters": dict(counters or {}),
+            "rows": [],
+            "snapshots": [],
+            "failures": [],
+            "warnings": [],
+            "export_path": "",
+        }
+
+    def _add_batch_report_row(self, report, status, name, reason="", details=None, actor=None):
+        row = {
+            "status": str(status or "INFO"),
+            "name": str(name or "<Unknown>"),
+            "reason": str(reason or ""),
+            "details": list(details or []),
+            "actor": actor,
+        }
+        report.setdefault("rows", []).append(row)
+        return row
+
+    def _format_batch_report_text(self, report, max_rows=300):
+        lines = []
+        title = report.get("title", "Batch Report")
+        lines.append(f"=== {title} ===")
+        scope = report.get("scope", "")
+        if scope:
+            lines.append(f"Scope: {scope}")
+        lines.append(f"Total: {report.get('total', 0)}")
+
+        counter_text = self._format_batch_report_counters(report.get("counters", {}))
+        if counter_text:
+            lines.append(counter_text)
+        lines.append("")
+
+        rows = list(report.get("rows", []))
+        for index, row in enumerate(rows[:max_rows], 1):
+            status = row.get("status", "INFO")
+            name = row.get("name", "<Unknown>")
+            reason = row.get("reason", "")
+            lines.append(f"{index:03d}. [{status}] {name}  {reason}")
+            details = row.get("details") or []
+            for detail in details[:5]:
+                lines.append(f"      - {detail}")
+        if len(rows) > max_rows:
+            lines.append("")
+            lines.append(f"... {len(rows) - max_rows} more rows omitted")
+
+        warnings = report.get("warnings") or []
+        if warnings:
+            lines.append("")
+            lines.append("Warnings:")
+            for warning in warnings[:50]:
+                lines.append(f"- {warning}")
+
+        failures = report.get("failures") or []
+        if failures:
+            lines.append("")
+            lines.append("Failures:")
+            for failure in failures[:50]:
+                name = failure.get("name", "<Unknown>") if isinstance(failure, dict) else "<Unknown>"
+                reason = failure.get("reason", str(failure)) if isinstance(failure, dict) else str(failure)
+                lines.append(f"- {name}: {reason}")
+
+        export_path = report.get("export_path", "")
+        if export_path:
+            lines.append("")
+            lines.append(f"Export Path: {export_path}")
+        return "\n".join(lines)
+
+    def _format_batch_report_counters(self, counters):
+        parts = []
+        for key, value in counters.items():
+            parts.append(f"{key}: {value}")
+        return " | ".join(parts)
+
+    def _export_batch_report_text(self, file_prefix, report_text):
+        export_dir = self._get_scene_tools_export_dir()
+        if not os.path.isdir(export_dir):
+            os.makedirs(export_dir)
+        safe_prefix = self._sanitize_export_file_prefix(file_prefix)
+        file_name = f"{safe_prefix}_{time.strftime('%Y%m%d_%H%M%S')}.txt"
+        file_path = os.path.join(export_dir, file_name)
+        with open(file_path, "w", encoding="utf-8") as report_file:
+            report_file.write(report_text)
+        return file_path
+
+    def _sanitize_export_file_prefix(self, file_prefix):
+        text = str(file_prefix or "SceneToolsReport").strip()
+        safe_chars = []
+        for char in text:
+            if char.isalnum() or char in ("_", "-"):
+                safe_chars.append(char)
+        return "".join(safe_chars) or "SceneToolsReport"
 
     def refresh_invalid_actor_level_list(self, show_status=True):
         try:
@@ -2214,10 +2400,163 @@ class SceneToolsController:
     def _clear_invalid_actor_scan_results(self, message=""):
         self._last_invalid_actor_plan = []
         self._last_invalid_actor_report = {}
+        self._invalid_actor_result_entries = []
+        self._invalid_actor_selected_result_indexes = []
+        self._set_list_view_items("list_invalid_actor_results", [])
+        self._set_invalid_actor_result_info("无扫描结果。")
         if message:
             self.data.set_text("txt_invalid_actor_preview", message)
         else:
             self.data.set_text("txt_invalid_actor_preview", "关卡选择已变化，请重新预览无效 Actor。")
+
+    def _refresh_invalid_actor_result_list(self, plan, summary):
+        entries = self._build_invalid_actor_result_entries(plan)
+        self._invalid_actor_result_entries = entries
+        self._invalid_actor_selected_result_indexes = []
+        self._set_list_view_items("list_invalid_actor_results", [entry["display"] for entry in entries])
+        self._set_invalid_actor_result_info(self._format_invalid_actor_result_info(entries, summary))
+
+    def _build_invalid_actor_result_entries(self, plan):
+        entries = []
+        for plan_index, item in enumerate(plan):
+            action = item.get("action", "skip")
+            if action not in ("mark", "already_marked", "error"):
+                continue
+            display = self._format_invalid_actor_result_display(item, len(entries) + 1)
+            entries.append({
+                "plan_index": plan_index,
+                "actor": item.get("actor"),
+                "name": item.get("name", "<UnknownActor>"),
+                "action": action,
+                "reason": item.get("reason", ""),
+                "details": list(item.get("details", [])),
+                "display": display,
+            })
+        return entries
+
+    def _format_invalid_actor_result_display(self, item, row_index):
+        action = item.get("action", "skip")
+        if action == "mark":
+            label = "MARK"
+            reason = item.get("reason", "")
+        elif action == "already_marked":
+            label = "TAGGED"
+            reason = "; ".join(item.get("details", [])) or item.get("reason", "")
+        else:
+            label = "ERR"
+            reason = item.get("reason", "")
+        return f"{row_index:03d}. [{label}] {item.get('name', '<UnknownActor>')}  {reason}"
+
+    def _format_invalid_actor_result_info(self, entries, summary):
+        selectable_count = len([entry for entry in entries if entry.get("action") in ("mark", "already_marked")])
+        error_count = len([entry for entry in entries if entry.get("action") == "error"])
+        return (
+            f"明细结果：可定位 {selectable_count}，错误 {error_count}，"
+            f"跳过 {summary.get('skip', 0)}，扫描 {summary.get('total', 0)}。"
+        )
+
+    def _build_invalid_actor_batch_report(self, plan, summary):
+        counters = {
+            "Source Actors": summary.get("source_actor_count", summary.get("total", 0)),
+            "Mark": summary.get("mark", 0),
+            "Already Marked": summary.get("already_marked", 0),
+            "Skip": summary.get("skip", 0),
+            "Errors": summary.get("errors", 0),
+        }
+        report = self._make_batch_report(
+            "Invalid Actor Cleanup Preview",
+            scope=summary.get("scope_label", "关卡扫描"),
+            total=summary.get("total", len(plan)),
+            counters=counters,
+        )
+        for item in plan:
+            action = item.get("action", "skip")
+            if action == "mark":
+                status = "MARK"
+                reason = item.get("reason", "")
+            elif action == "already_marked":
+                status = "TAGGED"
+                reason = item.get("reason", "")
+            elif action == "error":
+                status = "ERR"
+                reason = item.get("reason", "")
+                report.setdefault("failures", []).append({
+                    "name": item.get("name", "<UnknownActor>"),
+                    "reason": reason,
+                })
+            else:
+                status = "SKIP"
+                reason = item.get("reason", "")
+            self._add_batch_report_row(
+                report,
+                status,
+                item.get("name", "<UnknownActor>"),
+                reason=reason,
+                details=item.get("details", []),
+                actor=item.get("actor"),
+            )
+        return report
+
+    def _set_invalid_actor_result_info(self, text):
+        try:
+            self.data.set_text("txt_invalid_actor_result_info", text)
+        except Exception:
+            pass
+
+    def _set_invalid_actor_selected_result_indexes(self, indexes, update_selection):
+        unique_indexes = []
+        for index in indexes:
+            try:
+                index = int(index)
+            except Exception:
+                continue
+            if 0 <= index < len(self._invalid_actor_result_entries) and index not in unique_indexes:
+                unique_indexes.append(index)
+        self._invalid_actor_selected_result_indexes = unique_indexes
+        if update_selection:
+            self._set_list_view_selection("list_invalid_actor_results", unique_indexes)
+
+    def _get_selected_invalid_actor_result_entries(self):
+        entries = []
+        for index in self._invalid_actor_selected_result_indexes:
+            if 0 <= index < len(self._invalid_actor_result_entries):
+                entries.append(self._invalid_actor_result_entries[index])
+        return entries
+
+    def _select_invalid_actor_result_entries(self, entries, source_label):
+        targets = [
+            entry.get("actor") for entry in entries
+            if entry.get("action") in ("mark", "already_marked") and entry.get("actor") is not None
+        ]
+        if not targets:
+            msg = "所选明细中没有可定位的无效 Actor。"
+            self.data.set_text("txt_status", msg)
+            return
+        actor_subsystem = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
+        actor_subsystem.set_selected_level_actors(targets)
+        msg = f"已通过{source_label}选中 {len(targets)} 个无效 Actor。"
+        self.data.set_text("txt_status", msg)
+        unreal.log(f"SceneTools: {msg}")
+
+    def _infer_last_invalid_actor_scope_label(self):
+        entries = self._get_selected_invalid_actor_level_entries(refresh_if_missing=False)
+        return self._format_invalid_actor_scan_scope_label(entries)
+
+    def _format_invalid_actor_execution_report_for_export(self, report):
+        if "soft_deleted" in report:
+            return self._format_invalid_actor_soft_delete_report(report)
+        if "marked" in report:
+            return self._format_invalid_actor_report(report)
+        return ""
+
+    def _get_scene_tools_export_dir(self):
+        try:
+            saved_dir = unreal.Paths.project_saved_dir()
+            if saved_dir:
+                return os.path.join(saved_dir, "SceneTools")
+        except Exception:
+            pass
+        return os.path.join(os.getcwd(), "Saved", "SceneTools")
 
     def _get_level_identity_candidates(self, level):
         if level is None:
