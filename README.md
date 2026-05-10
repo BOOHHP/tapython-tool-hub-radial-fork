@@ -365,6 +365,67 @@ npm audit --omit=dev
 
 The web build may warn about large chunks because Ant Design is included in the current bundle. That warning is expected for now; code splitting is a later UI optimization.
 
+## Local Deployment
+
+### Prerequisites
+
+- Node.js 20+ and npm 10+
+- (Optional) PostgreSQL 15+ for persistent submission storage
+
+### Quick Start (Development)
+
+```bash
+cd tapython-tool-hub
+npm install
+
+# Start both web + API in dev mode
+npm run dev:all
+```
+
+The web dev server runs on `http://localhost:5174` and the API on `http://localhost:8787`.
+
+### Quick Start (Production)
+
+```bash
+# One-command build + start (macOS/Linux)
+npm run start:prod
+
+# Or with LAN access (pass your LAN IP):
+npm run start:prod -- 192.168.1.100
+```
+
+On Windows:
+
+```bat
+scripts\start-production.bat 10.2.13.8 5174 8787
+```
+
+The production script builds everything, then starts the API (port 8787) and web preview (port 4174) in parallel. Press Ctrl+C to stop both.
+
+### Environment Variables
+
+Copy `.env.example` to `.env` and adjust as needed:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DATABASE_URL` | *(empty)* | PostgreSQL connection string. When empty, submissions use local file storage. |
+| `API_HOST` | `127.0.0.1` | API listen address. Set `0.0.0.0` for LAN access. |
+| `API_PORT` | `8787` | API listen port. |
+| `VITE_API_BASE_URL` | *auto-detected* | Frontend build-time API URL. Override when the API is on a different host. |
+
+### PostgreSQL Setup (Optional)
+
+Without `DATABASE_URL`, the API stores submissions as local files under `.tapython-tool-hub/submissions/`. This works for local trials.
+
+For persistent storage, create a database and run the migration:
+
+```bash
+createdb tapython_tool_hub
+psql -d tapython_tool_hub -f apps/api/db/migrations/001_initial.sql
+```
+
+Then set `DATABASE_URL=postgresql://user:password@localhost:5432/tapython_tool_hub` in your `.env`.
+
 ## Deployment
 
 Preferred LAN deployment runs the API and web build together:
@@ -375,13 +436,15 @@ npm run build
 npm run start:api
 ```
 
-On Windows you can launch a production-style build plus preview pair with `scripts\start-production.bat`:
+Or use the production startup script:
 
-```bat
-scripts\start-production.bat 10.2.13.8 5174 8787
+```bash
+# macOS/Linux
+bash scripts/start-production.sh [HOST] [WEB_PORT] [API_PORT]
+
+# Windows
+scripts\start-production.bat [HOST] [WEB_PORT] [API_PORT]
 ```
-
-Arguments are `<public IP or hostname> <web port> <api port>`.
 
 Serve `dist/` with nginx or another static server and route API/download requests to `apps/api`, or configure `VITE_API_BASE_URL` to point at the API host.
 
