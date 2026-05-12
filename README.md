@@ -402,6 +402,8 @@ scripts\start-production.bat 10.2.13.8 5174 8787
 
 The production script builds everything, then starts the API (port 8787) and web preview (port 4174) in parallel. Press Ctrl+C to stop both.
 
+Important on Windows: do not run the workspace directly from a UNC network share such as `\\server\share\tapython-tool-hub`. This repo uses npm workspace packages under `node_modules/@tapython-tool-hub/*`, and on Windows those entries are junctions that resolve to server-local absolute paths. If the workspace is opened from a UNC path, Node.js cannot resolve the internal packages and the API exits before the health check succeeds. Run the repo from a local disk path on the host machine, or clone/copy it locally and run `npm install` there.
+
 ### Environment Variables
 
 Copy `.env.example` to `.env` and adjust as needed:
@@ -445,6 +447,8 @@ bash scripts/start-production.sh [HOST] [WEB_PORT] [API_PORT]
 # Windows
 scripts\start-production.bat [HOST] [WEB_PORT] [API_PORT]
 ```
+
+Windows note: `scripts\start-production.bat` does not support launching the repo directly from a UNC share. See [docs/windows-unc-deployment.md](docs/windows-unc-deployment.md) for the operational limitation, symptoms, and supported deployment patterns.
 
 Serve `dist/` with nginx or another static server and route API/download requests to `apps/api`, or configure `VITE_API_BASE_URL` to point at the API host.
 

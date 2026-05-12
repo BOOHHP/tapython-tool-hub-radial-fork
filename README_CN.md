@@ -402,6 +402,8 @@ scripts\start-production.bat 10.2.13.8 5174 8787
 
 生产脚本会构建全部产物，然后并行启动 API（端口 8787）和 Web 预览（端口 4174）。按 Ctrl+C 停止。
 
+Windows 下有一个重要限制：不要直接从 UNC 网络共享路径启动工作区，例如 `\\server\share\tapython-tool-hub`。这个仓库使用 npm workspace，`node_modules/@tapython-tool-hub/*` 在 Windows 上会被安装成 junction，并解析到服务器本机的绝对路径；如果客户端直接从 UNC 路径运行，Node.js 无法解析这些内部包，API 会在健康检查成功前提前退出。正确做法是在宿主机本地磁盘路径运行，或者先把仓库拷贝/克隆到本机，再执行 `npm install` 后启动。
+
 ### 环境变量
 
 复制 `.env.example` 为 `.env` 并按需调整：
@@ -445,6 +447,8 @@ bash scripts/start-production.sh [HOST] [WEB_PORT] [API_PORT]
 # Windows
 scripts\start-production.bat [HOST] [WEB_PORT] [API_PORT]
 ```
+
+Windows 说明：`scripts\start-production.bat` 不支持直接从 UNC 共享路径启动仓库。限制原因、典型症状和推荐部署方式见 [docs/windows-unc-deployment.md](docs/windows-unc-deployment.md)。
 
 将 `dist/` 交给 nginx 或其他静态服务器，并把 API/downloads 请求转发到 `apps/api`；也可以通过 `VITE_API_BASE_URL` 指向独立 API 主机。
 
