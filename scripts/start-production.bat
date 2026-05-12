@@ -3,7 +3,7 @@ setlocal EnableExtensions EnableDelayedExpansion
 
 set "SCRIPT_DIR=%~dp0"
 for %%I in ("%SCRIPT_DIR%..") do set "REPO_ROOT=%%~fI"
-cd /d "%REPO_ROOT"
+cd /d "%REPO_ROOT%"
 
 set "SERVER_HOST=%~1"
 if "%SERVER_HOST%"=="" set "SERVER_HOST=127.0.0.1"
@@ -41,7 +41,7 @@ call npm run build:api
 if errorlevel 1 goto :fail
 
 echo [tapython-tool-hub] starting API window...
-start "tapython-tool-hub api" cmd /k "cd /d "%REPO_ROOT%" && set "API_HOST=%API_HOST%" && set "API_PORT=%API_PORT%" && npm run start -w @tapython-tool-hub/api 2>&1 | tee %LOG_DIR%\api.log"
+start "tapython-tool-hub api" cmd /k "cd /d "%REPO_ROOT%" && set API_HOST=%API_HOST%&& set API_PORT=%API_PORT%&& npm run start -w @tapython-tool-hub/api 2>&1 | tee %LOG_DIR%\api.log"
 
 echo [tapython-tool-hub] starting Web window...
 start "tapython-tool-hub web" cmd /k "cd /d "%REPO_ROOT%" && npm run preview -w @tapython-tool-hub/web -- --host 0.0.0.0 --port %WEB_PORT% 2>&1 | tee %LOG_DIR%\web.log"
@@ -55,18 +55,20 @@ goto :healthcheck
 
 :single_mode
 REM === Single-process mode ===
-set "SERVE_STATIC=true"
 set "API_HOST=0.0.0.0"
+REM In single mode, the API serves static files, so point Vite at the API port
+set "VITE_API_BASE_URL=http://%SERVER_HOST%:%API_PORT%"
 
-echo [tapython-tool-hub] building...
+echo [tapython-tool-hub] building web with VITE_API_BASE_URL=%VITE_API_BASE_URL%...
 call npm run build
 if errorlevel 1 goto :fail
 
+echo [tapython-tool-hub] building api...
 call npm run build:api
 if errorlevel 1 goto :fail
 
 echo [tapython-tool-hub] starting API (single process, serving static) on %API_HOST%:%API_PORT%...
-start "tapython-tool-hub" cmd /k "cd /d "%REPO_ROOT%" && set "SERVE_STATIC=true" && set "API_HOST=%API_HOST%" && set "API_PORT=%API_PORT%" && npm run start -w @tapython-tool-hub/api 2>&1 | tee %LOG_DIR%\api.log"
+start "tapython-tool-hub" cmd /k "cd /d %REPO_ROOT% && set SERVE_STATIC=true&& set API_HOST=%API_HOST%&& set API_PORT=%API_PORT%&& npm run start -w @tapython-tool-hub/api 2>&1 | tee %LOG_DIR%\api.log"
 
 echo [tapython-tool-hub] started (single mode).
 echo [tapython-tool-hub] local:  http://127.0.0.1:%API_PORT%/
@@ -90,6 +92,7 @@ for /L %%i in (1,1,30) do (
 )
 if "!HEALTH_OK!"=="0" (
     echo [tapython-tool-hub] WARNING: API health check timed out after 30s. Service may not be ready.
+    echo [tapython-tool-hub] Check logs in %LOG_DIR% for errors.
 )
 goto :eof
 
