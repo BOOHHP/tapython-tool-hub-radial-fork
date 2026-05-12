@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-09T06:40:07.637Z",
+  "generatedAt": "2026-05-10T15:09:23.847Z",
   "tool": {
     "slug": "asset-organizer",
     "name": "AssetOrganizer",
@@ -40,8 +40,8 @@
       "latestReadme": "/downloads/asset-organizer/1.0.0/README.md",
       "latestMarkdown": "/downloads/asset-organizer/1.0.0/tool.md",
       "latestPackage": "/downloads/asset-organizer/1.0.0/asset-organizer-1.0.0.zip",
-      "latestPackageSha256": "899f9416b31b188b39271a013573551f28945ff680080c017b822808fc0d15fb",
-      "latestPackageSize": 98923,
+      "latestPackageSha256": "2934483371a6c1c464cd80a75566b2a3e9447fe6d781e844f5112d0b39c6af94",
+      "latestPackageSize": 97114,
       "latestPackageAvailable": true
     },
     "summary": {
@@ -105,27 +105,27 @@
         "扫描大型项目时可能耗时较长，进度由 ScopedSlowTask 显示"
       ]
     },
-    "documentationMarkdown": "# Asset Tools\r\n\r\n> 资产整理工具集，提供非 POT 纹理的批量扫描与修复，支持多目录管理、内容浏览器联动、结果列表同步及修复报告导出。\r\n\r\n## 快速开始\r\n\r\n1. 将 `AssetOrganizer/` 目录复制到 `<Project>/TA/TAPython/Python/`\r\n2. 将以下 JSON 条目合并到 `<Project>/TA/TAPython/UI/MenuConfig.json` 的 `OnToolBarChameleon.items` 数组：\r\n   ```json\r\n   {\r\n     \"name\": \"Asset Tools\",\r\n     \"tooltip\": \"资产整理工具集：纹理、材质、静态网格等 Content Browser 资产治理。\",\r\n     \"ExtensionHookName\": \"OnToolBarChameleon\",\r\n     \"ChameleonTools\": \"../Python/AssetOrganizer/AssetOrganizer.json\"\r\n   }\r\n   ```\r\n3. 在 UE 编辑器中 Reload TAPython 或重启编辑器，从 Chameleon 工具栏打开工具。\r\n\r\n## 文件清单\r\n\r\n| 文件名 | 用途 | 存放路径 |\r\n|--------|------|---------|\r\n| `AssetOrganizer.json` | Chameleon UI 布局（View） | `<Project>/TA/TAPython/Python/AssetOrganizer/` |\r\n| `AssetOrganizer.py` | 业务逻辑控制器（Controller） | `<Project>/TA/TAPython/Python/AssetOrganizer/` |\r\n| `AssetPathProxy.py` | UObject 代理，用于 DetailsView 编辑扫描路径列表 | `<Project>/TA/TAPython/Python/AssetOrganizer/` |\r\n| `__init__.py` | Python 模块初始化（空文件） | `<Project>/TA/TAPython/Python/AssetOrganizer/` |\r\n| `AssetMenuConfig.snippet.json` | MenuConfig 注册条目片段（安装参考） | 随提交文档，不需复制到项目 |\r\n\r\n## 架构简述\r\n\r\n- **工具名**：AssetOrganizer / 资产整理工具集\r\n- **Controller 类**：`AssetOrganizerController`\r\n- **代理类**：`AssetPathProxy`（`@unreal.uclass()` 装饰的 UObject，通过 `details_non_pot_texture_paths` DetailsView 小部件暴露路径列表编辑器）\r\n- **挂载点**：`OnToolBarChameleon`（Chameleon 工具栏下拉菜单）\r\n- **入口 JSON**：`AssetOrganizer/AssetOrganizer.json`\r\n- **核心 UE API**：\r\n  - `unreal.AssetRegistryHelpers.get_asset_registry`（资产注册表查询）\r\n  - `unreal.EditorAssetLibrary.load_asset` / `save_loaded_asset`（资产加载与保存）\r\n  - `unreal.EditorAssetLibrary.sync_browser_to_objects`（内容浏览器同步）\r\n  - `unreal.EditorUtilityLibrary.get_selected_assets`（获取内容浏览器选中资产）\r\n  - `unreal.ScopedEditorTransaction`（Ctrl+Z 撤销支持）\r\n  - `unreal.ScopedSlowTask`（大批量处理进度条）\r\n  - `unreal.register_slate_post_tick_callback`（延迟绑定 DetailsView）\r\n- **核心控件 Aka**（共 18 个）：`asset_organizer_scroll`、`details_non_pot_texture_paths`、`list_non_pot_texture_results`、`txt_status` 等\r\n\r\n## MenuConfig\r\n\r\n```json menuconfig path=AssetMenuConfig.snippet.json\r\n@file:AssetMenuConfig.snippet.json\r\n```\r\n\r\n## View\r\n\r\n```json chameleon-ui path=AssetOrganizer/AssetOrganizer.json\r\n@file:AssetOrganizer.json\r\n```\r\n\r\n## Controller\r\n\r\n```python controller path=AssetOrganizer/AssetOrganizer.py\r\n@file:AssetOrganizer.py\r\n```\r\n\r\n## 使用说明\r\n\r\n### 非 POT 纹理扫描与修复\r\n\r\n1. **配置扫描目录**：工具打开后，顶部\"扫描目录列表\"区域默认扫描 `/Game`。\r\n   - 点击**从内容浏览器添加**，选中目标文件夹或资产后导入路径。\r\n   - 点击**应用路径列表**使路径生效；点击**重置**恢复为 `/Game`。\r\n   - 可直接在 DetailsView 中编辑 `scan_paths` 数组（数组每项填写 `/Game/...` 格式路径）。\r\n2. **配置选项**：\r\n   - 勾选**递归扫描子目录**（默认已勾选）。\r\n   - 勾选**修复后自动保存**：修复完毕后将调用 `save_loaded_asset` 保存资产文件。\r\n3. **扫描预览**：点击**预览扫描**，工具将遍历 AssetRegistry 查找宽高不是 2 的幂的 Texture2D，结果显示在列表及预览文本框中。\r\n4. **执行修复**：确认预览结果无误后，点击**修复**。工具将对每个待修复纹理设置 `power_of_two_mode = ETexturePowerOfTwoSetting.StretchToPowerOfTwo`。\r\n5. **同步到内容浏览器**：在结果列表中选中一条或多条记录，点击**同步到内容浏览器**定位该纹理资产。\r\n6. **导出报告**：点击**导出报告**将扫描与修复摘要保存为文本文件（路径：`<ProjectSaved>/NonPOTTextureReport_<时间戳>.txt`）。\r\n\r\n## 注意事项\r\n\r\n- 属性修改通过 `ScopedEditorTransaction` 封装，**在未保存前支持 Ctrl+Z 撤销**。\r\n- 勾选\"**修复后自动保存**\"后会调用 `save_loaded_asset`，已保存的修改**不可通过 Ctrl+Z 撤销**，请谨慎使用。\r\n- 工具仅设置 `Power Of Two Mode` 属性为 `Stretch To Power Of Two`，**不会重采样源图像**，不影响原始纹理文件。\r\n- 首次打开工具时会通过 `register_slate_post_tick_callback` 延迟绑定 DetailsView；若日志出现绑定失败提示，关闭后重新打开工具即可。\r\n- 扫描大型项目（/Game 根目录）时可能耗时较长，进度由编辑器底部 `ScopedSlowTask` 进度条显示，请勿在扫描期间关闭工具。\r\n\r\n## Agent 安装指令\r\n\r\nAgent 可按以下方式读取本文档并完成安装：\r\n\r\n1. **解析 YAML front matter**，获取 `installPath`（`<Project>/TA/TAPython/Python/AssetOrganizer/`）和 `menuConfigMerge` 配置。\r\n2. **展开 `@file:` 引用**：将 `AssetOrganizer.json`、`AssetOrganizer.py`、`AssetPathProxy.py`、`__init__.py` 写入 `installPath`。\r\n3. **合并 MenuConfig**：读取 `menuConfigMerge.target` 指向的 JSON 文件，在 `OnToolBarChameleon.items` 数组末尾追加 `menuConfigMerge.itemsToAdd` 中的条目（若同名条目已存在则跳过）。\r\n4. **校验安装**：确认上述 4 个文件存在后，提示用户 Reload TAPython 或重启 UE 编辑器。\r\n5. **文件完整性校验**（可选）：对照 `previousVersions[0].files` 中的 sha256 值验证写入文件是否一致。",
+    "documentationMarkdown": "# Asset Tools\n\n> 资产整理工具集，提供非 POT 纹理的批量扫描与修复，支持多目录管理、内容浏览器联动、结果列表同步及修复报告导出。\n\n## 快速开始\n\n1. 将 `AssetOrganizer/` 目录复制到 `<Project>/TA/TAPython/Python/`\n2. 将以下 JSON 条目合并到 `<Project>/TA/TAPython/UI/MenuConfig.json` 的 `OnToolBarChameleon.items` 数组：\n   ```json\n   {\n     \"name\": \"Asset Tools\",\n     \"tooltip\": \"资产整理工具集：纹理、材质、静态网格等 Content Browser 资产治理。\",\n     \"ExtensionHookName\": \"OnToolBarChameleon\",\n     \"ChameleonTools\": \"../Python/AssetOrganizer/AssetOrganizer.json\"\n   }\n   ```\n3. 在 UE 编辑器中 Reload TAPython 或重启编辑器，从 Chameleon 工具栏打开工具。\n\n## 文件清单\n\n| 文件名 | 用途 | 存放路径 |\n|--------|------|---------|\n| `AssetOrganizer.json` | Chameleon UI 布局（View） | `<Project>/TA/TAPython/Python/AssetOrganizer/` |\n| `AssetOrganizer.py` | 业务逻辑控制器（Controller） | `<Project>/TA/TAPython/Python/AssetOrganizer/` |\n| `AssetPathProxy.py` | UObject 代理，用于 DetailsView 编辑扫描路径列表 | `<Project>/TA/TAPython/Python/AssetOrganizer/` |\n| `__init__.py` | Python 模块初始化（空文件） | `<Project>/TA/TAPython/Python/AssetOrganizer/` |\n| `AssetMenuConfig.snippet.json` | MenuConfig 注册条目片段（安装参考） | 随提交文档，不需复制到项目 |\n\n## 架构简述\n\n- **工具名**：AssetOrganizer / 资产整理工具集\n- **Controller 类**：`AssetOrganizerController`\n- **代理类**：`AssetPathProxy`（`@unreal.uclass()` 装饰的 UObject，通过 `details_non_pot_texture_paths` DetailsView 小部件暴露路径列表编辑器）\n- **挂载点**：`OnToolBarChameleon`（Chameleon 工具栏下拉菜单）\n- **入口 JSON**：`AssetOrganizer/AssetOrganizer.json`\n- **核心 UE API**：\n  - `unreal.AssetRegistryHelpers.get_asset_registry`（资产注册表查询）\n  - `unreal.EditorAssetLibrary.load_asset` / `save_loaded_asset`（资产加载与保存）\n  - `unreal.EditorAssetLibrary.sync_browser_to_objects`（内容浏览器同步）\n  - `unreal.EditorUtilityLibrary.get_selected_assets`（获取内容浏览器选中资产）\n  - `unreal.ScopedEditorTransaction`（Ctrl+Z 撤销支持）\n  - `unreal.ScopedSlowTask`（大批量处理进度条）\n  - `unreal.register_slate_post_tick_callback`（延迟绑定 DetailsView）\n- **核心控件 Aka**（共 18 个）：`asset_organizer_scroll`、`details_non_pot_texture_paths`、`list_non_pot_texture_results`、`txt_status` 等\n\n## MenuConfig\n\n```json menuconfig path=AssetMenuConfig.snippet.json\n@file:AssetMenuConfig.snippet.json\n```\n\n## View\n\n```json chameleon-ui path=AssetOrganizer/AssetOrganizer.json\n@file:AssetOrganizer.json\n```\n\n## Controller\n\n```python controller path=AssetOrganizer/AssetOrganizer.py\n@file:AssetOrganizer.py\n```\n\n## 使用说明\n\n### 非 POT 纹理扫描与修复\n\n1. **配置扫描目录**：工具打开后，顶部\"扫描目录列表\"区域默认扫描 `/Game`。\n   - 点击**从内容浏览器添加**，选中目标文件夹或资产后导入路径。\n   - 点击**应用路径列表**使路径生效；点击**重置**恢复为 `/Game`。\n   - 可直接在 DetailsView 中编辑 `scan_paths` 数组（数组每项填写 `/Game/...` 格式路径）。\n2. **配置选项**：\n   - 勾选**递归扫描子目录**（默认已勾选）。\n   - 勾选**修复后自动保存**：修复完毕后将调用 `save_loaded_asset` 保存资产文件。\n3. **扫描预览**：点击**预览扫描**，工具将遍历 AssetRegistry 查找宽高不是 2 的幂的 Texture2D，结果显示在列表及预览文本框中。\n4. **执行修复**：确认预览结果无误后，点击**修复**。工具将对每个待修复纹理设置 `power_of_two_mode = ETexturePowerOfTwoSetting.StretchToPowerOfTwo`。\n5. **同步到内容浏览器**：在结果列表中选中一条或多条记录，点击**同步到内容浏览器**定位该纹理资产。\n6. **导出报告**：点击**导出报告**将扫描与修复摘要保存为文本文件（路径：`<ProjectSaved>/NonPOTTextureReport_<时间戳>.txt`）。\n\n## 注意事项\n\n- 属性修改通过 `ScopedEditorTransaction` 封装，**在未保存前支持 Ctrl+Z 撤销**。\n- 勾选\"**修复后自动保存**\"后会调用 `save_loaded_asset`，已保存的修改**不可通过 Ctrl+Z 撤销**，请谨慎使用。\n- 工具仅设置 `Power Of Two Mode` 属性为 `Stretch To Power Of Two`，**不会重采样源图像**，不影响原始纹理文件。\n- 首次打开工具时会通过 `register_slate_post_tick_callback` 延迟绑定 DetailsView；若日志出现绑定失败提示，关闭后重新打开工具即可。\n- 扫描大型项目（/Game 根目录）时可能耗时较长，进度由编辑器底部 `ScopedSlowTask` 进度条显示，请勿在扫描期间关闭工具。\n\n## Agent 安装指令\n\nAgent 可按以下方式读取本文档并完成安装：\n\n1. **解析 YAML front matter**，获取 `installPath`（`<Project>/TA/TAPython/Python/AssetOrganizer/`）和 `menuConfigMerge` 配置。\n2. **展开 `@file:` 引用**：将 `AssetOrganizer.json`、`AssetOrganizer.py`、`AssetPathProxy.py`、`__init__.py` 写入 `installPath`。\n3. **合并 MenuConfig**：读取 `menuConfigMerge.target` 指向的 JSON 文件，在 `OnToolBarChameleon.items` 数组末尾追加 `menuConfigMerge.itemsToAdd` 中的条目（若同名条目已存在则跳过）。\n4. **校验安装**：确认上述 4 个文件存在后，提示用户 Reload TAPython 或重启 UE 编辑器。\n5. **文件完整性校验**（可选）：对照 `previousVersions[0].files` 中的 sha256 值验证写入文件是否一致。",
     "codeAssets": [
       {
         "path": "MenuConfig.snippet.json",
-        "sha256": "0f135273820efed9aea8f15d02256241a6c143dcf997fd2b5958017a3261873f",
-        "size": 266
+        "sha256": "ae1ffcc227bfce68c2d7746669857db127b01175e7f77c3cfec1cc80790bb113",
+        "size": 261
       },
       {
         "path": "AssetMenuConfig.snippet.json",
-        "sha256": "7e7e3de31f91512603dc037089c0b5015b51b6ae7fc4cae4ba4928423d264ad7",
-        "size": 253
+        "sha256": "7c598db8e453dd0660576b2f322c63eed50b3b47bf72e57f8ddf8d083a47c4a3",
+        "size": 247
       },
       {
         "path": "AssetOrganizer/AssetOrganizer.json",
-        "sha256": "950345017917339118c7d19b2e78af8d9b945ebcb3d4533d310f977a42cb9513",
-        "size": 22276
+        "sha256": "e7c0e43a9eb3fc572f1ea10c2f73f8ce812c16d518fe89f68497957e54f3e365",
+        "size": 21978
       },
       {
         "path": "AssetOrganizer/AssetOrganizer.py",
-        "sha256": "dc6cb15f02dffefc837bd5e672a5490a8a6fa70c07d2cf4a0ca51be70bf2ef04",
-        "size": 60756
+        "sha256": "3e383b8df4bbe314fb2c0a4b05a4d9bb96bb70f50a5be038eb4637ca4db6ffa5",
+        "size": 59446
       },
       {
         "path": "AssetOrganizer/__init__.py",
@@ -145,8 +145,8 @@
           "readme": "/downloads/asset-organizer/1.0.0/README.md",
           "markdown": "/downloads/asset-organizer/1.0.0/tool.md",
           "package": "/downloads/asset-organizer/1.0.0/asset-organizer-1.0.0.zip",
-          "packageSha256": "899f9416b31b188b39271a013573551f28945ff680080c017b822808fc0d15fb",
-          "packageSize": 98923,
+          "packageSha256": "2934483371a6c1c464cd80a75566b2a3e9447fe6d781e844f5112d0b39c6af94",
+          "packageSize": 97114,
           "packageAvailable": true
         },
         "manifest": {
@@ -183,23 +183,23 @@
           "files": [
             {
               "path": "MenuConfig.snippet.json",
-              "sha256": "0f135273820efed9aea8f15d02256241a6c143dcf997fd2b5958017a3261873f",
-              "size": 266
+              "sha256": "ae1ffcc227bfce68c2d7746669857db127b01175e7f77c3cfec1cc80790bb113",
+              "size": 261
             },
             {
               "path": "AssetMenuConfig.snippet.json",
-              "sha256": "7e7e3de31f91512603dc037089c0b5015b51b6ae7fc4cae4ba4928423d264ad7",
-              "size": 253
+              "sha256": "7c598db8e453dd0660576b2f322c63eed50b3b47bf72e57f8ddf8d083a47c4a3",
+              "size": 247
             },
             {
               "path": "AssetOrganizer/AssetOrganizer.json",
-              "sha256": "950345017917339118c7d19b2e78af8d9b945ebcb3d4533d310f977a42cb9513",
-              "size": 22276
+              "sha256": "e7c0e43a9eb3fc572f1ea10c2f73f8ce812c16d518fe89f68497957e54f3e365",
+              "size": 21978
             },
             {
               "path": "AssetOrganizer/AssetOrganizer.py",
-              "sha256": "dc6cb15f02dffefc837bd5e672a5490a8a6fa70c07d2cf4a0ca51be70bf2ef04",
-              "size": 60756
+              "sha256": "3e383b8df4bbe314fb2c0a4b05a4d9bb96bb70f50a5be038eb4637ca4db6ffa5",
+              "size": 59446
             },
             {
               "path": "AssetOrganizer/__init__.py",

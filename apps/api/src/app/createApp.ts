@@ -12,8 +12,9 @@ import { registerSubmissionRoutes } from '../routes/submissions.js';
 import { registerToolRoutes } from '../routes/tools.js';
 import { AdminWorkflow } from '../services/adminWorkflow.js';
 import { SubmissionWorkflow } from '../services/submissionWorkflow.js';
+import { registerStaticAssets } from './staticPlugin.js';
 
-export function createApp(config: ApiConfig) {
+export async function createApp(config: ApiConfig) {
   const app = fastify({ logger: true });
   const databasePool = createDatabasePool(config);
   const toolRepository = new StaticToolRepository(config);
@@ -33,6 +34,10 @@ export function createApp(config: ApiConfig) {
   app.register(registerDownloadRoutes(config));
   app.register(registerSubmissionRoutes(submissionRepository, submissionWorkflow));
   app.register(registerAdminRoutes(submissionRepository, submissionWorkflow, adminWorkflow));
+
+  if (config.serveStatic) {
+    await registerStaticAssets(app, { root: config.webStaticRoot });
+  }
 
   app.addHook('onClose', async () => {
     await databasePool?.end();

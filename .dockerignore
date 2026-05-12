@@ -1,0 +1,8 @@
+node_modules
+.git
+graphify-out
+.tapython-tool-hub
+*.log
+logs/
+.env
+.env.local

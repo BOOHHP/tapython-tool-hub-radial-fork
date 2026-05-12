@@ -16,13 +16,15 @@ test('serves markdown downloads as utf-8 markdown text', async () => {
     toolDocsRoot: path.join(root, 'data', 'tool-docs'),
     toolApiRoot: path.join(root, 'public', 'api', 'tools'),
     downloadRoot: path.join(root, 'public', 'downloads'),
-    submissionRoot: path.join(root, 'submissions')
+    submissionRoot: path.join(root, 'submissions'),
+    serveStatic: false,
+    webStaticRoot: path.join(root, 'dist')
   };
   const filePath = path.join(config.downloadRoot, 'demo-tool', '1.0.0', 'tool.md');
   await fs.mkdir(path.dirname(filePath), { recursive: true });
   await fs.writeFile(filePath, '\uFEFF# Demo\n\n中文 Markdown 下载测试。\n', 'utf8');
 
-  const app = createApp(config);
+  const app = await createApp(config);
   try {
     const response = await app.inject({ method: 'GET', url: '/downloads/demo-tool/1.0.0/tool.md' });
 
@@ -43,7 +45,7 @@ test('serves zip packages as binary archives', async () => {
   await fs.mkdir(path.dirname(filePath), { recursive: true });
   await fs.writeFile(filePath, content);
 
-  const app = createApp(config);
+  const app = await createApp(config);
   try {
     const response = await app.inject({ method: 'GET', url: '/downloads/demo-tool/1.0.0/demo-tool-1.0.0.zip' });
 
@@ -65,6 +67,8 @@ function createConfig(root: string): ApiConfig {
     toolDocsRoot: path.join(root, 'data', 'tool-docs'),
     toolApiRoot: path.join(root, 'public', 'api', 'tools'),
     downloadRoot: path.join(root, 'public', 'downloads'),
-    submissionRoot: path.join(root, 'submissions')
+    submissionRoot: path.join(root, 'submissions'),
+    serveStatic: false,
+    webStaticRoot: path.join(root, 'dist')
   };
 }
