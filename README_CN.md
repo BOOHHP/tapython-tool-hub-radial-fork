@@ -365,6 +365,67 @@ npm audit --omit=dev
 
 当前前端构建可能提示 Ant Design 相关 chunk 较大，这是已知现象；代码拆包属于后续 UI 优化。
 
+## 本地部署
+
+### 前置依赖
+
+- Node.js 20+ 和 npm 10+
+- （可选）PostgreSQL 15+，用于持久化投稿存储
+
+### 快速启动（开发模式）
+
+```bash
+cd tapython-tool-hub
+npm install
+
+# 同时启动 web + API 开发服务
+npm run dev:all
+```
+
+Web 开发服务运行在 `http://localhost:5174`，API 运行在 `http://localhost:8787`。
+
+### 快速启动（生产模式）
+
+```bash
+# 一键构建 + 启动（macOS/Linux）
+npm run start:prod
+
+# 支持局域网访问（传入本机 IP）：
+npm run start:prod -- 192.168.1.100
+```
+
+Windows：
+
+```bat
+scripts\start-production.bat 10.2.13.8 5174 8787
+```
+
+生产脚本会构建全部产物，然后并行启动 API（端口 8787）和 Web 预览（端口 4174）。按 Ctrl+C 停止。
+
+### 环境变量
+
+复制 `.env.example` 为 `.env` 并按需调整：
+
+| 变量 | 默认值 | 说明 |
+|------|--------|------|
+| `DATABASE_URL` | *(空)* | PostgreSQL 连接串。为空时投稿使用本地文件存储。 |
+| `API_HOST` | `127.0.0.1` | API 监听地址。设为 `0.0.0.0` 可开放局域网访问。 |
+| `API_PORT` | `8787` | API 监听端口。 |
+| `VITE_API_BASE_URL` | *自动检测* | 前端构建时 API 地址。API 在不同主机时需覆盖。 |
+
+### PostgreSQL 配置（可选）
+
+不配置 `DATABASE_URL` 时，API 将投稿存储在 `.tapython-tool-hub/submissions/` 目录下，适合本地试用。
+
+如需持久化存储，创建数据库并运行迁移：
+
+```bash
+createdb tapython_tool_hub
+psql -d tapython_tool_hub -f apps/api/db/migrations/001_initial.sql
+```
+
+然后在 `.env` 中设置 `DATABASE_URL=postgresql://user:password@localhost:5432/tapython_tool_hub`。
+
 ## 部署说明
 
 推荐的内网部署模式是 API + web build：
@@ -375,13 +436,15 @@ npm run build
 npm run start:api
 ```
 
-Windows 可直接使用 `scripts\start-production.bat` 启动一套生产构建和预览服务：
+或使用生产启动脚本：
 
-```bat
-scripts\start-production.bat 10.2.13.8 5174 8787
+```bash
+# macOS/Linux
+bash scripts/start-production.sh [HOST] [WEB_PORT] [API_PORT]
+
+# Windows
+scripts\start-production.bat [HOST] [WEB_PORT] [API_PORT]
 ```
-
-参数依次为：`<对外访问 IP 或主机名> <Web 端口> <API 端口>`。
 
 将 `dist/` 交给 nginx 或其他静态服务器，并把 API/downloads 请求转发到 `apps/api`；也可以通过 `VITE_API_BASE_URL` 指向独立 API 主机。
 

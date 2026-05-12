@@ -11,6 +11,8 @@ export interface ApiConfig {
   toolApiRoot: string;
   downloadRoot: string;
   submissionRoot: string;
+  serveStatic: boolean;
+  webStaticRoot: string;
 }
 
 export function loadConfig(): ApiConfig {
@@ -25,6 +27,22 @@ export function loadConfig(): ApiConfig {
     toolDocsRoot: process.env.TOOL_DOCS_ROOT ?? path.join(repoRoot, 'data', 'tool-docs'),
     toolApiRoot: process.env.TOOL_API_ROOT ?? path.join(repoRoot, 'apps', 'web', 'public', 'api', 'tools'),
     downloadRoot: process.env.TOOL_DOWNLOAD_ROOT ?? path.join(repoRoot, 'apps', 'web', 'public', 'downloads'),
-    submissionRoot: process.env.SUBMISSION_ROOT ?? path.join(repoRoot, '.tapython-tool-hub', 'submissions')
+    submissionRoot: process.env.SUBMISSION_ROOT ?? path.join(repoRoot, '.tapython-tool-hub', 'submissions'),
+    serveStatic: parseBoolean(process.env.SERVE_STATIC, true),
+    webStaticRoot: process.env.WEB_STATIC_ROOT ?? path.join(repoRoot, 'dist')
   };
+}
+
+function parseBoolean(value: string | undefined, fallback: boolean): boolean {
+  if (value === undefined) {
+    return fallback;
+  }
+  const normalized = value.trim().toLowerCase();
+  if (['1', 'true', 'yes', 'on'].includes(normalized)) {
+    return true;
+  }
+  if (['0', 'false', 'no', 'off', ''].includes(normalized)) {
+    return false;
+  }
+  return fallback;
 }

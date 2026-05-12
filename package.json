@@ -16,7 +16,9 @@
     "build:api": "npm run build -w @tapython-tool-hub/shared && npm run build -w @tapython-tool-hub/tooling && npm run build -w @tapython-tool-hub/api",
     "build-cli": "npm run build -w @tapython-tool-hub/shared -w @tapython-tool-hub/cli",
     "preview": "npm run preview -w @tapython-tool-hub/web",
-    "generate:data": "npm run build -w @tapython-tool-hub/shared && npm run build -w @tapython-tool-hub/tooling && node scripts/generate-data.mjs"
+    "generate:data": "npm run build -w @tapython-tool-hub/shared && npm run build -w @tapython-tool-hub/tooling && node scripts/generate-data.mjs",
+    "dev:all": "npm run build -w @tapython-tool-hub/shared && npm run build -w @tapython-tool-hub/tooling && (npm run dev -w @tapython-tool-hub/api & npm run dev -w @tapython-tool-hub/web &)",
+    "start:prod": "bash scripts/start-production.sh"
   },
   "devDependencies": {
     "gray-matter": "^4.0.3",

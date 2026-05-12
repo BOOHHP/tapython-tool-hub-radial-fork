@@ -125,7 +125,9 @@ async function createContext(): Promise<{ config: ApiConfig; workflow: Submissio
     toolDocsRoot: path.join(root, 'data', 'tool-docs'),
     toolApiRoot: path.join(root, 'public', 'api', 'tools'),
     downloadRoot: path.join(root, 'public', 'downloads'),
-    submissionRoot: path.join(root, 'submissions')
+    submissionRoot: path.join(root, 'submissions'),
+    serveStatic: false,
+    webStaticRoot: path.join(root, 'dist')
   };
 
   const repository = new FileSubmissionRepository(config);
