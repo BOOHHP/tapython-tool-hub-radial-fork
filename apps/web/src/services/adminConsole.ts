@@ -3,7 +3,7 @@ import type { AdminUpdateToolRequest, ReviewSubmissionRequest, SubmissionRecord,
 import { apiBaseUrl } from './apiBaseUrl';
 
 export async function listAdminSubmissions(): Promise<SubmissionRecord[]> {
-  const response = await fetch(`${apiBaseUrl}/api/admin/submissions`);
+  const response = await fetch(`${apiBaseUrl}/api/admin/submissions`, { credentials: 'include' });
   if (!response.ok) {
     throw new Error(`Failed to load admin submissions: ${response.status}`);
   }
@@ -14,6 +14,7 @@ export async function listAdminSubmissions(): Promise<SubmissionRecord[]> {
 export async function reviewAdminSubmission(id: string, payload: ReviewSubmissionRequest): Promise<SubmissionRecord> {
   const response = await fetch(`${apiBaseUrl}/api/admin/submissions/${id}/review`, {
     method: 'POST',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
   });
@@ -25,7 +26,7 @@ export async function reviewAdminSubmission(id: string, payload: ReviewSubmissio
 }
 
 export async function deleteAdminSubmission(id: string): Promise<void> {
-  const response = await fetch(`${apiBaseUrl}/api/admin/submissions/${id}`, { method: 'DELETE' });
+  const response = await fetch(`${apiBaseUrl}/api/admin/submissions/${id}`, { method: 'DELETE', credentials: 'include' });
   if (!response.ok) {
     throw new Error(`Failed to delete submission: ${response.status}`);
   }
@@ -34,6 +35,7 @@ export async function deleteAdminSubmission(id: string): Promise<void> {
 export async function updateAdminTool(slug: string, payload: AdminUpdateToolRequest): Promise<ToolRecord> {
   const response = await fetch(`${apiBaseUrl}/api/admin/tools/${slug}`, {
     method: 'PATCH',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
   });

@@ -1,15 +1,19 @@
 import type { FastifyInstance } from 'fastify';
 import { adminUpdateToolRequestSchema, reviewSubmissionRequestSchema, submissionListResponseSchema } from '@tapython-tool-hub/shared';
 import type { SubmissionRepository } from '../repositories/submissionRepository.js';
+import type { AuthService } from '../services/authService.js';
 import type { AdminWorkflow } from '../services/adminWorkflow.js';
 import type { SubmissionWorkflow } from '../services/submissionWorkflow.js';
 
 export function registerAdminRoutes(
   repository: SubmissionRepository,
   submissionWorkflow: SubmissionWorkflow,
-  adminWorkflow: AdminWorkflow
+  adminWorkflow: AdminWorkflow,
+  authService: AuthService
 ) {
   return async function adminRoutes(app: FastifyInstance) {
+    app.addHook('preHandler', authService.requireAdmin);
+
     app.get('/api/admin/submissions', async () => {
       const submissions = await repository.list();
       return submissionListResponseSchema.parse({
@@ -22,6 +26,7 @@ export function registerAdminRoutes(
 
     app.post<{ Params: { id: string } }>('/api/admin/submissions/:id/review', async (request, reply) => {
       const payload = reviewSubmissionRequestSchema.parse(request.body);
+      payload.reviewer = request.adminUser?.username ?? payload.reviewer;
       try {
         const submission = await submissionWorkflow.reviewSubmission(request.params.id, payload);
         if (!submission) {

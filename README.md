@@ -189,6 +189,10 @@ The API reads configuration from environment variables:
 | `TOOL_API_ROOT` | `apps/web/public/api/tools` | Compatible generated tool API root. |
 | `TOOL_DOWNLOAD_ROOT` | `apps/web/public/downloads` | Compatible generated downloads root. |
 | `SUBMISSION_ROOT` | `.tapython-tool-hub/submissions` | File fallback storage for submissions. |
+| `ADMIN_USERNAME` | unset | Single admin login username. When unset, `/api/admin/*` returns `503`. |
+| `ADMIN_PASSWORD_HASH` | unset | PBKDF2 password hash. Plaintext passwords are not stored. |
+| `AUTH_SESSION_SECRET` | unset | Signing secret for the admin Cookie Session. |
+| `ADMIN_SESSION_TTL_HOURS` | `12` | Admin session lifetime in hours. |
 
 The web app reads:
 
@@ -270,7 +274,7 @@ The SQL migration is idempotent. A dedicated migration runner is planned for Pha
 | `DELETE` | `/api/admin/submissions/<id>` | Admin delete one submission record. |
 | `PATCH` | `/api/admin/tools/<slug>` | Admin update published tool status and editable metadata. |
 
-Submission routes are visible to submitters; review and publishing routes live under `/api/admin/*`. Add authorization before exposing admin routes outside a trusted network.
+Submission routes are visible to submitters; review and publishing routes live under `/api/admin/*` and require a configured single-admin Cookie Session.
 
 ## CLI Operator Commands
 
@@ -414,6 +418,19 @@ Copy `.env.example` to `.env` and adjust as needed:
 | `API_HOST` | `127.0.0.1` | API listen address. Set `0.0.0.0` for LAN access. |
 | `API_PORT` | `8787` | API listen port. |
 | `VITE_API_BASE_URL` | *auto-detected* | Frontend build-time API URL. Override when the API is on a different host. |
+| `ADMIN_USERNAME` | `admin` | Single admin login username. |
+| `ADMIN_PASSWORD_HASH` | *(empty)* | PBKDF2 password hash. Admin routes are unavailable when empty. |
+| `AUTH_SESSION_SECRET` | *(empty)* | Cookie Session signing secret. Admin routes are unavailable when empty. |
+| `ADMIN_SESSION_TTL_HOURS` | `12` | Admin session lifetime in hours. |
+
+Generate the admin password hash and session secret:
+
+```powershell
+node -e "const crypto=require('node:crypto'); const p=process.argv[1]; const s=crypto.randomBytes(16).toString('base64url'); const i=210000; const h=crypto.pbkdf2Sync(p,s,i,32,'sha256').toString('base64url'); console.log(`pbkdf2-sha256$${i}$${s}$${h}`)" "your-admin-password"
+node -e "console.log(require('node:crypto').randomBytes(32).toString('base64url'))"
+```
+
+For LAN/server deployments started by `start-production.bat`, the API reads `.env` from the repository root at runtime. Do not commit `.env`.
 
 ### PostgreSQL Setup (Optional)
 
@@ -454,13 +471,13 @@ Serve `dist/` with nginx or another static server and route API/download request
 
 Static-only deployment is still possible for catalog browsing if generated `public/api` and `public/downloads` artifacts are served directly, but submissions/reviews require the API.
 
-Next recommended work is Phase H from the execution roadmap: database migration scripts, local PostgreSQL setup, route tests, PostgreSQL-first tool reads, and minimal authorization around review/publish actions.
+Next recommended work is Phase H from the execution roadmap: database migration scripts, local PostgreSQL setup, route tests, PostgreSQL-first tool reads, and multi-admin role management if the hub moves beyond a single operator.
 
 ## Known Gaps
 
 - There is no migration runner yet; apply `apps/api/db/migrations/001_initial.sql` manually when using PostgreSQL.
 - Tool reads are still backed by generated JSON artifacts; PostgreSQL-first tool reads are planned.
-- Submission review/publish routes do not yet enforce authentication or authorization.
+- Admin routes are protected by a single-admin Cookie Session; multi-admin users and role-based permissions are not implemented yet.
 - Route-level tests for tools, downloads, health, and submission HTTP errors are still pending.
 - The submission workbench is functional but should be split into smaller frontend components before it grows.
 - CLI is currently `private: true`; npm publish setup is needed for public distribution.

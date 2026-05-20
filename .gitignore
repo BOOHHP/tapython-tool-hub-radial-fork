@@ -1,4 +1,6 @@
 node_modules/
+.env
+logs/
 .tapython-tool-hub/
 dist/
 apps/*/dist/

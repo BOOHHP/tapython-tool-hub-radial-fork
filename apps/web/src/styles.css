@@ -283,12 +283,38 @@ li,
   border-color: rgba(88, 166, 255, 0.14);
 }
 
+.admin-login-panel {
+  max-width: 420px;
+}
+
+.admin-session-bar {
+  padding: 10px 12px;
+  background: rgba(15, 23, 34, 0.82);
+  border: 1px solid rgba(88, 166, 255, 0.14);
+  border-radius: 6px;
+}
+
 .admin-reviewer-input {
   max-width: 220px;
 }
 
 .admin-filter-select {
   min-width: 150px;
+}
+
+.admin-tool-cell {
+  width: 100%;
+  min-width: 0;
+}
+
+.admin-console .ant-table-cell {
+  vertical-align: middle;
+}
+
+.admin-console .ant-table-thead > tr > th,
+.admin-console .ant-table-tbody > tr > td {
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .stats-grid {

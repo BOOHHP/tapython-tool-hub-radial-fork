@@ -11,6 +11,7 @@ import type { ColumnsType } from 'antd/es/table';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { AdminUpdateToolRequest, SubmissionRecord, ToolRecord, ToolStatus } from '@tapython-tool-hub/shared';
 import { deleteAdminSubmission, listAdminSubmissions, reviewAdminSubmission, updateAdminTool } from '../../services/adminConsole';
+import { getCurrentAdmin, loginAdmin, logoutAdmin, type AuthUser } from '../../services/auth';
 import { riskColor, statusColor } from '../tools/display';
 
 const { Paragraph, Text, Title } = Typography;
@@ -30,7 +31,9 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
   const [loadingSubmissions, setLoadingSubmissions] = useState(false);
   const [submittingReview, setSubmittingReview] = useState<string>();
   const [savingTool, setSavingTool] = useState(false);
-  const [reviewer, setReviewer] = useState('TA Admin');
+  const [authChecking, setAuthChecking] = useState(true);
+  const [authUser, setAuthUser] = useState<AuthUser>();
+  const [loginLoading, setLoginLoading] = useState(false);
   const [submissionFilter, setSubmissionFilter] = useState<SubmissionFilter>('pending');
   const selectedSlug = Form.useWatch('slug', form);
   const selectedTool = useMemo(() => tools.find((tool) => tool.slug === selectedSlug), [selectedSlug, tools]);
@@ -41,7 +44,20 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
     return submission.status === submissionFilter;
   }), [submissionFilter, submissions]);
 
+  const checkSession = useCallback(async () => {
+    setAuthChecking(true);
+    try {
+      const state = await getCurrentAdmin();
+      setAuthUser(state.authenticated ? state.user : undefined);
+    } catch (error) {
+      messageApi.error(error instanceof Error ? error.message : String(error));
+    } finally {
+      setAuthChecking(false);
+    }
+  }, [messageApi]);
+
   const refreshSubmissions = useCallback(async () => {
+    if (!authUser) return;
     setLoadingSubmissions(true);
     try {
       setSubmissions(await listAdminSubmissions());
@@ -50,15 +66,39 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
     } finally {
       setLoadingSubmissions(false);
     }
-  }, [messageApi]);
+  }, [authUser, messageApi]);
+
+  const login = async (values: { username: string; password: string }) => {
+    setLoginLoading(true);
+    try {
+      const state = await loginAdmin(values.username, values.password);
+      setAuthUser(state.user);
+      messageApi.success('已进入后台管理');
+    } catch (error) {
+      messageApi.error(error instanceof Error ? error.message : String(error));
+    } finally {
+      setLoginLoading(false);
+    }
+  };
+
+  const logout = async () => {
+    await logoutAdmin();
+    setAuthUser(undefined);
+    setSubmissions([]);
+  };
 
   useEffect(() => {
+    void checkSession();
+  }, [checkSession]);
+
+  useEffect(() => {
+    if (!authUser) return;
     void refreshSubmissions();
     const intervalId = window.setInterval(() => {
       void refreshSubmissions();
     }, 10000);
     return () => window.clearInterval(intervalId);
-  }, [refreshSubmissions]);
+  }, [authUser, refreshSubmissions]);
 
   useEffect(() => {
     if (!selectedTool) return;
@@ -77,7 +117,7 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
   const review = async (submission: SubmissionRecord, decision: 'approved' | 'rejected' | 'changes_requested') => {
     setSubmittingReview(submission.id);
     try {
-      const updated = await reviewAdminSubmission(submission.id, { reviewer, decision });
+      const updated = await reviewAdminSubmission(submission.id, { reviewer: authUser?.username ?? 'admin', decision });
       setSubmissions((current) => current.map((item) => item.id === updated.id ? updated : item));
       if (decision === 'approved') {
         onToolsChanged();
@@ -132,10 +172,11 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
     {
       title: '工具',
       dataIndex: 'slug',
+      width: 190,
       render: (_, submission) => (
-        <Space direction="vertical" size={2}>
-          <Text strong>{submission.slug}</Text>
-          <Text type="secondary">{submission.submitter}</Text>
+        <Space direction="vertical" size={2} className="admin-tool-cell">
+          <Text strong ellipsis={{ tooltip: submission.slug }}>{submission.slug}</Text>
+          <Text type="secondary" ellipsis={{ tooltip: submission.submitter }}>{submission.submitter}</Text>
         </Space>
       )
     },
@@ -159,6 +200,7 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
     },
     {
       title: '校验信息',
+      width: 110,
       render: (_, submission) => submission.validationReport.issues.length > 0
         ? `${submission.validationReport.issues.length} 条问题`
         : '通过'
@@ -205,6 +247,16 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
   return (
     <Space direction="vertical" size={18} className="full-width admin-console">
       {contextHolder}
+      {!authUser ? (
+        <AdminLoginPanel loading={authChecking || loginLoading} onLogin={login} />
+      ) : null}
+      {authUser ? (
+        <Flex align="center" justify="space-between" gap={12} wrap="wrap" className="admin-session-bar">
+          <Text type="secondary">当前管理员：<Text strong>{authUser.username}</Text></Text>
+          <Button onClick={() => void logout()}>退出登录</Button>
+        </Flex>
+      ) : null}
+      {authUser ? (
       <Row gutter={[18, 18]}>
         <Col xs={24} xl={15}>
           <Card
@@ -213,7 +265,7 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
           >
             <Space direction="vertical" size={12} className="full-width">
               <Flex align="center" justify="space-between" gap={12} wrap="wrap">
-                <Input value={reviewer} onChange={(event) => setReviewer(event.target.value)} placeholder="审核人" className="admin-reviewer-input" />
+                <Text type="secondary" className="admin-reviewer-input">审核人：{authUser.username}</Text>
                 <Select<SubmissionFilter>
                   value={submissionFilter}
                   onChange={setSubmissionFilter}
@@ -233,6 +285,8 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
                 columns={submissionColumns}
                 dataSource={filteredSubmissions}
                 loading={loadingSubmissions}
+                tableLayout="fixed"
+                scroll={{ x: 980 }}
                 expandable={{
                   expandedRowRender: (submission) => {
                     const summary = extractSubmissionSummary(submission.markdown);
@@ -322,7 +376,24 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
           </Card>
         </Col>
       </Row>
+      ) : null}
     </Space>
+  );
+}
+
+function AdminLoginPanel({ loading, onLogin }: { loading: boolean; onLogin: (values: { username: string; password: string }) => void }) {
+  return (
+    <Card title="管理员登录" className="admin-login-panel">
+      <Form layout="vertical" onFinish={onLogin} autoComplete="off">
+        <Form.Item name="username" label="用户名" rules={[{ required: true, message: '请输入用户名' }]}>
+          <Input autoFocus />
+        </Form.Item>
+        <Form.Item name="password" label="密码" rules={[{ required: true, message: '请输入密码' }]}>
+          <Input.Password />
+        </Form.Item>
+        <Button type="primary" htmlType="submit" loading={loading}>登录</Button>
+      </Form>
+    </Card>
   );
 }
 
