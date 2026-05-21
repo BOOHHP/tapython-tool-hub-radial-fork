@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-10T15:09:23.852Z",
+  "generatedAt": "2026-05-21T01:48:33.235Z",
   "tool": {
     "slug": "scene-tools",
     "name": "SceneTools",
@@ -42,8 +42,8 @@
       "latestReadme": "/downloads/scene-tools/1.1.0/README.md",
       "latestMarkdown": "/downloads/scene-tools/1.1.0/tool.md",
       "latestPackage": "/downloads/scene-tools/1.1.0/scene-tools-1.1.0.zip",
-      "latestPackageSha256": "0003d718f2048275f53adcd206c1934b7156c0c46da2f5f294ae2fea6f3222d8",
-      "latestPackageSize": 338552,
+      "latestPackageSha256": "6a2489bf3b41d3ab33a5a474e1414e33fdf32e6822c9cd00c95547d02d212466",
+      "latestPackageSize": 342972,
       "latestPackageAvailable": true
     },
     "summary": {
@@ -164,17 +164,17 @@
         "无效 Actor 扫描报告导出到项目 Saved 目录，不影响资产"
       ]
     },
-    "documentationMarkdown": "# Scene Tools\n\n> 场景工具集，覆盖 Actor 批量选择、变换归零、落地吸附、渲染属性修改、贴花处理、无效 Actor 清理（含结果列表与报告导出）、对齐/分布阵列等高频场景批处理需求。\n\n## 快速开始\n\n1. 将 `SceneTools/` 目录复制到 `<Project>/TA/TAPython/Python/`\n2. 将以下 JSON 条目合并到 `<Project>/TA/TAPython/UI/MenuConfig.json` 的 `OnToolBarChameleon.items` 数组：\n   ```json\n   {\n     \"name\": \"Scene Tools\",\n     \"tooltip\": \"场景工具集：按范围和类型批量选择，以及隐藏/显示 Actor 可见性控制。\",\n     \"ExtensionHookName\": \"OnToolBarChameleon\",\n     \"ChameleonTools\": \"../Python/SceneTools/SceneTools.json\"\n   }\n   ```\n3. 在 UE 编辑器中 Reload TAPython 或重启编辑器，从 Chameleon 工具栏打开工具。\n\n## 文件清单\n\n| 文件名 | 用途 | 存放路径 |\n|--------|------|---------|\n| `SceneTools.json` | Chameleon UI 布局（View） | `<Project>/TA/TAPython/Python/SceneTools/` |\n| `SceneTools.py` | 业务逻辑控制器（Controller） | `<Project>/TA/TAPython/Python/SceneTools/` |\n| `__init__.py` | Python 模块初始化（空文件） | `<Project>/TA/TAPython/Python/SceneTools/` |\n| `MenuConfig.snippet.json` | MenuConfig 注册条目片段（安装参考） | 随提交文档，不需复制到项目 |\n\n## 架构简述\n\n- **工具名**：SceneTools / 场景工具集\n- **Controller 类**：`SceneToolsController`\n- **挂载点**：`OnToolBarChameleon`（Chameleon 工具栏下拉菜单）\n- **入口 JSON**：`SceneTools/SceneTools.json`\n- **核心 UE API**：\n  - `unreal.EditorActorSubsystem`（Actor 选择与批量操作）\n  - `unreal.EditorLevelLibrary`（关卡上下文）\n  - `unreal.EditorLevelUtils.get_levels`（多关卡支持）\n  - `unreal.SystemLibrary.line_trace_single_by_profile`（落地射线检测）\n  - `unreal.ScopedEditorTransaction`（Ctrl+Z 撤销支持）\n  - `unreal.PythonBPLib.set_timer` / `clear_timer`（分帧任务调度）\n  - `unreal.Paths.project_saved_dir`（报告导出路径）\n- **核心控件 Aka**（共 70 个）：`scene_tools_scroll`、`chk_scope_current`、`list_invalid_actor_results`、`btn_invalid_actor_export_report`、`txt_status` 等\n\n## MenuConfig\n\n```json menuconfig path=MenuConfig.snippet.json\n@file:MenuConfig.snippet.json\n```\n\n## View\n\n```json chameleon-ui path=SceneTools/SceneTools.json\n@file:SceneTools.json\n```\n\n## Controller\n\n```python controller path=SceneTools/SceneTools.py\n@file:SceneTools.py\n```\n\n## 使用说明\n\n### 选择工具\n1. 在\"选择范围\"中选择**当前关卡**或**所有关卡**。\n2. 勾选需要批量选择的物件类型（静态网格体、蓝图、点光源、聚光灯、平行光、矩形光、天空光、贴花、摄像机、触发器）。\n3. 点击**执行选择**，工具会将符合条件的 Actor 加入选中集。\n\n### 变换工具\n1. 在视口或大纲中选中目标 Actor。\n2. 根据需要点击：**位置归零**、**旋转归零**、**缩放归一**或**全变换重置**。\n3. 操作包裹在 `ScopedEditorTransaction` 中，支持 **Ctrl+Z** 撤销。\n\n### 落地吸附\n1. 选中目标 Actor 后展开\"落地吸附\"面板。\n2. 配置碰撞预设、最大检测距离、吸附阈值等参数。\n3. 先点击**预览**查看修正计划，确认无误后点击**执行吸附**。\n\n### 渲染属性批量修改\n1. 选中目标 Actor，展开\"渲染属性\"面板。\n2. 勾选需要修改的属性项并设置目标值。\n3. 点击**预览**确认修改范围，再点击**执行**。\n\n### 接受贴花批量开关\n1. 选中包含 StaticMeshComponent 的 Actor。\n2. 设置目标值（开/关），点击**预览**后执行。\n\n### 贴花转平面\n1. 选中 DecalActor，展开\"贴花转平面\"面板。\n2. 可选配置：保留材质、隐藏源贴花、后缀名。\n3. 预览确认后执行转换。\n\n### 无效 Actor 清理\n1. 展开\"无效 Actor 清理\"面板，刷新并选择目标关卡。\n2. 配置检测规则（空 Actor、缺失静态网格体）。\n3. 执行**预览扫描** → 在结果列表中查看详情 → 可点击**同步到内容浏览器**定位 Actor。\n4. 确认后执行**标记**（打 Tag）或**软删除**（移动到指定文件夹）。\n5. 点击**导出报告**将扫描结果保存为文本文件（路径：`<ProjectSaved>/InvalidActorReport_<时间戳>.txt`）。\n\n### 对齐 / 分布 / 阵列\n1. 选中两个或以上 Actor。\n2. 选择对齐轴（X / Y / Z），展开\"对齐/分布\"面板。\n3. 执行**对齐到首个**、**等距分布**或**按步长阵列**。\n\n## 注意事项\n\n- 变换重置、渲染属性修改、对齐/分布通过 `ScopedEditorTransaction` 封装，**支持 Ctrl+Z 撤销**。\n- **Actor 软删除**（将 Actor 移动到特定文件夹）**不可通过 Ctrl+Z 撤销**，请在执行前确认目标 Actor 列表。\n- 贴花转平面勾选\"隐藏源贴花\"后，源 DecalActor 将被隐藏，如需恢复需手动操作。\n- 分帧任务（大批量处理时自动开启）执行期间请勿关闭工具窗口。\n- 无效 Actor 扫描报告导出到项目 `Saved/` 目录，不修改任何资产，可安全使用。\n- 工具依赖 TAPython 提供的 `PythonBPLib`，请确保项目已安装并启用 TAPython 插件。\n\n## Agent 安装指令\n\nAgent 可按以下方式读取本文档并完成安装：\n\n1. **解析 YAML front matter**，获取 `installPath`（`<Project>/TA/TAPython/Python/SceneTools/`）和 `menuConfigMerge` 配置。\n2. **展开 `@file:` 引用**：将 `SceneTools.json`、`SceneTools.py`、`__init__.py` 写入 `installPath`。\n3. **合并 MenuConfig**：读取 `menuConfigMerge.target` 指向的 JSON 文件，在 `OnToolBarChameleon.items` 数组末尾追加 `menuConfigMerge.itemsToAdd` 中的条目（若同名条目已存在则跳过）。\n4. **校验安装**：确认上述文件存在后，提示用户 Reload TAPython 或重启 UE 编辑器。\n5. **文件完整性校验**（可选）：对照 `previousVersions` 中当前版本（`1.1.0`）的 sha256 值验证写入文件是否一致。",
+    "documentationMarkdown": "# Scene Tools\r\n\r\n> 场景工具集，覆盖 Actor 批量选择、变换归零、落地吸附、渲染属性修改、贴花处理、无效 Actor 清理（含结果列表与报告导出）、对齐/分布阵列等高频场景批处理需求。\r\n\r\n## 快速开始\r\n\r\n1. 将 `SceneTools/` 目录复制到 `<Project>/TA/TAPython/Python/`\r\n2. 将以下 JSON 条目合并到 `<Project>/TA/TAPython/UI/MenuConfig.json` 的 `OnToolBarChameleon.items` 数组：\r\n   ```json\r\n   {\r\n     \"name\": \"Scene Tools\",\r\n     \"tooltip\": \"场景工具集：按范围和类型批量选择，以及隐藏/显示 Actor 可见性控制。\",\r\n     \"ExtensionHookName\": \"OnToolBarChameleon\",\r\n     \"ChameleonTools\": \"../Python/SceneTools/SceneTools.json\"\r\n   }\r\n   ```\r\n3. 在 UE 编辑器中 Reload TAPython 或重启编辑器，从 Chameleon 工具栏打开工具。\r\n\r\n## 文件清单\r\n\r\n| 文件名 | 用途 | 存放路径 |\r\n|--------|------|---------|\r\n| `SceneTools.json` | Chameleon UI 布局（View） | `<Project>/TA/TAPython/Python/SceneTools/` |\r\n| `SceneTools.py` | 业务逻辑控制器（Controller） | `<Project>/TA/TAPython/Python/SceneTools/` |\r\n| `__init__.py` | Python 模块初始化（空文件） | `<Project>/TA/TAPython/Python/SceneTools/` |\r\n| `MenuConfig.snippet.json` | MenuConfig 注册条目片段（安装参考） | 随提交文档，不需复制到项目 |\r\n\r\n## 架构简述\r\n\r\n- **工具名**：SceneTools / 场景工具集\r\n- **Controller 类**：`SceneToolsController`\r\n- **挂载点**：`OnToolBarChameleon`（Chameleon 工具栏下拉菜单）\r\n- **入口 JSON**：`SceneTools/SceneTools.json`\r\n- **核心 UE API**：\r\n  - `unreal.EditorActorSubsystem`（Actor 选择与批量操作）\r\n  - `unreal.EditorLevelLibrary`（关卡上下文）\r\n  - `unreal.EditorLevelUtils.get_levels`（多关卡支持）\r\n  - `unreal.SystemLibrary.line_trace_single_by_profile`（落地射线检测）\r\n  - `unreal.ScopedEditorTransaction`（Ctrl+Z 撤销支持）\r\n  - `unreal.PythonBPLib.set_timer` / `clear_timer`（分帧任务调度）\r\n  - `unreal.Paths.project_saved_dir`（报告导出路径）\r\n- **核心控件 Aka**（共 70 个）：`scene_tools_scroll`、`chk_scope_current`、`list_invalid_actor_results`、`btn_invalid_actor_export_report`、`txt_status` 等\r\n\r\n## MenuConfig\r\n\r\n```json menuconfig path=MenuConfig.snippet.json\r\n@file:MenuConfig.snippet.json\r\n```\r\n\r\n## View\r\n\r\n```json chameleon-ui path=SceneTools/SceneTools.json\r\n@file:SceneTools.json\r\n```\r\n\r\n## Controller\r\n\r\n```python controller path=SceneTools/SceneTools.py\r\n@file:SceneTools.py\r\n```\r\n\r\n## 使用说明\r\n\r\n### 选择工具\r\n1. 在\"选择范围\"中选择**当前关卡**或**所有关卡**。\r\n2. 勾选需要批量选择的物件类型（静态网格体、蓝图、点光源、聚光灯、平行光、矩形光、天空光、贴花、摄像机、触发器）。\r\n3. 点击**执行选择**，工具会将符合条件的 Actor 加入选中集。\r\n\r\n### 变换工具\r\n1. 在视口或大纲中选中目标 Actor。\r\n2. 根据需要点击：**位置归零**、**旋转归零**、**缩放归一**或**全变换重置**。\r\n3. 操作包裹在 `ScopedEditorTransaction` 中，支持 **Ctrl+Z** 撤销。\r\n\r\n### 落地吸附\r\n1. 选中目标 Actor 后展开\"落地吸附\"面板。\r\n2. 配置碰撞预设、最大检测距离、吸附阈值等参数。\r\n3. 先点击**预览**查看修正计划，确认无误后点击**执行吸附**。\r\n\r\n### 渲染属性批量修改\r\n1. 选中目标 Actor，展开\"渲染属性\"面板。\r\n2. 勾选需要修改的属性项并设置目标值。\r\n3. 点击**预览**确认修改范围，再点击**执行**。\r\n\r\n### 接受贴花批量开关\r\n1. 选中包含 StaticMeshComponent 的 Actor。\r\n2. 设置目标值（开/关），点击**预览**后执行。\r\n\r\n### 贴花转平面\r\n1. 选中 DecalActor，展开\"贴花转平面\"面板。\r\n2. 可选配置：保留材质、隐藏源贴花、后缀名。\r\n3. 预览确认后执行转换。\r\n\r\n### 无效 Actor 清理\r\n1. 展开\"无效 Actor 清理\"面板，刷新并选择目标关卡。\r\n2. 配置检测规则（空 Actor、缺失静态网格体）。\r\n3. 执行**预览扫描** → 在结果列表中查看详情 → 可点击**同步到内容浏览器**定位 Actor。\r\n4. 确认后执行**标记**（打 Tag）或**软删除**（移动到指定文件夹）。\r\n5. 点击**导出报告**将扫描结果保存为文本文件（路径：`<ProjectSaved>/InvalidActorReport_<时间戳>.txt`）。\r\n\r\n### 对齐 / 分布 / 阵列\r\n1. 选中两个或以上 Actor。\r\n2. 选择对齐轴（X / Y / Z），展开\"对齐/分布\"面板。\r\n3. 执行**对齐到首个**、**等距分布**或**按步长阵列**。\r\n\r\n## 注意事项\r\n\r\n- 变换重置、渲染属性修改、对齐/分布通过 `ScopedEditorTransaction` 封装，**支持 Ctrl+Z 撤销**。\r\n- **Actor 软删除**（将 Actor 移动到特定文件夹）**不可通过 Ctrl+Z 撤销**，请在执行前确认目标 Actor 列表。\r\n- 贴花转平面勾选\"隐藏源贴花\"后，源 DecalActor 将被隐藏，如需恢复需手动操作。\r\n- 分帧任务（大批量处理时自动开启）执行期间请勿关闭工具窗口。\r\n- 无效 Actor 扫描报告导出到项目 `Saved/` 目录，不修改任何资产，可安全使用。\r\n- 工具依赖 TAPython 提供的 `PythonBPLib`，请确保项目已安装并启用 TAPython 插件。\r\n\r\n## Agent 安装指令\r\n\r\nAgent 可按以下方式读取本文档并完成安装：\r\n\r\n1. **解析 YAML front matter**，获取 `installPath`（`<Project>/TA/TAPython/Python/SceneTools/`）和 `menuConfigMerge` 配置。\r\n2. **展开 `@file:` 引用**：将 `SceneTools.json`、`SceneTools.py`、`__init__.py` 写入 `installPath`。\r\n3. **合并 MenuConfig**：读取 `menuConfigMerge.target` 指向的 JSON 文件，在 `OnToolBarChameleon.items` 数组末尾追加 `menuConfigMerge.itemsToAdd` 中的条目（若同名条目已存在则跳过）。\r\n4. **校验安装**：确认上述文件存在后，提示用户 Reload TAPython 或重启 UE 编辑器。\r\n5. **文件完整性校验**（可选）：对照 `previousVersions` 中当前版本（`1.1.0`）的 sha256 值验证写入文件是否一致。",
     "codeAssets": [
       {
         "path": "MenuConfig.snippet.json",
-        "sha256": "4bf920fcf8e6015c6630f79c4e8f07d18a8e58f40e0894f664e01fda4b9bbe5c",
-        "size": 259
+        "sha256": "5e2d045338ccd5aa1802ff168f115c252ba90bf35b73588500fe428c9315d327",
+        "size": 264
       },
       {
         "path": "MenuConfig.snippet.json",
-        "sha256": "d7bd19ca31495aefb9c1c6d122c2206f54feb7ac3a5749412577c9a81c6863a0",
-        "size": 245
+        "sha256": "616a0995e1f508e077a49ab5a667ce89490ab78d864b6af1cfb57cb11649fb24",
+        "size": 251
       },
       {
         "path": "SceneTools/SceneTools.json",
@@ -183,8 +183,8 @@
       },
       {
         "path": "SceneTools/SceneTools.py",
-        "sha256": "01a05df6e1cf0b0fab11e2a75d68d1714c0ec640de434ebaeb931e5caa9db8af",
-        "size": 182954
+        "sha256": "ed075183d3a2219134f26b2eaa962f37583c9d652c85d246421ad18890601eb6",
+        "size": 187126
       },
       {
         "path": "SceneTools/__init__.py",
@@ -204,8 +204,8 @@
           "readme": "/downloads/scene-tools/1.1.0/README.md",
           "markdown": "/downloads/scene-tools/1.1.0/tool.md",
           "package": "/downloads/scene-tools/1.1.0/scene-tools-1.1.0.zip",
-          "packageSha256": "0003d718f2048275f53adcd206c1934b7156c0c46da2f5f294ae2fea6f3222d8",
-          "packageSize": 338552,
+          "packageSha256": "6a2489bf3b41d3ab33a5a474e1414e33fdf32e6822c9cd00c95547d02d212466",
+          "packageSize": 342972,
           "packageAvailable": true
         },
         "manifest": {
@@ -244,13 +244,13 @@
           "files": [
             {
               "path": "MenuConfig.snippet.json",
-              "sha256": "4bf920fcf8e6015c6630f79c4e8f07d18a8e58f40e0894f664e01fda4b9bbe5c",
-              "size": 259
+              "sha256": "5e2d045338ccd5aa1802ff168f115c252ba90bf35b73588500fe428c9315d327",
+              "size": 264
             },
             {
               "path": "MenuConfig.snippet.json",
-              "sha256": "d7bd19ca31495aefb9c1c6d122c2206f54feb7ac3a5749412577c9a81c6863a0",
-              "size": 245
+              "sha256": "616a0995e1f508e077a49ab5a667ce89490ab78d864b6af1cfb57cb11649fb24",
+              "size": 251
             },
             {
               "path": "SceneTools/SceneTools.json",
@@ -259,8 +259,8 @@
             },
             {
               "path": "SceneTools/SceneTools.py",
-              "sha256": "01a05df6e1cf0b0fab11e2a75d68d1714c0ec640de434ebaeb931e5caa9db8af",
-              "size": 182954
+              "sha256": "ed075183d3a2219134f26b2eaa962f37583c9d652c85d246421ad18890601eb6",
+              "size": 187126
             },
             {
               "path": "SceneTools/__init__.py",

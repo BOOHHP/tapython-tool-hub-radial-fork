@@ -29,10 +29,10 @@ if "%REPO_ROOT:~0,2%"=="\\" goto :unc_not_supported
 if /i "%MODE%"=="single" goto :single_mode
 
 REM === Dual-process mode (default) ===
-set "VITE_API_BASE_URL=http://%SERVER_HOST%:%API_PORT%"
+set "VITE_API_BASE_URL=auto"
 set "API_HOST=0.0.0.0"
 
-echo [tapython-tool-hub] building web with VITE_API_BASE_URL=%VITE_API_BASE_URL%
+echo [tapython-tool-hub] building web with runtime API auto-detection
 echo [tapython-tool-hub] api will listen on %API_HOST%:%API_PORT%
 echo [tapython-tool-hub] web preview will listen on 0.0.0.0:%WEB_PORT%
 echo [tapython-tool-hub] logs will be written to %LOG_DIR%\
@@ -59,10 +59,10 @@ goto :healthcheck
 :single_mode
 REM === Single-process mode ===
 set "API_HOST=0.0.0.0"
-REM In single mode, the API serves static files, so point Vite at the API port
-set "VITE_API_BASE_URL=http://%SERVER_HOST%:%API_PORT%"
+REM The frontend resolves local/server API endpoints from the browser hostname.
+set "VITE_API_BASE_URL=auto"
 
-echo [tapython-tool-hub] building web with VITE_API_BASE_URL=%VITE_API_BASE_URL%...
+echo [tapython-tool-hub] building web with runtime API auto-detection...
 call npm run build
 if errorlevel 1 goto :fail
 

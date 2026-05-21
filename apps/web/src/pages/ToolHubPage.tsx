@@ -12,6 +12,7 @@ import {
   RobotOutlined,
   SafetyCertificateOutlined,
   SettingOutlined,
+  StarFilled,
   StarOutlined,
   UploadOutlined
 } from '@ant-design/icons';
@@ -59,11 +60,33 @@ type ToolViewMode = 'detail' | 'compare';
 type InstallMode = 'ai' | 'cli' | 'zip';
 type CliPlatform = 'posix' | 'windows' | 'download';
 
+const FAVORITES_STORAGE_KEY = 'tapython-tool-hub:favorites';
+
+function readFavoriteSlugs(): Set<string> {
+  if (typeof window === 'undefined') return new Set();
+
+  try {
+    const rawValue = window.localStorage.getItem(FAVORITES_STORAGE_KEY);
+    if (!rawValue) return new Set();
+    const parsedValue = JSON.parse(rawValue);
+    return new Set(Array.isArray(parsedValue) ? parsedValue.filter((value): value is string => typeof value === 'string') : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function writeFavoriteSlugs(slugs: Set<string>) {
+  if (typeof window === 'undefined') return;
+  window.localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify([...slugs].sort()));
+}
+
 export function ToolHubPage() {
   const [viewMode, setViewMode] = useState<ViewMode>('tools');
   const [toolViewMode, setToolViewMode] = useState<ToolViewMode>('detail');
   const [selectedSlug, setSelectedSlug] = useState<string>();
   const [tools, setTools] = useState<ToolRecord[]>([]);
+  const [favoriteSlugs, setFavoriteSlugs] = useState<Set<string>>(() => readFavoriteSlugs());
+  const [favoriteOnly, setFavoriteOnly] = useState(false);
   const [loadingTools, setLoadingTools] = useState(true);
   const [toolError, setToolError] = useState<string>();
   const { filteredTools, query, category, riskLevel, status, setQuery, setCategory, setRiskLevel, setStatus } = useToolFilters(tools);
@@ -97,6 +120,24 @@ export function ToolHubPage() {
     refreshTools();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const toggleFavorite = (tool: ToolRecord) => {
+    setFavoriteSlugs((currentSlugs) => {
+      const nextSlugs = new Set(currentSlugs);
+      const isFavorite = nextSlugs.has(tool.slug);
+
+      if (isFavorite) {
+        nextSlugs.delete(tool.slug);
+        message.info(`已取消收藏 ${tool.displayName}`);
+      } else {
+        nextSlugs.add(tool.slug);
+        message.success(`已收藏 ${tool.displayName}`);
+      }
+
+      writeFavoriteSlugs(nextSlugs);
+      return nextSlugs;
+    });
+  };
 
   return (
     <Layout className="app-shell">
@@ -152,10 +193,13 @@ export function ToolHubPage() {
             riskLevels={riskLevels}
             statuses={statuses}
             totalTools={tools}
+            favoriteSlugs={favoriteSlugs}
+            favoriteOnly={favoriteOnly}
             setQuery={setQuery}
             setCategory={setCategory}
             setRiskLevel={setRiskLevel}
             setStatus={setStatus}
+            setFavoriteOnly={setFavoriteOnly}
             onOpenTool={(tool) => {
               setSelectedSlug(tool.slug);
               setToolViewMode('detail');
@@ -168,6 +212,8 @@ export function ToolHubPage() {
             tool={selectedTool}
             onBack={() => setViewMode('tools')}
             onCompare={() => setToolViewMode('compare')}
+            isFavorite={favoriteSlugs.has(selectedTool.slug)}
+            onToggleFavorite={() => toggleFavorite(selectedTool)}
           />
         )}
         {viewMode === 'tool' && selectedTool && toolViewMode === 'compare' && (
@@ -298,10 +344,13 @@ interface ToolCatalogProps {
   riskLevels: string[];
   statuses: string[];
   totalTools: ToolRecord[];
+  favoriteSlugs: Set<string>;
+  favoriteOnly: boolean;
   setQuery: (value: string) => void;
   setCategory: (value?: string) => void;
   setRiskLevel: (value?: string) => void;
   setStatus: (value?: string) => void;
+  setFavoriteOnly: (value: boolean) => void;
   onOpenTool: (tool: ToolRecord) => void;
 }
 
@@ -316,13 +365,18 @@ function ToolCatalog({
   riskLevels,
   statuses,
   totalTools,
+  favoriteSlugs,
+  favoriteOnly,
   setQuery,
   setCategory,
   setRiskLevel,
   setStatus,
+  setFavoriteOnly,
   onOpenTool
 }: ToolCatalogProps) {
-  const activeFilterCount = [query.trim(), category, riskLevel, status].filter(Boolean).length;
+  const visibleTools = favoriteOnly ? filteredTools.filter((tool) => favoriteSlugs.has(tool.slug)) : filteredTools;
+  const favoriteCount = totalTools.filter((tool) => favoriteSlugs.has(tool.slug)).length;
+  const activeFilterCount = [query.trim(), category, riskLevel, status, favoriteOnly ? 'favorites' : undefined].filter(Boolean).length;
   const categoryCounts = categories.map((item) => ({
     category: item,
     count: totalTools.filter((tool) => tool.category === item).length
@@ -332,14 +386,33 @@ function ToolCatalog({
     setCategory(undefined);
     setRiskLevel(undefined);
     setStatus(undefined);
+    setFavoriteOnly(false);
   };
+  const emptyDescription = favoriteOnly
+    ? favoriteCount === 0
+      ? '还没有收藏工具'
+      : '收藏中没有匹配工具'
+    : '没有找到匹配工具';
 
   return (
     <section className="marketplace-layout" id="tool-catalog">
       <aside className="channel-sidebar" aria-label="Tool categories">
         <Title level={3}>Unreal Tools</Title>
+        <Text className="sidebar-section-label">我的工具</Text>
+        <button className={`sidebar-row${favoriteOnly ? ' sidebar-row-active' : ''}`} type="button" onClick={() => setFavoriteOnly(true)}>
+          <span><StarFilled /> 收藏工具</span>
+          <span>{favoriteCount}</span>
+        </button>
+        <Divider />
         <Text className="sidebar-section-label">产品类型</Text>
-        <button className={`sidebar-row${category ? '' : ' sidebar-row-active'}`} type="button" onClick={() => setCategory(undefined)}>
+        <button
+          className={`sidebar-row${!category && !favoriteOnly ? ' sidebar-row-active' : ''}`}
+          type="button"
+          onClick={() => {
+            setCategory(undefined);
+            setFavoriteOnly(false);
+          }}
+        >
           <span>所有工具</span>
           <span>{totalTools.length}</span>
         </button>
@@ -372,7 +445,7 @@ function ToolCatalog({
             </Space>
             <Space wrap>
               {activeFilterCount > 0 ? <Button size="small" onClick={resetFilters}>清空筛选</Button> : null}
-              <Tag>{filteredTools.length} 个结果</Tag>
+              <Tag>{visibleTools.length} 个结果</Tag>
             </Space>
           </Flex>
           <Flex gap={12} wrap="wrap" align="center">
@@ -413,26 +486,34 @@ function ToolCatalog({
 
         {loading ? (
           <Card loading />
-        ) : filteredTools.length === 0 ? (
+        ) : visibleTools.length === 0 ? (
           <Card>
-            <Empty description="没有找到匹配工具" />
+            <Empty description={emptyDescription} />
           </Card>
         ) : (
           <section className="tool-grid">
-            {filteredTools.map((tool) => (
+            {visibleTools.map((tool) => {
+              const isFavorite = favoriteSlugs.has(tool.slug);
+
+              return (
               <Card
                 key={tool.slug}
                 className="tool-card"
                 title={(
-                  <Flex align="center" gap={14} className="tool-card-title">
-                    <span className="tool-card-mark">{tool.displayName.slice(0, 1).toUpperCase()}</span>
-                    <div className="tool-card-title-copy">
-                      <Text strong className="tool-card-name">{tool.displayName}</Text>
-                      <Text type="secondary" className="tool-card-author">{tool.author}</Text>
+                  <div className="tool-card-title">
+                    <div className="tool-card-title-main">
+                      <span className="tool-card-mark">{tool.displayName.slice(0, 1).toUpperCase()}</span>
+                      <div className="tool-card-title-copy">
+                        <Text strong className="tool-card-name">{tool.displayName}</Text>
+                        <Text type="secondary" className="tool-card-author">{tool.author}</Text>
+                      </div>
                     </div>
-                  </Flex>
+                    <Space size={6} wrap className="tool-card-badges">
+                      {isFavorite ? <Tag className="tool-card-favorite" icon={<StarFilled />}>已收藏</Tag> : null}
+                      <Tag className="tool-card-status" color={statusColor[tool.status]}>{tool.status}</Tag>
+                    </Space>
+                  </div>
                 )}
-                extra={<Tag className="tool-card-status" color={statusColor[tool.status]}>{tool.status}</Tag>}
               >
                 <Paragraph className="tool-description">{tool.description}</Paragraph>
                 <div className="tool-meta-grid">
@@ -472,7 +553,8 @@ function ToolCatalog({
                   </Button>
                 </div>
               </Card>
-            ))}
+              );
+            })}
           </section>
         )}
       </Space>
@@ -480,7 +562,19 @@ function ToolCatalog({
   );
 }
 
-function ToolDetail({ tool, onBack, onCompare }: { tool: ToolRecord; onBack: () => void; onCompare: () => void }) {
+function ToolDetail({
+  tool,
+  onBack,
+  onCompare,
+  isFavorite,
+  onToggleFavorite
+}: {
+  tool: ToolRecord;
+  onBack: () => void;
+  onCompare: () => void;
+  isFavorite: boolean;
+  onToggleFavorite: () => void;
+}) {
   const latestVersion = tool.versions[0];
   const latestManifest = latestVersion.manifest;
   const fileCount = latestManifest.files.length;
@@ -496,13 +590,13 @@ function ToolDetail({ tool, onBack, onCompare }: { tool: ToolRecord; onBack: () 
       </Flex>
 
       <section className="tool-hero">
-        <Flex justify="space-between" align="flex-start" gap={20} wrap="wrap">
+        <div className="tool-hero-layout">
           <Flex gap={16} align="flex-start" className="tool-hero-main">
             <Avatar className="tool-avatar" shape="square" size={72}>
               {tool.displayName.slice(0, 1).toUpperCase()}
             </Avatar>
             <Space direction="vertical" size={10} className="tool-hero-copy">
-              <Space wrap align="center">
+              <Space wrap align="center" className="tool-title-row">
                 <Title level={1}>{tool.displayName}</Title>
                 <Tag icon={<CodeOutlined />} color="blue">
                   TAPython
@@ -515,8 +609,17 @@ function ToolDetail({ tool, onBack, onCompare }: { tool: ToolRecord; onBack: () 
               </Paragraph>
             </Space>
           </Flex>
+        </div>
+        <div className="hero-action-bar">
           <Space wrap className="hero-actions">
-            <Button icon={<StarOutlined />}>收藏</Button>
+            <Button
+              className={isFavorite ? 'favorite-button favorite-button-active' : 'favorite-button'}
+              icon={isFavorite ? <StarFilled /> : <StarOutlined />}
+              aria-pressed={isFavorite}
+              onClick={onToggleFavorite}
+            >
+              {isFavorite ? '已收藏' : '收藏'}
+            </Button>
             <Button icon={<DiffOutlined />} onClick={onCompare}>
               版本对比
             </Button>
@@ -535,7 +638,7 @@ function ToolDetail({ tool, onBack, onCompare }: { tool: ToolRecord; onBack: () 
               </Button>
             )}
           </Space>
-        </Flex>
+        </div>
       </section>
 
       <section className="metric-strip" aria-label="Tool release summary">
@@ -624,18 +727,18 @@ function ToolOverview({ tool }: { tool: ToolRecord }) {
   return (
     <Card>
       <Descriptions bordered column={{ xs: 1, md: 2 }} size="small">
-        <Descriptions.Item label="工具名">{tool.name}</Descriptions.Item>
-        <Descriptions.Item label="分类">{tool.category}</Descriptions.Item>
-        <Descriptions.Item label="作者">{tool.author}</Descriptions.Item>
-        <Descriptions.Item label="团队">{tool.ownerTeam}</Descriptions.Item>
-        <Descriptions.Item label="挂载点">{tool.mountPoint}</Descriptions.Item>
-        <Descriptions.Item label="入口 JSON">{tool.entryJson}</Descriptions.Item>
+        <Descriptions.Item label="工具名"><Text className="detail-field-value">{tool.name}</Text></Descriptions.Item>
+        <Descriptions.Item label="分类"><Text className="detail-field-value">{tool.category}</Text></Descriptions.Item>
+        <Descriptions.Item label="作者"><Text className="detail-field-value">{tool.author}</Text></Descriptions.Item>
+        <Descriptions.Item label="团队"><Text className="detail-field-value">{tool.ownerTeam}</Text></Descriptions.Item>
+        <Descriptions.Item label="挂载点"><Text className="detail-field-value">{tool.mountPoint}</Text></Descriptions.Item>
+        <Descriptions.Item label="入口 JSON"><Text className="detail-field-value">{tool.entryJson}</Text></Descriptions.Item>
         <Descriptions.Item label="源文档模式">{tool.sourceMode ?? 'json'}</Descriptions.Item>
         <Descriptions.Item label="源文档" span={{ xs: 1, md: 2 }}>
-          {tool.sourceDocument}
+          <Text className="detail-field-value">{tool.sourceDocument}</Text>
         </Descriptions.Item>
         <Descriptions.Item label="安装路径" span={{ xs: 1, md: 2 }}>
-          {tool.installPath}
+          <Text className="detail-field-value">{tool.installPath}</Text>
         </Descriptions.Item>
         <Descriptions.Item label="Unreal Engine">{tool.compatibility.unrealEngine.join(', ')}</Descriptions.Item>
         <Descriptions.Item label="TAPython">{tool.compatibility.tapython.join(', ')}</Descriptions.Item>
@@ -966,14 +1069,16 @@ function CompareView({ tool, onBack }: { tool: ToolRecord; onBack: () => void })
 
   return (
     <Space direction="vertical" size={16} className="full-width detail-page">
-      <Flex className="detail-breadcrumb" align="center" gap={8} wrap="wrap">
-        <Button type="text" icon={<ArrowLeftOutlined />} onClick={onBack}>
-          返回详情
+      <section className="view-return-panel compare-return-panel" aria-label="Compare page navigation">
+        <Button className="detail-back-button" icon={<ArrowLeftOutlined />} onClick={onBack}>
+          返回工具详情
         </Button>
-        <Text type="secondary">工具 /</Text>
-        <Text>{tool.slug}</Text>
-        <Text type="secondary">/ 版本对比</Text>
-      </Flex>
+        <div className="view-return-copy">
+          <Text className="eyebrow">Version Compare</Text>
+          <Title level={4}>{tool.displayName}</Title>
+          <Text type="secondary">{tool.slug} / 版本对比</Text>
+        </div>
+      </section>
       <Card>
         <Flex gap={12} wrap="wrap" align="center">
           <Text strong>工具：</Text>

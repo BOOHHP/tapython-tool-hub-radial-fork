@@ -1,0 +1,198 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-05-21T01:48:33.259Z",
+  "tool": {
+    "slug": "texture-duplicate-sorter",
+    "name": "TextureDuplicateSorter",
+    "displayName": "同名纹理排序器",
+    "description": "扫描路径下所有纹理，按照同名数量排序，双击快速定位所有同名纹理并复制名称，辅助清理重复纹理",
+    "category": "asset-management",
+    "author": "CC",
+    "ownerTeam": "CC",
+    "status": "approved",
+    "riskLevel": "low",
+    "tags": [
+      "texture",
+      "duplicate",
+      "asset-cleanup",
+      "content-browser"
+    ],
+    "compatibility": {
+      "unrealEngine": [
+        "5.5"
+      ],
+      "tapython": [
+        "1.2+"
+      ],
+      "plugins": [
+        "TAPython"
+      ]
+    },
+    "mountPoint": "OnToolBarChameleon",
+    "installPath": "<Project>/TA/TAPython/Python/TextureDuplicateSorter/",
+    "entryJson": "TextureDuplicateSorter/TextureDuplicateSorter.json",
+    "sourceDocument": "data/tool-docs/texture-duplicate-sorter/texture-duplicate-sorter.md",
+    "sourceMode": "markdown-with-external-files",
+    "updatedAt": "2026-05-21",
+    "downloads": {
+      "latestManifest": "/downloads/texture-duplicate-sorter/1.0.0/manifest.json",
+      "latestReadme": "/downloads/texture-duplicate-sorter/1.0.0/README.md",
+      "latestMarkdown": "/downloads/texture-duplicate-sorter/1.0.0/tool.md",
+      "latestPackage": "/downloads/texture-duplicate-sorter/1.0.0/texture-duplicate-sorter-1.0.0.zip",
+      "latestPackageSha256": "4af66abf9c936a98622f3c8b050c7decec4d4b4657ef6f0c1b67ea89abd7965b",
+      "latestPackageSize": 45948,
+      "latestPackageAvailable": true
+    },
+    "summary": {
+      "features": [
+        "扫描指定路径下所有纹理资产，按文件名分组",
+        "按同名数量降序排列，快速定位重复纹理",
+        "双击列表项复制纹理名称到剪贴板",
+        "双击同时在内容浏览器中高亮定位所有同名纹理",
+        "支持仅显示同名纹理过滤",
+        "内置内容浏览器诊断功能"
+      ],
+      "unrealApis": [
+        "unreal.AssetRegistryHelpers.get_asset_registry",
+        "unreal.PythonBPLib.sync_to_assets",
+        "unreal.PythonBPLib.set_clipboard_content",
+        "unreal.EditorAssetLibrary.sync_browser_to_objects",
+        "unreal.PythonBPLib.get_chameleon_data"
+      ],
+      "widgetAkas": [
+        "ScanPathText",
+        "DuplicateOnlyCheckBox",
+        "StatusText",
+        "GroupPanel",
+        "GroupList"
+      ],
+      "installSteps": [
+        "将 TextureDuplicateSorter/ 目录复制到 <Project>/TA/TAPython/Python/",
+        "将 MenuConfig.snippet.json 内容合并到 <Project>/TA/TAPython/UI/MenuConfig.json 的 OnToolBarChameleon.items 中",
+        "Reload TAPython 或重启 UE 编辑器"
+      ],
+      "riskNotes": [
+        "本工具仅执行只读扫描和内容浏览器定位操作，不修改任何资产"
+      ]
+    },
+    "documentationMarkdown": "# 同名纹理排序器\r\n\r\n> 扫描路径下所有纹理，按照同名数量排序，双击快速定位所有同名纹理并复制名称，辅助清理重复纹理。\r\n\r\n## 快速开始\r\n\r\n1. 将 `TextureDuplicateSorter/` 目录复制到 `<Project>/TA/TAPython/Python/`\r\n2. 将 `MenuConfig.snippet.json` 内容合并到 `<Project>/TA/TAPython/UI/MenuConfig.json` 的 `OnToolBarChameleon.items` 数组中\r\n3. Reload TAPython 或重启 UE 编辑器，在 Chameleon 工具栏中打开「同名纹理排序器」\r\n\r\n## 文件清单\r\n\r\n| 文件名 | 用途 | 存放路径 |\r\n|--------|------|---------|\r\n| TextureDuplicateSorter.json | UI 界面定义 | `<Project>/TA/TAPython/Python/TextureDuplicateSorter/` |\r\n| TextureDuplicateSorter.py | 控制器逻辑 | `<Project>/TA/TAPython/Python/TextureDuplicateSorter/` |\r\n| __init__.py | 模块初始化 | `<Project>/TA/TAPython/Python/TextureDuplicateSorter/` |\r\n| MenuConfig.snippet.json | 菜单注册片段 | `<Project>/TA/TAPython/Python/TextureDuplicateSorter/` |\r\n\r\n## 架构简述\r\n\r\n- **工具名**：TextureDuplicateSorter\r\n- **挂载点**：OnToolBarChameleon\r\n- **核心 API**：`unreal.AssetRegistryHelpers.get_asset_registry`、`unreal.PythonBPLib.sync_to_assets`、`unreal.EditorAssetLibrary.sync_browser_to_objects`\r\n- **核心控件 Aka**：`ScanPathText`（扫描路径输入）、`DuplicateOnlyCheckBox`（仅同名过滤）、`GroupList`（结果列表）、`StatusText`（状态栏）\r\n\r\n## MenuConfig\r\n\r\n```json menuconfig path=MenuConfig.snippet.json\r\n@file:MenuConfig.snippet.json\r\n```\r\n\r\n## View\r\n\r\n```json chameleon-ui path=TextureDuplicateSorter/TextureDuplicateSorter.json\r\n@file:TextureDuplicateSorter.json\r\n```\r\n\r\n## Controller\r\n\r\n```python controller path=TextureDuplicateSorter/TextureDuplicateSorter.py\r\n@file:TextureDuplicateSorter.py\r\n```\r\n\r\n## 使用说明\r\n\r\n1. 在 Chameleon 工具栏下拉菜单中点击「同名纹理排序器」打开工具面板\r\n2. 在「扫描路径」输入框中填入目标路径（默认 `/Game`）\r\n3. 勾选「仅显示同名」可过滤掉只出现一次的纹理\r\n4. 点击「刷新」按钮开始扫描\r\n5. 结果列表按同名数量降序排列，双击任意行：\r\n   - 纹理名称自动复制到剪贴板\r\n   - 所有同名纹理在内容浏览器中高亮定位\r\n6. 如遇内容浏览器定位异常，点击「诊断内容浏览器」按钮，诊断信息将输出到 UE 日志\r\n\r\n## 注意事项\r\n\r\n- 本工具为只读操作，不会修改、删除或移动任何资产\r\n- 大型项目首次扫描可能需要数秒（取决于资产数量）\r\n- 扫描路径支持 `/Game`、`/Engine` 及其子路径\r\n- 内容浏览器定位依赖 `PythonBPLib.sync_to_assets`，不同 UE/TAPython 版本行为可能略有差异\r\n\r\n## Agent 安装指令\r\n\r\nAgent 读取本文档后执行安装：\r\n\r\n1. 解析 front matter 获取 `installPath` 和 `entryJson`\r\n2. 将 `@file:` 引用的外部文件写入 `installPath` 对应目录\r\n3. 读取 `menuConfigMerge` 配置，将 `itemsToAdd` 合并到目标 `MenuConfig.json` 的 `OnToolBarChameleon.items` 数组末尾\r\n4. 执行 `postInstallSteps` 中的操作确认安装成功",
+    "codeAssets": [
+      {
+        "path": "MenuConfig.snippet.json",
+        "sha256": "e1717520077123d7edc4b05a9ea01d2e4a71446d4d4be8198351238c12ec8f33",
+        "size": 178
+      },
+      {
+        "path": "TextureDuplicateSorter/TextureDuplicateSorter.json",
+        "sha256": "868fa29ac12dd01af2469796290203b4bf339fc4e66d9a1bdc0692f2e82c51db",
+        "size": 6490
+      },
+      {
+        "path": "TextureDuplicateSorter/TextureDuplicateSorter.py",
+        "sha256": "1419b413ec82fc0f7fbf371a5afb23ae73e55d4f6de776ded926189b3b94698c",
+        "size": 29838
+      },
+      {
+        "path": "TextureDuplicateSorter/__init__.py",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    ],
+    "versions": [
+      {
+        "version": "1.0.0",
+        "releasedAt": "2026-05-21",
+        "author": "CC",
+        "changeSummary": "首版发布",
+        "breaking": false,
+        "downloads": {
+          "manifest": "/downloads/texture-duplicate-sorter/1.0.0/manifest.json",
+          "readme": "/downloads/texture-duplicate-sorter/1.0.0/README.md",
+          "markdown": "/downloads/texture-duplicate-sorter/1.0.0/tool.md",
+          "package": "/downloads/texture-duplicate-sorter/1.0.0/texture-duplicate-sorter-1.0.0.zip",
+          "packageSha256": "4af66abf9c936a98622f3c8b050c7decec4d4b4657ef6f0c1b67ea89abd7965b",
+          "packageSize": 45948,
+          "packageAvailable": true
+        },
+        "manifest": {
+          "schemaVersion": "1.0.0",
+          "name": "TextureDuplicateSorter",
+          "displayName": "同名纹理排序器",
+          "version": "1.0.0",
+          "author": "CC",
+          "description": "同名纹理扫描定位",
+          "category": "asset-management",
+          "tags": [
+            "texture",
+            "duplicate",
+            "asset-cleanup",
+            "content-browser"
+          ],
+          "compatibility": {
+            "unrealEngine": [
+              "5.5"
+            ],
+            "tapython": [
+              "1.2+"
+            ],
+            "plugins": [
+              "TAPython"
+            ]
+          },
+          "dependencies": [],
+          "mountPoint": "OnToolBarChameleon",
+          "installPath": "<Project>/TA/TAPython/Python/TextureDuplicateSorter/",
+          "entryJson": "TextureDuplicateSorter/TextureDuplicateSorter.json",
+          "riskLevel": "low",
+          "files": [
+            {
+              "path": "MenuConfig.snippet.json",
+              "sha256": "e1717520077123d7edc4b05a9ea01d2e4a71446d4d4be8198351238c12ec8f33",
+              "size": 178
+            },
+            {
+              "path": "TextureDuplicateSorter/TextureDuplicateSorter.json",
+              "sha256": "868fa29ac12dd01af2469796290203b4bf339fc4e66d9a1bdc0692f2e82c51db",
+              "size": 6490
+            },
+            {
+              "path": "TextureDuplicateSorter/TextureDuplicateSorter.py",
+              "sha256": "1419b413ec82fc0f7fbf371a5afb23ae73e55d4f6de776ded926189b3b94698c",
+              "size": 29838
+            },
+            {
+              "path": "TextureDuplicateSorter/__init__.py",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0
+            }
+          ],
+          "menuConfigMerge": {
+            "target": "<Project>/TA/TAPython/UI/MenuConfig.json",
+            "mountPoint": "OnToolBarChameleon",
+            "itemsToAdd": [
+              {
+                "name": "同名纹理排序器",
+                "ChameleonTools": "../Python/TextureDuplicateSorter/TextureDuplicateSorter.json",
+                "ExtensionHookName": "OnToolBarChameleon"
+              }
+            ]
+          },
+          "preInstallChecks": [
+            "确认项目已安装 TAPython",
+            "确认 MenuConfig.json 可写"
+          ],
+          "postInstallSteps": [
+            "Reload TAPython 或重启 UE 编辑器",
+            "在 Chameleon 工具栏中确认「同名纹理排序器」入口可见"
+          ],
+          "uninstallSteps": [
+            "删除 <Project>/TA/TAPython/Python/TextureDuplicateSorter/",
+            "从 MenuConfig.json 的 OnToolBarChameleon.items 中移除「同名纹理排序器」条目"
+          ],
+          "createdAt": "2026-05-21",
+          "updatedAt": "2026-05-21"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,123 @@
+{
+    "TabLabel": "同名纹理排序器",
+    "InitTabSize": [780, 620],
+    "InitTabPosition": [260, 160],
+    "MenuEntries": ["Tools/同名纹理排序器"],
+    "Icon": {"style": "ChameleonStyle", "name": "Picture"},
+    "InitPyCmd": "import importlib; import TextureDuplicateSorter.TextureDuplicateSorter as tds; importlib.reload(tds); tds.instance = tds.TextureDuplicateSorter(%JsonPath)",
+    "Root": {
+        "SBorder": {
+            "BorderImage": {
+                "Style": "FCoreStyle",
+                "Brush": "ToolPanel.GroupBorder"
+            },
+            "Content": {
+                "SVerticalBox": {
+                    "Slots": [
+                        {
+                            "AutoHeight": true,
+                            "Padding": 6,
+                            "SHorizontalBox": {
+                                "Slots": [
+                                    {
+                                        "AutoWidth": true,
+                                        "VAlign": "Center",
+                                        "Padding": [0, 0, 6, 0],
+                                        "STextBlock": {
+                                            "Text": "扫描路径"
+                                        }
+                                    },
+                                    {
+                                        "Padding": [0, 0, 6, 0],
+                                        "SEditableTextBox": {
+                                            "Aka": "ScanPathText",
+                                            "Text": "/Game"
+                                        }
+                                    },
+                                    {
+                                        "AutoWidth": true,
+                                        "Padding": [0, 0, 6, 0],
+                                        "SCheckBox": {
+                                            "Aka": "DuplicateOnlyCheckBox",
+                                            "IsChecked": true,
+                                            "Padding": 6,
+                                            "Content": {
+                                                "STextBlock": {
+                                                    "Text": "仅显示同名"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "AutoWidth": true,
+                                        "SButton": {
+                                            "Text": "刷新",
+                                            "HAlign": "Center",
+                                            "ContentPadding": [12, 4],
+                                            "OnClick": "import TextureDuplicateSorter.TextureDuplicateSorter as tds; tds.refresh_groups()"
+                                        }
+                                    },
+                                    {
+                                        "AutoWidth": true,
+                                        "Padding": [6, 0, 0, 0],
+                                        "SButton": {
+                                            "Text": "诊断内容浏览器",
+                                            "HAlign": "Center",
+                                            "ContentPadding": [12, 4],
+                                            "OnClick": "import TextureDuplicateSorter.TextureDuplicateSorter as tds; tds.diagnose_content_browser()"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "AutoHeight": true,
+                            "Padding": [6, 0, 6, 6],
+                            "SEditableTextBox": {
+                                "Aka": "StatusText",
+                                "Text": "就绪。双击列表项复制名称，并在内容浏览器中定位所有同名纹理。",
+                                "IsReadOnly": true
+                            }
+                        },
+                        {
+                            "SVerticalBox": {
+                                "Aka": "GroupPanel",
+                                "Slots": [
+                                    {
+                                        "AutoHeight": true,
+                                        "Padding": [6, 0, 6, 4],
+                                        "STextBlock": {
+                                            "Text": "同名纹理列表"
+                                        }
+                                    },
+                                    {
+                                        "Padding": 6,
+                                        "SListView<MultiColumn>": {
+                                            "Aka": "GroupList",
+                                            "ItemHeight": 10,
+                                            "EnableAnimatedScrolling": false,
+                                            "SHeaderRow": {
+                                                "Columns": [
+                                                    {
+                                                        "DefaultLabel": "纹理名称",
+                                                        "FillWidth": 0.7
+                                                    },
+                                                    {
+                                                        "DefaultLabel": "同名数量",
+                                                        "FillWidth": 0.3
+                                                    }
+                                                ]
+                                            },
+                                            "ListItemsSource": [],
+                                            "OnMouseButtonDoubleClick": "import TextureDuplicateSorter.TextureDuplicateSorter as tds; tds.copy_group_name(%Index)"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

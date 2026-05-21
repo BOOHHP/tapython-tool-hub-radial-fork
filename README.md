@@ -406,6 +406,18 @@ scripts\start-production.bat 10.2.13.8 5174 8787
 
 The production script builds everything, then starts the API (port 8787) and web preview (port 4174) in parallel. Press Ctrl+C to stop both.
 
+Use `start-production.bat` for local production-like verification. On the Windows deployment server, prefer `scripts\deploy-server.bat`; it first resets the server workspace to the configured remote branch, then calls `start-production.bat`. This keeps the server as a deployment target rather than a second development workspace.
+
+```bat
+REM Defaults: radial-fork master 10.2.13.8 5174 8787 dual
+scripts\deploy-server.bat
+
+REM Full form: [REMOTE] [BRANCH] [HOST] [WEB_PORT] [API_PORT] [MODE]
+scripts\deploy-server.bat radial-fork master 10.2.13.8 5174 8787 dual
+```
+
+Do not run `deploy-server.bat` in a local development repo unless you intentionally want to discard local tracked and untracked changes. It runs `git reset --hard` and `git clean -fd`, while preserving `.env`, `logs/`, and `.tapython-tool-hub/`.
+
 Important on Windows: do not run the workspace directly from a UNC network share such as `\\server\share\tapython-tool-hub`. This repo uses npm workspace packages under `node_modules/@tapython-tool-hub/*`, and on Windows those entries are junctions that resolve to server-local absolute paths. If the workspace is opened from a UNC path, Node.js cannot resolve the internal packages and the API exits before the health check succeeds. Run the repo from a local disk path on the host machine, or clone/copy it locally and run `npm install` there.
 
 ### Environment Variables
@@ -417,7 +429,7 @@ Copy `.env.example` to `.env` and adjust as needed:
 | `DATABASE_URL` | *(empty)* | PostgreSQL connection string. When empty, submissions use local file storage. |
 | `API_HOST` | `127.0.0.1` | API listen address. Set `0.0.0.0` for LAN access. |
 | `API_PORT` | `8787` | API listen port. |
-| `VITE_API_BASE_URL` | *auto-detected* | Frontend build-time API URL. Override when the API is on a different host. |
+| `VITE_API_BASE_URL` | `auto` | Frontend API URL. `auto` resolves from the browser hostname: localhost/127.* uses `127.0.0.1:8787`, while a server IP uses the same host on `:8787`. |
 | `ADMIN_USERNAME` | `admin` | Single admin login username. |
 | `ADMIN_PASSWORD_HASH` | *(empty)* | PBKDF2 password hash. Admin routes are unavailable when empty. |
 | `AUTH_SESSION_SECRET` | *(empty)* | Cookie Session signing secret. Admin routes are unavailable when empty. |
@@ -431,6 +443,8 @@ node -e "console.log(require('node:crypto').randomBytes(32).toString('base64url'
 ```
 
 For LAN/server deployments started by `start-production.bat`, the API reads `.env` from the repository root at runtime. Do not commit `.env`.
+
+The frontend does not hard-code one host into the production bundle by default. Pages opened through `localhost` or `127.*` call the local API, while pages opened through a server IP such as `10.2.13.8` call the API on that same server. Set `VITE_API_BASE_URL=http://api-host:8787` only when the API is on a different host from the page.
 
 ### PostgreSQL Setup (Optional)
 
@@ -464,6 +478,14 @@ bash scripts/start-production.sh [HOST] [WEB_PORT] [API_PORT]
 # Windows
 scripts\start-production.bat [HOST] [WEB_PORT] [API_PORT]
 ```
+
+For Windows server deployment updates, use:
+
+```bat
+scripts\deploy-server.bat [REMOTE] [BRANCH] [HOST] [WEB_PORT] [API_PORT] [MODE]
+```
+
+The defaults target `radial-fork/master` on host `10.2.13.8`. The script checks the server `.env` admin settings, fetches the remote branch, resets tracked files, cleans untracked files while preserving runtime data, installs dependencies with `npm ci`, and then delegates startup to `start-production.bat`.
 
 Windows note: `scripts\start-production.bat` does not support launching the repo directly from a UNC share. See [docs/windows-unc-deployment.md](docs/windows-unc-deployment.md) for the operational limitation, symptoms, and supported deployment patterns.
 

@@ -1,0 +1,5 @@
+{
+    "name": "同名纹理排序器",
+    "ChameleonTools": "../Python/TextureDuplicateSorter/TextureDuplicateSorter.json",
+    "ExtensionHookName": "OnToolBarChameleon"
+}

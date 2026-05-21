@@ -1,8 +1,52 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-10T15:09:23.854Z",
-  "total": 4,
+  "generatedAt": "2026-05-21T01:48:33.260Z",
+  "total": 5,
   "tools": [
+    {
+      "slug": "texture-duplicate-sorter",
+      "name": "TextureDuplicateSorter",
+      "displayName": "同名纹理排序器",
+      "description": "扫描路径下所有纹理，按照同名数量排序，双击快速定位所有同名纹理并复制名称，辅助清理重复纹理",
+      "category": "asset-management",
+      "author": "CC",
+      "ownerTeam": "CC",
+      "status": "approved",
+      "riskLevel": "low",
+      "tags": [
+        "texture",
+        "duplicate",
+        "asset-cleanup",
+        "content-browser"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/TextureDuplicateSorter/",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-05-21",
+      "apiUrl": "/api/tools/texture-duplicate-sorter.json",
+      "sourceDocument": "data/tool-docs/texture-duplicate-sorter/texture-duplicate-sorter.md",
+      "sourceMode": "markdown-with-external-files",
+      "downloads": {
+        "latestManifest": "/downloads/texture-duplicate-sorter/1.0.0/manifest.json",
+        "latestReadme": "/downloads/texture-duplicate-sorter/1.0.0/README.md",
+        "latestMarkdown": "/downloads/texture-duplicate-sorter/1.0.0/tool.md",
+        "latestPackage": "/downloads/texture-duplicate-sorter/1.0.0/texture-duplicate-sorter-1.0.0.zip",
+        "latestPackageSha256": "4af66abf9c936a98622f3c8b050c7decec4d4b4657ef6f0c1b67ea89abd7965b",
+        "latestPackageSize": 45948,
+        "latestPackageAvailable": true
+      }
+    },
     {
       "slug": "asset-organizer",
       "name": "AssetOrganizer",
@@ -43,8 +87,8 @@
         "latestReadme": "/downloads/asset-organizer/1.0.0/README.md",
         "latestMarkdown": "/downloads/asset-organizer/1.0.0/tool.md",
         "latestPackage": "/downloads/asset-organizer/1.0.0/asset-organizer-1.0.0.zip",
-        "latestPackageSha256": "2934483371a6c1c464cd80a75566b2a3e9447fe6d781e844f5112d0b39c6af94",
-        "latestPackageSize": 97114,
+        "latestPackageSha256": "899f9416b31b188b39271a013573551f28945ff680080c017b822808fc0d15fb",
+        "latestPackageSize": 98923,
         "latestPackageAvailable": true
       }
     },
@@ -90,8 +134,8 @@
         "latestReadme": "/downloads/scene-tools/1.1.0/README.md",
         "latestMarkdown": "/downloads/scene-tools/1.1.0/tool.md",
         "latestPackage": "/downloads/scene-tools/1.1.0/scene-tools-1.1.0.zip",
-        "latestPackageSha256": "0003d718f2048275f53adcd206c1934b7156c0c46da2f5f294ae2fea6f3222d8",
-        "latestPackageSize": 338552,
+        "latestPackageSha256": "6a2489bf3b41d3ab33a5a474e1414e33fdf32e6822c9cd00c95547d02d212466",
+        "latestPackageSize": 342972,
         "latestPackageAvailable": true
       }
     },
@@ -137,8 +181,8 @@
         "latestReadme": "/downloads/actor-rename-tool/1.2.0/README.md",
         "latestMarkdown": "/downloads/actor-rename-tool/1.2.0/tool.md",
         "latestPackage": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.zip",
-        "latestPackageSha256": "e5d531e07a00b5b6b1ed74fdbffd675d9998090aa8b2f1747d91db543648feb8",
-        "latestPackageSize": 14021,
+        "latestPackageSha256": "36ecc95e77e30c965ed68d8e81df18c38d2dd91d1100b4f35ab1effa9cfc111c",
+        "latestPackageSize": 14318,
         "latestPackageAvailable": true
       }
     },
@@ -183,8 +227,8 @@
         "latestReadme": "/downloads/test-selection-audit-tool/0.2.0/README.md",
         "latestMarkdown": "/downloads/test-selection-audit-tool/0.2.0/tool.md",
         "latestPackage": "/downloads/test-selection-audit-tool/0.2.0/test-selection-audit-tool-0.2.0.zip",
-        "latestPackageSha256": "8054bdba598ea296e38bbf268b35fdaeffc62866445013d4b959d8be0d8f133f",
-        "latestPackageSize": 11319,
+        "latestPackageSha256": "c8b1d8aca4d0c49656803d7e951e2cc38eed64e183c88655c6ae9d54ff108460",
+        "latestPackageSize": 11533,
         "latestPackageAvailable": true
       }
     }
