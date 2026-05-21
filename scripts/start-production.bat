@@ -24,7 +24,17 @@ echo [tapython-tool-hub] repo root: %REPO_ROOT%
 echo [tapython-tool-hub] mode:      %MODE%
 echo [tapython-tool-hub] host:      %SERVER_HOST%
 
-if "%REPO_ROOT:~0,2%"=="\\" goto :unc_not_supported
+if "%REPO_ROOT:~0,2%"=="\\" (
+    echo [tapython-tool-hub] UNC path detected, mapping to drive letter via pushd...
+    pushd "%REPO_ROOT%"
+    if errorlevel 1 (
+        echo [tapython-tool-hub] ERROR: failed to map UNC path to drive letter.
+        exit /b 1
+    )
+    for %%%%I in (".") do set "REPO_ROOT=%%%%~fI"
+    set "LOG_DIR=!REPO_ROOT!\logs"
+    echo [tapython-tool-hub] mapped to: !REPO_ROOT!
+)
 
 if /i "%MODE%"=="single" goto :single_mode
 
@@ -105,8 +115,5 @@ echo [tapython-tool-hub] startup failed with exit code %errorlevel%.
 exit /b %errorlevel%
 
 :unc_not_supported
-echo [tapython-tool-hub] ERROR: Windows production startup does not support launching from a UNC workspace path.
-echo [tapython-tool-hub] npm workspace packages in node_modules are Windows junctions that resolve to server-local absolute paths.
-echo [tapython-tool-hub] When this repository is opened as %REPO_ROOT%, Node.js cannot resolve @tapython-tool-hub/* and the API exits before the health check succeeds.
-echo [tapython-tool-hub] Run the repo from a local path on the host machine, or clone it locally and run npm install there.
+echo [tapython-tool-hub] ERROR: failed to handle UNC workspace path.
 exit /b 1

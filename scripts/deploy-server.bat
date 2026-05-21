@@ -30,7 +30,18 @@ echo [tapython-tool-hub deploy] target:    %REMOTE_NAME%/%REMOTE_BRANCH%
 echo [tapython-tool-hub deploy] host:      %SERVER_HOST%
 echo [tapython-tool-hub deploy] mode:      %MODE%
 
-if "%REPO_ROOT:~0,2%"=="\\" goto :unc_not_supported
+if "%REPO_ROOT:~0,2%"=="\\" (
+    echo [tapython-tool-hub deploy] UNC path detected, mapping to drive letter via pushd...
+    pushd "%REPO_ROOT%"
+    if errorlevel 1 (
+        echo [tapython-tool-hub deploy] ERROR: failed to map UNC path to drive letter.
+        exit /b 1
+    )
+    for %%%%I in (".") do set "REPO_ROOT=%%%%~fI"
+    set "SCRIPT_DIR=!REPO_ROOT!\scripts\"
+    set "ENV_FILE=!REPO_ROOT!\.env"
+    echo [tapython-tool-hub deploy] mapped to: !REPO_ROOT!
+)
 
 where git >nul 2>&1
 if errorlevel 1 goto :missing_git
@@ -109,6 +120,5 @@ echo [tapython-tool-hub deploy] ERROR: .env must define ADMIN_USERNAME, ADMIN_PA
 exit /b 1
 
 :unc_not_supported
-echo [tapython-tool-hub deploy] ERROR: deployment from a UNC workspace path is not supported.
-echo [tapython-tool-hub deploy] Run from a local disk path on the Windows host.
+echo [tapython-tool-hub deploy] ERROR: failed to handle UNC workspace path.
 exit /b 1
