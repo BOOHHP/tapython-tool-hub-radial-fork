@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-21T01:48:33.218Z",
+  "generatedAt": "2026-05-21T10:15:45.031Z",
   "tool": {
     "slug": "asset-organizer",
     "name": "AssetOrganizer",
@@ -39,9 +39,9 @@
       "latestManifest": "/downloads/asset-organizer/1.0.0/manifest.json",
       "latestReadme": "/downloads/asset-organizer/1.0.0/README.md",
       "latestMarkdown": "/downloads/asset-organizer/1.0.0/tool.md",
-      "latestPackage": "/downloads/asset-organizer/1.0.0/asset-organizer-1.0.0.zip",
-      "latestPackageSha256": "899f9416b31b188b39271a013573551f28945ff680080c017b822808fc0d15fb",
-      "latestPackageSize": 98923,
+      "latestPackage": "/downloads/asset-organizer/1.0.0/asset-organizer-1.0.0.tapython-tool.zip",
+      "latestPackageSha256": "9a5b4e248097cb3bc6975309c8242119285d6f87975af1ee7637ee6b46dbc425",
+      "latestPackageSize": 89277,
       "latestPackageAvailable": true
     },
     "summary": {
@@ -144,9 +144,9 @@
           "manifest": "/downloads/asset-organizer/1.0.0/manifest.json",
           "readme": "/downloads/asset-organizer/1.0.0/README.md",
           "markdown": "/downloads/asset-organizer/1.0.0/tool.md",
-          "package": "/downloads/asset-organizer/1.0.0/asset-organizer-1.0.0.zip",
-          "packageSha256": "899f9416b31b188b39271a013573551f28945ff680080c017b822808fc0d15fb",
-          "packageSize": 98923,
+          "package": "/downloads/asset-organizer/1.0.0/asset-organizer-1.0.0.tapython-tool.zip",
+          "packageSha256": "9a5b4e248097cb3bc6975309c8242119285d6f87975af1ee7637ee6b46dbc425",
+          "packageSize": 89277,
           "packageAvailable": true
         },
         "manifest": {

@@ -11,6 +11,26 @@ const slugPattern = /^[a-z0-9-]+$/;
 export class AdminWorkflow {
   constructor(private readonly config: ApiConfig) {}
 
+  async deleteTool(slug: string): Promise<boolean> {
+    if (!slugPattern.test(slug)) {
+      return false;
+    }
+
+    const sourcePath = await this.findToolSourcePath(slug);
+    const hasStaticTool = await fileExists(path.join(this.config.toolApiRoot, `${slug}.json`));
+    if (!sourcePath && !hasStaticTool) {
+      return false;
+    }
+
+    if (sourcePath) {
+      await this.removeToolSource(sourcePath, slug);
+    }
+    await this.regenerateToolData();
+    await fs.rm(path.join(this.config.toolApiRoot, `${slug}.json`), { force: true });
+    await fs.rm(path.join(this.config.downloadRoot, slug), { recursive: true, force: true });
+    return true;
+  }
+
   async updateTool(slug: string, updates: AdminUpdateToolRequest) {
     if (!slugPattern.test(slug)) {
       return undefined;
@@ -44,6 +64,19 @@ export class AdminWorkflow {
     });
   }
 
+  private async removeToolSource(sourcePath: string, slug: string): Promise<void> {
+    const sourceRoot = path.resolve(this.config.toolDocsRoot);
+    const sourceDir = path.resolve(path.dirname(sourcePath));
+    const shouldRemoveDirectory = path.basename(sourceDir) === slug && isInside(sourceRoot, sourceDir);
+
+    if (shouldRemoveDirectory) {
+      await fs.rm(sourceDir, { recursive: true, force: true });
+      return;
+    }
+
+    await fs.rm(sourcePath, { force: true });
+  }
+
   private async findToolSourcePath(slug: string): Promise<string | undefined> {
     const markdownFiles = await listMarkdownFiles(this.config.toolDocsRoot);
     for (const filePath of markdownFiles) {
@@ -70,4 +103,18 @@ async function listMarkdownFiles(root: string): Promise<string[]> {
   }
 
   return files;
+}
+
+async function fileExists(filePath: string): Promise<boolean> {
+  try {
+    await fs.access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function isInside(root: string, target: string): boolean {
+  const relativePath = path.relative(root, target);
+  return relativePath !== '' && !relativePath.startsWith('..') && !path.isAbsolute(relativePath);
 }

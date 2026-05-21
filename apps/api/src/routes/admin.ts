@@ -54,5 +54,13 @@ export function registerAdminRoutes(
       }
       return tool;
     });
+
+    app.delete<{ Params: { slug: string } }>('/api/admin/tools/:slug', async (request, reply) => {
+      const deleted = await adminWorkflow.deleteTool(request.params.slug);
+      if (!deleted) {
+        return reply.code(404).send({ error: 'tool_not_found', message: `未找到可删除工具：${request.params.slug}。请确认后端已重启并且 TOOL_DOCS_ROOT / TOOL_API_ROOT 指向当前工具库。` });
+      }
+      return reply.code(204).send();
+    });
   };
 }

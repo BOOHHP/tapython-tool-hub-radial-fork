@@ -234,7 +234,7 @@ export function SubmissionWorkbench() {
             >
               <p className="ant-upload-drag-icon"><InboxOutlined /></p>
               <p className="ant-upload-text">拖入 @file 引用资源，或点击选择</p>
-              <p className="ant-upload-hint">支持 JSON、Python、MenuConfig 片段等文本文件。</p>
+              <p className="ant-upload-hint">上传 Markdown 中 @file 引用的文件：工具 UI .json、Controller .py、__init__.py、MenuConfig.snippet.json，以及其他被引用的文本资源。</p>
             </Upload.Dragger>
             {assets.length > 0 ? (
               <List

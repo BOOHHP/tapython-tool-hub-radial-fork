@@ -1,14 +1,14 @@
 ---
-schemaVersion: "1.0.0"
+schemaVersion: 1.0.0
 slug: test-selection-audit-tool
 name: TestSelectionAuditTool
 displayName: Test Selection Audit Tool
-version: "0.2.0"
-releasedAt: "2026-04-29"
-updatedAt: "2026-04-29"
+version: 0.2.0
+releasedAt: '2026-04-29'
+updatedAt: '2026-05-21'
 author: Tool Hub QA
 ownerTeam: Pipeline QA
-status: pending
+status: approved
 description: 用于测试 Tool Hub 发布、检索、安装和版本对比流程的伪造工具，模拟对当前选中 Actor 进行轻量审计。
 manifestDescription: 伪造的选中 Actor 审计工具，用于测试 Tool Hub 数据链路。
 category: validation
@@ -21,9 +21,13 @@ tags:
   - audit
   - chameleon
 compatibility:
-  unrealEngine: ["5.4", "5.5"]
-  tapython: ["1.2+"]
-  plugins: ["TAPython"]
+  unrealEngine:
+    - '5.4'
+    - '5.5'
+  tapython:
+    - 1.2+
+  plugins:
+    - TAPython
 dependencies: []
 mountPoint: OnToolBarChameleon
 installPath: <Project>/TA/TAPython/Python/TestSelectionAuditTool/
@@ -47,8 +51,12 @@ summary:
     - btn_copy_summary
   installSteps:
     - 下载工具文档和引用文件。
-    - 复制 TestSelectionAuditTool 文件夹到 <Project>/TA/TAPython/Python/TestSelectionAuditTool/。
-    - 将 TestSelectionAuditTool.MenuConfig.snippet.json 合并到 <Project>/TA/TAPython/UI/MenuConfig.json。
+    - >-
+      复制 TestSelectionAuditTool 文件夹到
+      <Project>/TA/TAPython/Python/TestSelectionAuditTool/。
+    - >-
+      将 TestSelectionAuditTool.MenuConfig.snippet.json 合并到
+      <Project>/TA/TAPython/UI/MenuConfig.json。
     - Reload TAPython 后在工具栏打开测试工具。
   riskNotes:
     - 该测试工具只读取当前选中 Actor，不写入场景或资产。
@@ -70,8 +78,8 @@ uninstallSteps:
   - 删除 <Project>/TA/TAPython/Python/TestSelectionAuditTool/
   - 从 MenuConfig.json 移除对应 items 项
 previousVersions:
-  - version: "0.1.0"
-    releasedAt: "2026-04-25"
+  - version: 0.1.0
+    releasedAt: '2026-04-25'
     changeSummary: 首个测试版本，仅显示选中 Actor 数量。
     files:
       - path: TestSelectionAuditTool/TestSelectionAuditTool.json
@@ -87,11 +95,17 @@ previousVersions:
         sha256: test-menu-v010-placeholder
         size: 168
     manifestOverrides:
-      tags: ["test-fixture", "validation", "selection"]
+      tags:
+        - test-fixture
+        - validation
+        - selection
       compatibility:
-        unrealEngine: ["5.4"]
-        tapython: ["1.2+"]
-        plugins: ["TAPython"]
+        unrealEngine:
+          - '5.4'
+        tapython:
+          - 1.2+
+        plugins:
+          - TAPython
 ---
 
 # Test Selection Audit Tool

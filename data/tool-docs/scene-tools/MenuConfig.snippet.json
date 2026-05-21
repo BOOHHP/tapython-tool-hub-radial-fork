@@ -1,6 +1,6 @@
 {
   "name": "Scene Tools",
-  "tooltip": "场景工具集：按范围和类型批量选择，以及隐藏/显示 Actor 可见性控制。",
+  "tooltip": "场景工具集：按范围和类型批量选择、批量重置变换、落地吸附、渲染属性批改、接受贴花开关、贴花转平面模型、无效 Actor 清理，以及对齐/分布/阵列操作。",
   "ChameleonTools": "../Python/SceneTools/SceneTools.json",
   "ExtensionHookName": "OnToolBarChameleon"
 }

@@ -62,6 +62,25 @@ type CliPlatform = 'posix' | 'windows' | 'download';
 
 const FAVORITES_STORAGE_KEY = 'tapython-tool-hub:favorites';
 
+function readInitialViewMode(): ViewMode {
+  if (typeof window === 'undefined') return 'tools';
+  return viewModeFromHash(window.location.hash) ?? 'tools';
+}
+
+function viewModeFromHash(hash: string): ViewMode | undefined {
+  const normalized = hash.replace(/^#\/?/, '').toLowerCase();
+  if (normalized === 'submit') return 'submit';
+  if (normalized === 'admin') return 'admin';
+  return undefined;
+}
+
+function writeViewModeHash(viewMode: ViewMode) {
+  if (typeof window === 'undefined') return;
+  const nextHash = viewMode === 'submit' || viewMode === 'admin' ? `#${viewMode}` : '';
+  const nextUrl = `${window.location.pathname}${window.location.search}${nextHash}`;
+  window.history.replaceState(null, '', nextUrl);
+}
+
 function readFavoriteSlugs(): Set<string> {
   if (typeof window === 'undefined') return new Set();
 
@@ -81,7 +100,7 @@ function writeFavoriteSlugs(slugs: Set<string>) {
 }
 
 export function ToolHubPage() {
-  const [viewMode, setViewMode] = useState<ViewMode>('tools');
+  const [viewMode, setViewMode] = useState<ViewMode>(() => readInitialViewMode());
   const [toolViewMode, setToolViewMode] = useState<ToolViewMode>('detail');
   const [selectedSlug, setSelectedSlug] = useState<string>();
   const [tools, setTools] = useState<ToolRecord[]>([]);
@@ -95,10 +114,15 @@ export function ToolHubPage() {
   const statuses = useMemo(() => getStatuses(tools), [tools]);
 
   const selectedTool = selectedSlug ? tools.find((tool) => tool.slug === selectedSlug) : undefined;
+  const navigateToView = (nextViewMode: ViewMode) => {
+    setViewMode(nextViewMode);
+    writeViewModeHash(nextViewMode);
+  };
+
   const goHome = () => {
     setSelectedSlug(undefined);
     setToolViewMode('detail');
-    setViewMode('tools');
+    navigateToView('tools');
   };
 
   const refreshTools = () => {
@@ -119,6 +143,21 @@ export function ToolHubPage() {
   useEffect(() => {
     refreshTools();
   // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const syncViewModeFromHash = () => {
+      const nextViewMode = viewModeFromHash(window.location.hash);
+      if (nextViewMode) {
+        setSelectedSlug(undefined);
+        setToolViewMode('detail');
+        setViewMode(nextViewMode);
+      }
+    };
+
+    syncViewModeFromHash();
+    window.addEventListener('hashchange', syncViewModeFromHash);
+    return () => window.removeEventListener('hashchange', syncViewModeFromHash);
   }, []);
 
   const toggleFavorite = (tool: ToolRecord) => {
@@ -173,8 +212,8 @@ export function ToolHubPage() {
             tools={tools}
             loading={loadingTools}
             onBrowse={() => scrollToElement('tool-catalog')}
-            onSubmit={() => setViewMode('submit')}
-            onAdmin={() => setViewMode('admin')}
+            onSubmit={() => navigateToView('submit')}
+            onAdmin={() => navigateToView('admin')}
           />
         ) : null}
         {viewMode === 'submit' ? <SubmitPageHeader onBack={goHome} /> : null}
@@ -204,6 +243,7 @@ export function ToolHubPage() {
               setSelectedSlug(tool.slug);
               setToolViewMode('detail');
               setViewMode('tool');
+              writeViewModeHash('tool');
             }}
           />
         )}

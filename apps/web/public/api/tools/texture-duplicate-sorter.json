@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-21T01:48:33.259Z",
+  "generatedAt": "2026-05-21T10:15:45.065Z",
   "tool": {
     "slug": "texture-duplicate-sorter",
     "name": "TextureDuplicateSorter",
@@ -38,9 +38,9 @@
       "latestManifest": "/downloads/texture-duplicate-sorter/1.0.0/manifest.json",
       "latestReadme": "/downloads/texture-duplicate-sorter/1.0.0/README.md",
       "latestMarkdown": "/downloads/texture-duplicate-sorter/1.0.0/tool.md",
-      "latestPackage": "/downloads/texture-duplicate-sorter/1.0.0/texture-duplicate-sorter-1.0.0.zip",
-      "latestPackageSha256": "4af66abf9c936a98622f3c8b050c7decec4d4b4657ef6f0c1b67ea89abd7965b",
-      "latestPackageSize": 45948,
+      "latestPackage": "/downloads/texture-duplicate-sorter/1.0.0/texture-duplicate-sorter-1.0.0.tapython-tool.zip",
+      "latestPackageSha256": "5143699901c57714f62037b111ceb1e19c3fb63349d04e03da32c12d0e3fe1cf",
+      "latestPackageSize": 40240,
       "latestPackageAvailable": true
     },
     "summary": {
@@ -109,9 +109,9 @@
           "manifest": "/downloads/texture-duplicate-sorter/1.0.0/manifest.json",
           "readme": "/downloads/texture-duplicate-sorter/1.0.0/README.md",
           "markdown": "/downloads/texture-duplicate-sorter/1.0.0/tool.md",
-          "package": "/downloads/texture-duplicate-sorter/1.0.0/texture-duplicate-sorter-1.0.0.zip",
-          "packageSha256": "4af66abf9c936a98622f3c8b050c7decec4d4b4657ef6f0c1b67ea89abd7965b",
-          "packageSize": 45948,
+          "package": "/downloads/texture-duplicate-sorter/1.0.0/texture-duplicate-sorter-1.0.0.tapython-tool.zip",
+          "packageSha256": "5143699901c57714f62037b111ceb1e19c3fb63349d04e03da32c12d0e3fe1cf",
+          "packageSize": 40240,
           "packageAvailable": true
         },
         "manifest": {

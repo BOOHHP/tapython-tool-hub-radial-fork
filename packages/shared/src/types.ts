@@ -15,10 +15,61 @@ export interface ToolFileManifest {
   size: number;
 }
 
+export interface TapythonToolPackageFile {
+  path: string;
+  sha256: string;
+  size: number;
+  role?: string;
+}
+
 export interface MenuConfigItem {
   name: string;
   ChameleonTools: string;
   ExtensionHookName: string;
+}
+
+export interface TapythonToolPackageInstall {
+  pythonRoot: string;
+  targetPath: string;
+  entryJson: string;
+  mountPoint: string;
+}
+
+export interface TapythonToolPackageSummary {
+  features: string[];
+  unrealApis: string[];
+  widgetAkas: string[];
+  riskNotes: string[];
+}
+
+export interface TapythonToolPackageManifest {
+  formatVersion: 2;
+  packageType: 'TAPythonToolPackage';
+  schemaVersion: string;
+  slug: string;
+  name: string;
+  displayName: string;
+  version: string;
+  releasedAt: string;
+  author: string;
+  ownerTeam: string;
+  description: string;
+  category: string;
+  riskLevel: RiskLevel;
+  tags: string[];
+  compatibility: Compatibility;
+  dependencies: string[];
+  install: TapythonToolPackageInstall;
+  files: TapythonToolPackageFile[];
+  menuEntries: MenuConfigItem[];
+  hotkeyEntries: Record<string, unknown>;
+  externalJson: string[];
+  summary: TapythonToolPackageSummary;
+  preInstallChecks: string[];
+  postInstallSteps: string[];
+  uninstallSteps: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ToolManifest {

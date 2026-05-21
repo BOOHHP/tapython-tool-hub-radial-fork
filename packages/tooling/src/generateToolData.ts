@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import matter from 'gray-matter';
-import { toolDetailResponseSchema, toolIndexResponseSchema } from '@tapython-tool-hub/shared';
+import { tapythonToolPackageManifestSchema, toolDetailResponseSchema, toolIndexResponseSchema } from '@tapython-tool-hub/shared';
 
 export interface GenerateToolDataOptions {
   root: string;
@@ -26,6 +26,11 @@ interface AssetFile {
 interface ZipEntry {
   path: string;
   content: Buffer;
+}
+
+interface PackageAssetFile extends AssetFile {
+  role: string;
+  content: string;
 }
 
 type ToolData = Record<string, any>;
@@ -109,10 +114,24 @@ async function readMarkdownTools(options: GenerateToolDataOptions): Promise<Tool
   for (const fileName of fileNames) {
     const sourcePath = path.join(options.toolDocsRoot, fileName);
     const parsed = matter(await fs.readFile(sourcePath, 'utf8'));
+    if (!parsed.data.slug && !isToolMarkdownCandidate(fileName)) {
+      continue;
+    }
     tools.push(await buildToolFromMarkdown(parsed.data, parsed.content, sourcePath, options.root));
   }
 
   return tools;
+}
+
+function isToolMarkdownCandidate(fileName: string): boolean {
+  const segments = fileName.split(path.sep);
+  if (segments.length === 1) {
+    return true;
+  }
+  if (segments.length === 2) {
+    return segments[1] === `${segments[0]}.md`;
+  }
+  return false;
 }
 
 async function buildToolFromMarkdown(data: ToolData, markdown: string, sourcePath: string, root: string): Promise<ToolData> {
@@ -167,7 +186,7 @@ async function buildToolFromMarkdown(data: ToolData, markdown: string, sourcePat
       latestManifest: `/downloads/${slug}/${version}/manifest.json`,
       latestReadme: `/downloads/${slug}/${version}/README.md`,
       latestMarkdown: `/downloads/${slug}/${version}/tool.md`,
-      latestPackage: `/downloads/${slug}/${version}/${slug}-${version}.zip`
+      latestPackage: `/downloads/${slug}/${version}/${packageArchiveName(slug, version)}`
     },
     summary: {
       features: data.summary?.features ?? [],
@@ -209,21 +228,28 @@ async function writeDownloads(tool: ToolData, downloadRoot: string): Promise<voi
   for (const version of tool.versions) {
     const versionRoot = path.join(downloadRoot, tool.slug, version.version);
     await fs.mkdir(versionRoot, { recursive: true });
-    await writeJson(path.join(versionRoot, 'manifest.json'), version.manifest);
     await writeUtf8Markdown(path.join(versionRoot, 'README.md'), buildReadme(tool, version));
     if (tool.documentationMarkdown && version.version === tool.versions[0]?.version) {
       await writeUtf8Markdown(path.join(versionRoot, 'tool.md'), tool.documentationMarkdown);
       await writeAssetFiles(versionRoot, tool._assetFiles ?? []);
     }
-    if (version.downloads.package && await hasPackageFiles(versionRoot, version.manifest.files)) {
-      await writePackageArchive(versionRoot, `${tool.slug}-${version.version}.zip`, version.releasedAt);
-      const archivePath = path.join(versionRoot, `${tool.slug}-${version.version}.zip`);
+    const packageAssets = await collectPackageAssetFiles(versionRoot, version.manifest.files);
+    const packageManifest = buildToolPackageManifest(tool, version, packageAssets);
+    await writeJson(path.join(versionRoot, 'manifest.json'), packageManifest);
+    if (version.downloads.package && packageAssets.length > 0) {
+      validatePayload(tapythonToolPackageManifestSchema, packageManifest, `TAPython tool package manifest '${tool.slug}@${version.version}'`);
+      const archiveName = packageArchiveName(tool.slug, version.version);
+      const legacyArchiveName = legacyPackageArchiveName(tool.slug, version.version);
+      await writePackageArchive(versionRoot, archiveName, version.releasedAt, packageManifest, packageAssets);
+      const archivePath = path.join(versionRoot, archiveName);
+      await fs.copyFile(archivePath, path.join(versionRoot, legacyArchiveName));
       const archiveBuffer = await fs.readFile(archivePath);
       version.downloads.packageSha256 = crypto.createHash('sha256').update(archiveBuffer).digest('hex');
       version.downloads.packageSize = archiveBuffer.length;
       version.downloads.packageAvailable = true;
     } else {
-      await fs.rm(path.join(versionRoot, `${tool.slug}-${version.version}.zip`), { force: true });
+      await fs.rm(path.join(versionRoot, packageArchiveName(tool.slug, version.version)), { force: true });
+      await fs.rm(path.join(versionRoot, legacyPackageArchiveName(tool.slug, version.version)), { force: true });
       version.downloads.package = '';
       version.downloads.packageSha256 = '';
       version.downloads.packageSize = 0;
@@ -284,50 +310,56 @@ function buildDownloads(slug: string, version: string, includePackage = true): T
     manifest: `/downloads/${slug}/${version}/manifest.json`,
     readme: `/downloads/${slug}/${version}/README.md`,
     markdown: `/downloads/${slug}/${version}/tool.md`,
-    package: includePackage ? `/downloads/${slug}/${version}/${slug}-${version}.zip` : ''
+    package: includePackage ? `/downloads/${slug}/${version}/${packageArchiveName(slug, version)}` : ''
   };
 }
 
-async function hasPackageFiles(versionRoot: string, files: AssetFile[]): Promise<boolean> {
-  if (files.length === 0) {
-    return false;
-  }
+function packageArchiveName(slug: string, version: string): string {
+  return `${slug}-${version}.tapython-tool.zip`;
+}
+
+function legacyPackageArchiveName(slug: string, version: string): string {
+  return `${slug}-${version}.zip`;
+}
+
+async function collectPackageAssetFiles(versionRoot: string, files: AssetFile[]): Promise<PackageAssetFile[]> {
+  const packageFiles: PackageAssetFile[] = [];
+
   for (const file of files) {
+    if (isMenuConfigSnippetPath(file.path)) continue;
+
     try {
-      await fs.access(resolveInside(versionRoot, file.path));
+      const sourcePath = resolveInside(versionRoot, file.path);
+      const content = await fs.readFile(sourcePath, 'utf8');
+      const packagePath = toPackagePythonPath(file.path);
+      packageFiles.push({
+        path: packagePath,
+        sha256: crypto.createHash('sha256').update(content).digest('hex'),
+        size: Buffer.byteLength(content, 'utf8'),
+        content,
+        role: inferPackageFileRole(packagePath)
+      });
     } catch {
-      return false;
+      return [];
     }
   }
-  return true;
+
+  return packageFiles;
 }
 
-async function writePackageArchive(versionRoot: string, archiveName: string, releasedAt: string): Promise<void> {
+async function writePackageArchive(versionRoot: string, archiveName: string, releasedAt: string, packageManifest: ToolData, packageFiles: PackageAssetFile[]): Promise<void> {
   const archivePath = path.join(versionRoot, archiveName);
-  const filePaths = await listPackageFiles(versionRoot, archivePath);
-  const entries = await Promise.all(filePaths.map(async (filePath) => ({
-    path: path.relative(versionRoot, filePath).split(path.sep).join('/'),
-    content: await fs.readFile(filePath)
-  })));
+  const entries = [
+    {
+      path: 'manifest.json',
+      content: Buffer.from(`${JSON.stringify(packageManifest, null, 2)}\n`, 'utf8')
+    },
+    ...packageFiles.map((file) => ({
+      path: file.path,
+      content: Buffer.from(file.content, 'utf8')
+    }))
+  ];
   await fs.writeFile(archivePath, createZipArchive(entries, releasedAt));
-}
-
-async function listPackageFiles(directory: string, archivePath: string): Promise<string[]> {
-  const entries = await fs.readdir(directory, { withFileTypes: true });
-  const files: string[] = [];
-
-  for (const entry of entries) {
-    const entryPath = path.join(directory, entry.name);
-    if (entry.isDirectory()) {
-      files.push(...await listPackageFiles(entryPath, archivePath));
-      continue;
-    }
-    if (entry.isFile() && entryPath !== archivePath) {
-      files.push(entryPath);
-    }
-  }
-
-  return files.sort((left, right) => left.localeCompare(right));
 }
 
 function createZipArchive(entries: ZipEntry[], releasedAt: string): Buffer {
@@ -416,6 +448,92 @@ const CRC32_TABLE = Array.from({ length: 256 }, (_, index) => {
   }
   return value >>> 0;
 });
+
+function buildToolPackageManifest(tool: ToolData, version: ToolData, packageFiles: PackageAssetFile[]): ToolData {
+  const manifest = version.manifest;
+  const createdAt = manifest.createdAt ?? version.releasedAt ?? tool.updatedAt;
+  const updatedAt = manifest.updatedAt ?? tool.updatedAt ?? version.releasedAt;
+  return {
+    formatVersion: 2,
+    packageType: 'TAPythonToolPackage',
+    schemaVersion: '2.0.0',
+    slug: tool.slug,
+    name: tool.name,
+    displayName: tool.displayName,
+    version: version.version,
+    releasedAt: version.releasedAt,
+    author: version.author ?? tool.author,
+    ownerTeam: tool.ownerTeam,
+    description: manifest.description ?? tool.description,
+    category: tool.category,
+    riskLevel: tool.riskLevel,
+    tags: tool.tags ?? [],
+    compatibility: manifest.compatibility ?? tool.compatibility,
+    dependencies: manifest.dependencies ?? [],
+    install: {
+      pythonRoot: inferPythonRoot(manifest.installPath, manifest.entryJson, packageFiles),
+      targetPath: manifest.installPath,
+      entryJson: manifest.entryJson,
+      mountPoint: manifest.mountPoint
+    },
+    files: packageFiles.map(({ content, ...file }) => file),
+    menuEntries: manifest.menuConfigMerge?.itemsToAdd ?? [],
+    hotkeyEntries: manifest.hotkeyEntries ?? {},
+    externalJson: manifest.externalJson ?? [],
+    summary: {
+      features: tool.summary?.features ?? [],
+      unrealApis: tool.summary?.unrealApis ?? [],
+      widgetAkas: tool.summary?.widgetAkas ?? [],
+      riskNotes: tool.summary?.riskNotes ?? []
+    },
+    preInstallChecks: manifest.preInstallChecks ?? [],
+    postInstallSteps: manifest.postInstallSteps ?? [],
+    uninstallSteps: manifest.uninstallSteps ?? [],
+    createdAt,
+    updatedAt
+  };
+}
+
+function inferPythonRoot(installPath: string, entryJson: string, packageFiles: PackageAssetFile[]): string {
+  const normalizedInstallPath = normalizePackagePath(installPath).replace(/\/$/, '');
+  const marker = '/TA/TAPython/Python/';
+  const markerIndex = normalizedInstallPath.toLowerCase().indexOf(marker.toLowerCase());
+  if (markerIndex >= 0) {
+    return `Python/${normalizedInstallPath.slice(markerIndex + marker.length)}`.replace(/\/$/, '');
+  }
+
+  const normalizedEntryJson = normalizePackagePath(entryJson);
+  const matchingFile = packageFiles.find((file) => file.path.endsWith(normalizedEntryJson));
+  if (matchingFile) {
+    const fileDir = matchingFile.path.slice(0, -path.posix.basename(matchingFile.path).length).replace(/\/$/, '');
+    return fileDir || 'Python';
+  }
+
+  const firstFile = packageFiles[0]?.path;
+  if (!firstFile) return 'Python';
+  return firstFile.slice(0, -path.posix.basename(firstFile).length).replace(/\/$/, '') || 'Python';
+}
+
+function toPackagePythonPath(filePath: string): string {
+  const normalizedPath = normalizePackagePath(filePath).replace(/^\/+/, '');
+  return normalizedPath.startsWith('Python/') ? normalizedPath : `Python/${normalizedPath}`;
+}
+
+function normalizePackagePath(filePath: string): string {
+  return filePath.split(path.sep).join('/').replace(/\\/g, '/');
+}
+
+function isMenuConfigSnippetPath(filePath: string): boolean {
+  const fileName = path.posix.basename(normalizePackagePath(filePath));
+  return fileName === 'MenuConfig.snippet.json' || fileName.endsWith('.MenuConfig.snippet.json');
+}
+
+function inferPackageFileRole(filePath: string): string {
+  const extension = path.posix.extname(filePath).toLowerCase();
+  if (extension === '.py') return 'python';
+  if (extension === '.json') return 'chameleon-ui';
+  return 'asset';
+}
 
 function buildManifest(data: ToolData, version: string, files: AssetFile[] | undefined, fallbackDate: string): ToolData {
   return {

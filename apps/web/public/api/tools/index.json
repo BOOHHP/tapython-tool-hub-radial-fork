@@ -1,8 +1,54 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-21T01:48:33.260Z",
+  "generatedAt": "2026-05-21T10:15:45.066Z",
   "total": 5,
   "tools": [
+    {
+      "slug": "test-selection-audit-tool",
+      "name": "TestSelectionAuditTool",
+      "displayName": "Test Selection Audit Tool",
+      "description": "用于测试 Tool Hub 发布、检索、安装和版本对比流程的伪造工具，模拟对当前选中 Actor 进行轻量审计。",
+      "category": "validation",
+      "author": "Tool Hub QA",
+      "ownerTeam": "Pipeline QA",
+      "status": "approved",
+      "riskLevel": "low",
+      "tags": [
+        "test-fixture",
+        "validation",
+        "selection",
+        "audit",
+        "chameleon"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.4",
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/TestSelectionAuditTool/",
+      "latestVersion": "0.2.0",
+      "updatedAt": "2026-05-21",
+      "apiUrl": "/api/tools/test-selection-audit-tool.json",
+      "sourceDocument": "data/tool-docs/test-selection-audit-tool.md",
+      "sourceMode": "markdown-with-external-files",
+      "downloads": {
+        "latestManifest": "/downloads/test-selection-audit-tool/0.2.0/manifest.json",
+        "latestReadme": "/downloads/test-selection-audit-tool/0.2.0/README.md",
+        "latestMarkdown": "/downloads/test-selection-audit-tool/0.2.0/tool.md",
+        "latestPackage": "/downloads/test-selection-audit-tool/0.2.0/test-selection-audit-tool-0.2.0.tapython-tool.zip",
+        "latestPackageSha256": "22b1329feeeb0e93a265395b7bb489f643c0c7572b8f43399d2fb33028e3cd08",
+        "latestPackageSize": 6856,
+        "latestPackageAvailable": true
+      }
+    },
     {
       "slug": "texture-duplicate-sorter",
       "name": "TextureDuplicateSorter",
@@ -41,9 +87,56 @@
         "latestManifest": "/downloads/texture-duplicate-sorter/1.0.0/manifest.json",
         "latestReadme": "/downloads/texture-duplicate-sorter/1.0.0/README.md",
         "latestMarkdown": "/downloads/texture-duplicate-sorter/1.0.0/tool.md",
-        "latestPackage": "/downloads/texture-duplicate-sorter/1.0.0/texture-duplicate-sorter-1.0.0.zip",
-        "latestPackageSha256": "4af66abf9c936a98622f3c8b050c7decec4d4b4657ef6f0c1b67ea89abd7965b",
-        "latestPackageSize": 45948,
+        "latestPackage": "/downloads/texture-duplicate-sorter/1.0.0/texture-duplicate-sorter-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "5143699901c57714f62037b111ceb1e19c3fb63349d04e03da32c12d0e3fe1cf",
+        "latestPackageSize": 40240,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "scene-tools",
+      "name": "SceneTools",
+      "displayName": "场景工具集",
+      "description": "场景批处理工具集：按范围与物件类型批量选择 Actor、批量重置变换、Actor 落地吸附、渲染属性批改、接受贴花开关、贴花转平面模型、无效 Actor 扫描清理，以及对齐/分布/阵列操作。",
+      "category": "level-editing",
+      "author": "吴俊枫",
+      "ownerTeam": "场景B组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "tags": [
+        "scene",
+        "batch",
+        "actor",
+        "transform",
+        "level-editing",
+        "ground-snap",
+        "decal"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/SceneTools/",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-05-14",
+      "apiUrl": "/api/tools/scene-tools.json",
+      "sourceDocument": "data/tool-docs/scene-tools/scene-tools.md",
+      "sourceMode": "markdown-with-external-files",
+      "downloads": {
+        "latestManifest": "/downloads/scene-tools/1.0.0/manifest.json",
+        "latestReadme": "/downloads/scene-tools/1.0.0/README.md",
+        "latestMarkdown": "/downloads/scene-tools/1.0.0/tool.md",
+        "latestPackage": "/downloads/scene-tools/1.0.0/scene-tools-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "920a4cd7f8de7e13604e3e4e4b257acc3a0da6fd1f2e817f499d2dd2d8aee314",
+        "latestPackageSize": 335297,
         "latestPackageAvailable": true
       }
     },
@@ -86,56 +179,9 @@
         "latestManifest": "/downloads/asset-organizer/1.0.0/manifest.json",
         "latestReadme": "/downloads/asset-organizer/1.0.0/README.md",
         "latestMarkdown": "/downloads/asset-organizer/1.0.0/tool.md",
-        "latestPackage": "/downloads/asset-organizer/1.0.0/asset-organizer-1.0.0.zip",
-        "latestPackageSha256": "899f9416b31b188b39271a013573551f28945ff680080c017b822808fc0d15fb",
-        "latestPackageSize": 98923,
-        "latestPackageAvailable": true
-      }
-    },
-    {
-      "slug": "scene-tools",
-      "name": "SceneTools",
-      "displayName": "Scene Tools",
-      "description": "场景工具集，提供按范围与类型批量选择 Actor、变换归零、落地吸附、渲染属性批量修改、接受贴花开关、贴花转平面、无效 Actor 清理及对齐/阵列分布等场景批处理功能。",
-      "category": "level-editing",
-      "author": "WuJunFeng",
-      "ownerTeam": "Scene Team B",
-      "status": "approved",
-      "riskLevel": "medium",
-      "tags": [
-        "scene",
-        "actor",
-        "batch",
-        "transform",
-        "ground-snap",
-        "render",
-        "level-editing"
-      ],
-      "compatibility": {
-        "unrealEngine": [
-          "5.5"
-        ],
-        "tapython": [
-          "1.2+"
-        ],
-        "plugins": [
-          "TAPython"
-        ]
-      },
-      "mountPoint": "OnToolBarChameleon",
-      "installPath": "<Project>/TA/TAPython/Python/SceneTools/",
-      "latestVersion": "1.1.0",
-      "updatedAt": "2026-05-09",
-      "apiUrl": "/api/tools/scene-tools.json",
-      "sourceDocument": "data/tool-docs/scene-tools/scene-tools.md",
-      "sourceMode": "markdown-with-external-files",
-      "downloads": {
-        "latestManifest": "/downloads/scene-tools/1.1.0/manifest.json",
-        "latestReadme": "/downloads/scene-tools/1.1.0/README.md",
-        "latestMarkdown": "/downloads/scene-tools/1.1.0/tool.md",
-        "latestPackage": "/downloads/scene-tools/1.1.0/scene-tools-1.1.0.zip",
-        "latestPackageSha256": "6a2489bf3b41d3ab33a5a474e1414e33fdf32e6822c9cd00c95547d02d212466",
-        "latestPackageSize": 342972,
+        "latestPackage": "/downloads/asset-organizer/1.0.0/asset-organizer-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "9a5b4e248097cb3bc6975309c8242119285d6f87975af1ee7637ee6b46dbc425",
+        "latestPackageSize": 89277,
         "latestPackageAvailable": true
       }
     },
@@ -180,55 +226,9 @@
         "latestManifest": "/downloads/actor-rename-tool/1.2.0/manifest.json",
         "latestReadme": "/downloads/actor-rename-tool/1.2.0/README.md",
         "latestMarkdown": "/downloads/actor-rename-tool/1.2.0/tool.md",
-        "latestPackage": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.zip",
-        "latestPackageSha256": "36ecc95e77e30c965ed68d8e81df18c38d2dd91d1100b4f35ab1effa9cfc111c",
-        "latestPackageSize": 14318,
-        "latestPackageAvailable": true
-      }
-    },
-    {
-      "slug": "test-selection-audit-tool",
-      "name": "TestSelectionAuditTool",
-      "displayName": "Test Selection Audit Tool",
-      "description": "用于测试 Tool Hub 发布、检索、安装和版本对比流程的伪造工具，模拟对当前选中 Actor 进行轻量审计。",
-      "category": "validation",
-      "author": "Tool Hub QA",
-      "ownerTeam": "Pipeline QA",
-      "status": "pending",
-      "riskLevel": "low",
-      "tags": [
-        "test-fixture",
-        "validation",
-        "selection",
-        "audit",
-        "chameleon"
-      ],
-      "compatibility": {
-        "unrealEngine": [
-          "5.4",
-          "5.5"
-        ],
-        "tapython": [
-          "1.2+"
-        ],
-        "plugins": [
-          "TAPython"
-        ]
-      },
-      "mountPoint": "OnToolBarChameleon",
-      "installPath": "<Project>/TA/TAPython/Python/TestSelectionAuditTool/",
-      "latestVersion": "0.2.0",
-      "updatedAt": "2026-04-29",
-      "apiUrl": "/api/tools/test-selection-audit-tool.json",
-      "sourceDocument": "data/tool-docs/test-selection-audit-tool.md",
-      "sourceMode": "markdown-with-external-files",
-      "downloads": {
-        "latestManifest": "/downloads/test-selection-audit-tool/0.2.0/manifest.json",
-        "latestReadme": "/downloads/test-selection-audit-tool/0.2.0/README.md",
-        "latestMarkdown": "/downloads/test-selection-audit-tool/0.2.0/tool.md",
-        "latestPackage": "/downloads/test-selection-audit-tool/0.2.0/test-selection-audit-tool-0.2.0.zip",
-        "latestPackageSha256": "c8b1d8aca4d0c49656803d7e951e2cc38eed64e183c88655c6ae9d54ff108460",
-        "latestPackageSize": 11533,
+        "latestPackage": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.tapython-tool.zip",
+        "latestPackageSha256": "003ce7bdca2f84cad77d438466d9c9c9cb78363525eaa7112c54c9ccee5d3781",
+        "latestPackageSize": 9208,
         "latestPackageAvailable": true
       }
     }

@@ -17,10 +17,61 @@ export const toolFileManifestSchema = z.object({
   size: z.number().int().nonnegative()
 });
 
+export const tapythonToolPackageFileSchema = z.object({
+  path: z.string(),
+  sha256: z.string().regex(/^[a-f0-9]{64}$/),
+  size: z.number().int().nonnegative(),
+  role: z.string().optional()
+});
+
 export const menuConfigItemSchema = z.object({
   name: z.string(),
   ChameleonTools: z.string(),
   ExtensionHookName: z.string()
+});
+
+export const tapythonToolPackageInstallSchema = z.object({
+  pythonRoot: z.string(),
+  targetPath: z.string(),
+  entryJson: z.string(),
+  mountPoint: z.string()
+});
+
+export const tapythonToolPackageSummarySchema = z.object({
+  features: z.array(z.string()),
+  unrealApis: z.array(z.string()),
+  widgetAkas: z.array(z.string()),
+  riskNotes: z.array(z.string())
+});
+
+export const tapythonToolPackageManifestSchema = z.object({
+  formatVersion: z.literal(2),
+  packageType: z.literal('TAPythonToolPackage'),
+  schemaVersion: z.string(),
+  slug: z.string().regex(/^[a-z0-9-]+$/),
+  name: z.string(),
+  displayName: z.string(),
+  version: z.string(),
+  releasedAt: z.string(),
+  author: z.string(),
+  ownerTeam: z.string(),
+  description: z.string(),
+  category: z.string(),
+  riskLevel: riskLevelSchema,
+  tags: z.array(z.string()),
+  compatibility: compatibilitySchema,
+  dependencies: z.array(z.string()),
+  install: tapythonToolPackageInstallSchema,
+  files: z.array(tapythonToolPackageFileSchema),
+  menuEntries: z.array(menuConfigItemSchema),
+  hotkeyEntries: z.record(z.unknown()),
+  externalJson: z.array(z.string()),
+  summary: tapythonToolPackageSummarySchema,
+  preInstallChecks: z.array(z.string()),
+  postInstallSteps: z.array(z.string()),
+  uninstallSteps: z.array(z.string()),
+  createdAt: z.string(),
+  updatedAt: z.string()
 });
 
 export const toolManifestSchema = z.object({

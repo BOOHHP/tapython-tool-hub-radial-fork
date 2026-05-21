@@ -28,7 +28,8 @@ export async function reviewAdminSubmission(id: string, payload: ReviewSubmissio
 export async function deleteAdminSubmission(id: string): Promise<void> {
   const response = await fetch(`${apiBaseUrl}/api/admin/submissions/${id}`, { method: 'DELETE', credentials: 'include' });
   if (!response.ok) {
-    throw new Error(`Failed to delete submission: ${response.status}`);
+    const errorPayload = await response.json().catch(() => undefined) as { message?: string } | undefined;
+    throw new Error(errorPayload?.message ?? `Failed to delete submission: ${response.status}`);
   }
 }
 
@@ -43,4 +44,12 @@ export async function updateAdminTool(slug: string, payload: AdminUpdateToolRequ
     throw new Error(`Failed to update tool: ${response.status}`);
   }
   return response.json() as Promise<ToolRecord>;
+}
+
+export async function deleteAdminTool(slug: string): Promise<void> {
+  const response = await fetch(`${apiBaseUrl}/api/admin/tools/${slug}`, { method: 'DELETE', credentials: 'include' });
+  if (!response.ok) {
+    const errorPayload = await response.json().catch(() => undefined) as { message?: string } | undefined;
+    throw new Error(errorPayload?.message ?? `Failed to delete tool: ${response.status}`);
+  }
 }

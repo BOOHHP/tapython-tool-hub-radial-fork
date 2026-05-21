@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-21T01:48:33.205Z",
+  "generatedAt": "2026-05-21T10:15:45.017Z",
   "tool": {
     "slug": "actor-rename-tool",
     "name": "ActorRenameTool",
@@ -41,9 +41,9 @@
       "latestManifest": "/downloads/actor-rename-tool/1.2.0/manifest.json",
       "latestReadme": "/downloads/actor-rename-tool/1.2.0/README.md",
       "latestMarkdown": "/downloads/actor-rename-tool/1.2.0/tool.md",
-      "latestPackage": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.zip",
-      "latestPackageSha256": "36ecc95e77e30c965ed68d8e81df18c38d2dd91d1100b4f35ab1effa9cfc111c",
-      "latestPackageSize": 14318,
+      "latestPackage": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.tapython-tool.zip",
+      "latestPackageSha256": "003ce7bdca2f84cad77d438466d9c9c9cb78363525eaa7112c54c9ccee5d3781",
+      "latestPackageSize": 9208,
       "latestPackageAvailable": true
     },
     "summary": {
@@ -117,9 +117,9 @@
           "manifest": "/downloads/actor-rename-tool/1.2.0/manifest.json",
           "readme": "/downloads/actor-rename-tool/1.2.0/README.md",
           "markdown": "/downloads/actor-rename-tool/1.2.0/tool.md",
-          "package": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.zip",
-          "packageSha256": "36ecc95e77e30c965ed68d8e81df18c38d2dd91d1100b4f35ab1effa9cfc111c",
-          "packageSize": 14318,
+          "package": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.tapython-tool.zip",
+          "packageSha256": "003ce7bdca2f84cad77d438466d9c9c9cb78363525eaa7112c54c9ccee5d3781",
+          "packageSize": 9208,
           "packageAvailable": true
         },
         "manifest": {

@@ -105,7 +105,7 @@ export async function run(ctx: CommandContext): Promise<void> {
     hub = hub || baseUrl;
     downloads = {
       manifest: target,
-      package: target.replace('manifest.json', `${slug}-${version}.zip`),
+      package: target.replace('manifest.json', `${slug}-${version}.tapython-tool.zip`),
       readme: target.replace('manifest.json', 'README.md'),
     };
   } else {

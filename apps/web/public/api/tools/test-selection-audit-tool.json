@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-21T01:48:33.248Z",
+  "generatedAt": "2026-05-21T10:15:45.056Z",
   "tool": {
     "slug": "test-selection-audit-tool",
     "name": "TestSelectionAuditTool",
@@ -9,7 +9,7 @@
     "category": "validation",
     "author": "Tool Hub QA",
     "ownerTeam": "Pipeline QA",
-    "status": "pending",
+    "status": "approved",
     "riskLevel": "low",
     "tags": [
       "test-fixture",
@@ -35,14 +35,14 @@
     "entryJson": "TestSelectionAuditTool/TestSelectionAuditTool.json",
     "sourceDocument": "data/tool-docs/test-selection-audit-tool.md",
     "sourceMode": "markdown-with-external-files",
-    "updatedAt": "2026-04-29",
+    "updatedAt": "2026-05-21",
     "downloads": {
       "latestManifest": "/downloads/test-selection-audit-tool/0.2.0/manifest.json",
       "latestReadme": "/downloads/test-selection-audit-tool/0.2.0/README.md",
       "latestMarkdown": "/downloads/test-selection-audit-tool/0.2.0/tool.md",
-      "latestPackage": "/downloads/test-selection-audit-tool/0.2.0/test-selection-audit-tool-0.2.0.zip",
-      "latestPackageSha256": "c8b1d8aca4d0c49656803d7e951e2cc38eed64e183c88655c6ae9d54ff108460",
-      "latestPackageSize": 11533,
+      "latestPackage": "/downloads/test-selection-audit-tool/0.2.0/test-selection-audit-tool-0.2.0.tapython-tool.zip",
+      "latestPackageSha256": "22b1329feeeb0e93a265395b7bb489f643c0c7572b8f43399d2fb33028e3cd08",
+      "latestPackageSize": 6856,
       "latestPackageAvailable": true
     },
     "summary": {
@@ -109,9 +109,9 @@
           "manifest": "/downloads/test-selection-audit-tool/0.2.0/manifest.json",
           "readme": "/downloads/test-selection-audit-tool/0.2.0/README.md",
           "markdown": "/downloads/test-selection-audit-tool/0.2.0/tool.md",
-          "package": "/downloads/test-selection-audit-tool/0.2.0/test-selection-audit-tool-0.2.0.zip",
-          "packageSha256": "c8b1d8aca4d0c49656803d7e951e2cc38eed64e183c88655c6ae9d54ff108460",
-          "packageSize": 11533,
+          "package": "/downloads/test-selection-audit-tool/0.2.0/test-selection-audit-tool-0.2.0.tapython-tool.zip",
+          "packageSha256": "22b1329feeeb0e93a265395b7bb489f643c0c7572b8f43399d2fb33028e3cd08",
+          "packageSize": 6856,
           "packageAvailable": true
         },
         "manifest": {
@@ -191,8 +191,8 @@
             "删除 <Project>/TA/TAPython/Python/TestSelectionAuditTool/",
             "从 MenuConfig.json 移除对应 items 项"
           ],
-          "createdAt": "2026-04-29",
-          "updatedAt": "2026-04-29"
+          "createdAt": "2026-05-21",
+          "updatedAt": "2026-05-21"
         }
       },
       {
@@ -286,7 +286,7 @@
             "从 MenuConfig.json 移除对应 items 项"
           ],
           "createdAt": "2026-04-25",
-          "updatedAt": "2026-04-29"
+          "updatedAt": "2026-05-21"
         }
       }
     ]

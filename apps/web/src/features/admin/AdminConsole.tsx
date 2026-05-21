@@ -10,7 +10,7 @@ import { Alert, Button, Card, Col, Empty, Flex, Form, Input, Popconfirm, Row, Se
 import type { ColumnsType } from 'antd/es/table';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { AdminUpdateToolRequest, SubmissionRecord, ToolRecord, ToolStatus } from '@tapython-tool-hub/shared';
-import { deleteAdminSubmission, listAdminSubmissions, reviewAdminSubmission, updateAdminTool } from '../../services/adminConsole';
+import { deleteAdminSubmission, deleteAdminTool, listAdminSubmissions, reviewAdminSubmission, updateAdminTool } from '../../services/adminConsole';
 import { getCurrentAdmin, loginAdmin, logoutAdmin, type AuthUser } from '../../services/auth';
 import { riskColor, statusColor } from '../tools/display';
 
@@ -31,6 +31,7 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
   const [loadingSubmissions, setLoadingSubmissions] = useState(false);
   const [submittingReview, setSubmittingReview] = useState<string>();
   const [savingTool, setSavingTool] = useState(false);
+  const [deletingTool, setDeletingTool] = useState(false);
   const [authChecking, setAuthChecking] = useState(true);
   const [authUser, setAuthUser] = useState<AuthUser>();
   const [loginLoading, setLoginLoading] = useState(false);
@@ -165,6 +166,24 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
       messageApi.error(error instanceof Error ? error.message : String(error));
     } finally {
       setSavingTool(false);
+    }
+  };
+
+  const deleteTool = async () => {
+    if (!selectedTool) {
+      messageApi.warning('请先选择工具');
+      return;
+    }
+    setDeletingTool(true);
+    try {
+      await deleteAdminTool(selectedTool.slug);
+      form.resetFields();
+      onToolsChanged();
+      messageApi.success('工具已完全删除');
+    } catch (error) {
+      messageApi.error(error instanceof Error ? error.message : String(error));
+    } finally {
+      setDeletingTool(false);
     }
   };
 
@@ -366,7 +385,19 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
                       <Tag color={statusColor[selectedTool.status]}>{selectedTool.status}</Tag>
                       <Tag color={riskColor[selectedTool.riskLevel]}>{selectedTool.riskLevel}</Tag>
                     </Space>
-                    <Button type="primary" htmlType="submit" icon={<SaveOutlined />} loading={savingTool}>保存并刷新</Button>
+                    <Space wrap>
+                      <Popconfirm
+                        title="完全删除工具"
+                        description={`将删除 ${selectedTool.displayName} 的源文件、API 数据和下载包。此操作不可恢复。`}
+                        okText="删除工具"
+                        cancelText="取消"
+                        okButtonProps={{ danger: true }}
+                        onConfirm={() => void deleteTool()}
+                      >
+                        <Button danger className="review-action-button review-action-delete" icon={<DeleteOutlined />} loading={deletingTool}>删除工具</Button>
+                      </Popconfirm>
+                      <Button type="primary" htmlType="submit" icon={<SaveOutlined />} loading={savingTool}>保存并刷新</Button>
+                    </Space>
                   </Flex>
                 </>
               ) : (

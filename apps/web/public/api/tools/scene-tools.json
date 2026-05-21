@@ -1,24 +1,24 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-21T01:48:33.235Z",
+  "generatedAt": "2026-05-21T10:15:45.044Z",
   "tool": {
     "slug": "scene-tools",
     "name": "SceneTools",
-    "displayName": "Scene Tools",
-    "description": "场景工具集，提供按范围与类型批量选择 Actor、变换归零、落地吸附、渲染属性批量修改、接受贴花开关、贴花转平面、无效 Actor 清理及对齐/阵列分布等场景批处理功能。",
+    "displayName": "场景工具集",
+    "description": "场景批处理工具集：按范围与物件类型批量选择 Actor、批量重置变换、Actor 落地吸附、渲染属性批改、接受贴花开关、贴花转平面模型、无效 Actor 扫描清理，以及对齐/分布/阵列操作。",
     "category": "level-editing",
-    "author": "WuJunFeng",
-    "ownerTeam": "Scene Team B",
+    "author": "吴俊枫",
+    "ownerTeam": "场景B组",
     "status": "approved",
     "riskLevel": "medium",
     "tags": [
       "scene",
-      "actor",
       "batch",
+      "actor",
       "transform",
+      "level-editing",
       "ground-snap",
-      "render",
-      "level-editing"
+      "decal"
     ],
     "compatibility": {
       "unrealEngine": [
@@ -36,52 +36,55 @@
     "entryJson": "SceneTools/SceneTools.json",
     "sourceDocument": "data/tool-docs/scene-tools/scene-tools.md",
     "sourceMode": "markdown-with-external-files",
-    "updatedAt": "2026-05-09",
+    "updatedAt": "2026-05-14",
     "downloads": {
-      "latestManifest": "/downloads/scene-tools/1.1.0/manifest.json",
-      "latestReadme": "/downloads/scene-tools/1.1.0/README.md",
-      "latestMarkdown": "/downloads/scene-tools/1.1.0/tool.md",
-      "latestPackage": "/downloads/scene-tools/1.1.0/scene-tools-1.1.0.zip",
-      "latestPackageSha256": "6a2489bf3b41d3ab33a5a474e1414e33fdf32e6822c9cd00c95547d02d212466",
-      "latestPackageSize": 342972,
+      "latestManifest": "/downloads/scene-tools/1.0.0/manifest.json",
+      "latestReadme": "/downloads/scene-tools/1.0.0/README.md",
+      "latestMarkdown": "/downloads/scene-tools/1.0.0/tool.md",
+      "latestPackage": "/downloads/scene-tools/1.0.0/scene-tools-1.0.0.tapython-tool.zip",
+      "latestPackageSha256": "920a4cd7f8de7e13604e3e4e4b257acc3a0da6fd1f2e817f499d2dd2d8aee314",
+      "latestPackageSize": 335297,
       "latestPackageAvailable": true
     },
     "summary": {
       "features": [
-        "按物件类型（静态网格体、蓝图、灯光、贴花、摄像机、触发器）和范围（当前/所有关卡）批量选择 Actor",
-        "批量重置 Actor 变换（位置归零、旋转归零、缩放归一），支持 Ctrl+Z 撤销",
-        "Actor Tags 批量导出为 CSV 文件",
-        "Actor 落地吸附（地面贴合），支持预览与分帧执行",
-        "批量修改渲染属性（Actor/组件隐藏、投射阴影、绘制距离等）",
-        "批量开关静态网格组件的接受贴花属性",
-        "贴花转平面模型（可选保留材质及隐藏源贴花）",
-        "无效 Actor 扫描、标记与软删除（支持多关卡选择、结果列表展示、报告导出）",
-        "多轴 Actor 批量对齐、等距分布与阵列操作"
+        "按范围（当前关卡/所有关卡）与物件类型（StaticMesh/Blueprint/点光源/聚光灯/方向光/矩形光/天空光/贴花/摄像机/触发器）批量选择 Actor",
+        "批量重置 Actor 变换：位置归零、旋转归零、缩放归一、全变换重置，通过 ScopedEditorTransaction 支持 Ctrl+Z 撤销",
+        "导出已选 Actor 的 Tag 为 CSV 文件",
+        "Actor 落地吸附：预览+执行射线检测贴地，支持配置偏移量、射线距离、起始偏移与碰撞 Profile，支持大批量分帧任务",
+        "批量修改渲染属性：Actor 隐藏、Cast Shadow、组件隐藏/可见、Draw Distance，支持预览+执行+分帧任务",
+        "批量开关 StaticMeshComponent 的 Receives Decals，支持预览+执行+分帧任务",
+        "贴花转平面模型：将选中 DecalActor 生成等比例 Plane StaticMeshActor，可赋予源材质并隐藏源贴花",
+        "无效 Actor 清理：扫描关卡中的空节点与缺失 StaticMesh Actor，支持标记 Tag、软删除（移入隐藏文件夹）、导出扫描报告",
+        "对齐/分布/阵列：按 X/Y/Z 轴对齐首个 Actor、等距分布，或按步长阵列，支持预览+执行+分帧任务"
       ],
       "unrealApis": [
-        "unreal.EditorActorSubsystem",
-        "unreal.EditorLevelLibrary.get_current_level",
-        "unreal.EditorLevelLibrary.get_editor_world",
-        "unreal.EditorLevelUtils.get_levels",
-        "unreal.EditorAssetLibrary.load_asset",
-        "unreal.SystemLibrary.line_trace_single_by_profile",
+        "unreal.get_editor_subsystem(unreal.EditorActorSubsystem)",
+        "unreal.EditorActorSubsystem.get_all_level_actors",
+        "unreal.EditorActorSubsystem.get_selected_level_actors",
+        "unreal.EditorActorSubsystem.set_selected_level_actors",
         "unreal.ScopedEditorTransaction",
+        "unreal.PythonBPLib.get_chameleon_data",
         "unreal.ChameleonData.get_chameleon_window_size",
         "unreal.ChameleonData.set_chameleon_window_size",
-        "unreal.PythonBPLib.get_chameleon_data",
-        "unreal.PythonBPLib.set_timer",
-        "unreal.PythonBPLib.clear_timer",
-        "unreal.Paths.project_saved_dir",
-        "unreal.get_editor_subsystem",
-        "unreal.register_slate_post_tick_callback",
-        "unreal.unregister_slate_post_tick_callback"
+        "unreal.StaticMeshActor",
+        "unreal.PointLight",
+        "unreal.SpotLight",
+        "unreal.DirectionalLight",
+        "unreal.RectLight",
+        "unreal.SkyLight",
+        "unreal.DecalActor",
+        "unreal.CameraActor",
+        "unreal.TriggerVolume",
+        "unreal.Vector2D",
+        "unreal.log",
+        "unreal.log_warning",
+        "unreal.log_error"
       ],
       "widgetAkas": [
         "scene_tools_scroll",
         "chk_scope_current",
         "chk_scope_all",
-        "btn_select_all",
-        "btn_deselect_all",
         "chk_static_mesh",
         "chk_blueprint",
         "chk_point_light",
@@ -92,8 +95,43 @@
         "chk_decal",
         "chk_camera",
         "chk_trigger",
+        "btn_select_all",
+        "btn_deselect_all",
         "btn_execute",
         "btn_clear_selection",
+        "txt_status",
+        "btn_ground_preview",
+        "btn_ground_execute",
+        "input_ground_threshold",
+        "input_ground_offset",
+        "input_ground_max_distance",
+        "input_ground_start_offset",
+        "input_ground_profile",
+        "txt_ground_snap_preview",
+        "input_export_path",
+        "chk_render_actor_hidden_enabled",
+        "chk_render_actor_hidden_value",
+        "chk_render_cast_shadow_enabled",
+        "chk_render_cast_shadow_value",
+        "chk_render_component_hidden_enabled",
+        "chk_render_component_hidden_value",
+        "chk_render_component_visible_enabled",
+        "chk_render_component_visible_value",
+        "chk_render_draw_distance_enabled",
+        "input_render_draw_distance",
+        "btn_render_preview",
+        "btn_render_execute",
+        "txt_render_property_preview",
+        "chk_receives_decals_value",
+        "btn_receives_decals_preview",
+        "btn_receives_decals_execute",
+        "txt_receives_decals_preview",
+        "input_decal_plane_suffix",
+        "chk_decal_plane_copy_material",
+        "chk_decal_plane_hide_source",
+        "btn_decal_plane_preview",
+        "btn_decal_plane_execute",
+        "txt_decal_to_plane_preview",
         "txt_invalid_actor_level_info",
         "btn_invalid_actor_refresh_levels",
         "btn_invalid_actor_select_all_levels",
@@ -111,70 +149,31 @@
         "btn_invalid_actor_export_report",
         "list_invalid_actor_results",
         "txt_invalid_actor_preview",
-        "input_decal_plane_suffix",
-        "chk_decal_plane_copy_material",
-        "chk_decal_plane_hide_source",
-        "btn_decal_plane_preview",
-        "btn_decal_plane_execute",
-        "txt_decal_to_plane_preview",
-        "chk_receives_decals_value",
-        "btn_receives_decals_preview",
-        "btn_receives_decals_execute",
-        "txt_receives_decals_preview",
         "chk_align_axis_x",
         "chk_align_axis_y",
         "chk_align_axis_z",
         "input_align_step",
-        "txt_align_preview",
-        "chk_render_actor_hidden_enabled",
-        "chk_render_actor_hidden_value",
-        "chk_render_component_hidden_enabled",
-        "chk_render_component_hidden_value",
-        "chk_render_component_visible_enabled",
-        "chk_render_component_visible_value",
-        "chk_render_cast_shadow_enabled",
-        "chk_render_cast_shadow_value",
-        "chk_render_draw_distance_enabled",
-        "input_render_draw_distance",
-        "btn_render_preview",
-        "btn_render_execute",
-        "txt_render_property_preview",
-        "input_ground_profile",
-        "input_ground_max_distance",
-        "input_ground_threshold",
-        "input_ground_offset",
-        "input_ground_start_offset",
-        "btn_ground_preview",
-        "btn_ground_execute",
-        "txt_ground_snap_preview",
-        "input_export_path",
-        "txt_status"
+        "txt_align_preview"
       ],
       "installSteps": [
-        "确认项目已安装 TAPython 插件",
-        "将 SceneTools/ 文件夹复制到 <Project>/TA/TAPython/Python/",
-        "将 MenuConfig.snippet.json 的条目合并到 MenuConfig.json 的 OnToolBarChameleon.items 数组中",
-        "在 UE 编辑器中 Reload TAPython 或重启编辑器"
+        "将 SceneTools/ 目录复制到 <Project>/TA/TAPython/Python/",
+        "在 <Project>/TA/TAPython/UI/MenuConfig.json 的 OnToolBarChameleon.items 中追加 MenuConfig.snippet.json 中的条目",
+        "在 UE 编辑器中执行 Reload TAPython 或重启编辑器",
+        "在 Chameleon 工具栏下拉菜单中找到 'Scene Tools' 并点击打开"
       ],
       "riskNotes": [
-        "变换重置操作通过 ScopedEditorTransaction 封装，支持 Ctrl+Z 撤销",
-        "渲染属性修改、接受贴花开关、对齐/分布操作通过事务封装，支持撤销",
-        "Actor 软删除操作将 Actor 移动到指定文件夹，不可通过 Ctrl+Z 撤销，请提前确认",
-        "贴花转平面会在场景中新建 StaticMeshActor，如勾选隐藏源贴花则不可一键撤销",
-        "无效 Actor 扫描报告导出到项目 Saved 目录，不影响资产"
+        "变换重置操作（位置/旋转/缩放归零）通过 ScopedEditorTransaction 包裹，支持 Ctrl+Z 完整撤销",
+        "落地吸附执行修改 Actor 位置，通过 ScopedEditorTransaction 支持撤销",
+        "无效 Actor 软删除：将 Actor 移入指定文件夹并隐藏，该操作不可通过 Ctrl+Z 完全还原，建议操作前手动保存关卡",
+        "贴花转平面生成新 Actor，但原贴花不删除；若勾选'隐藏源贴花'则会修改原 Actor 可见性，不可通过 Ctrl+Z 撤销"
       ]
     },
-    "documentationMarkdown": "# Scene Tools\r\n\r\n> 场景工具集，覆盖 Actor 批量选择、变换归零、落地吸附、渲染属性修改、贴花处理、无效 Actor 清理（含结果列表与报告导出）、对齐/分布阵列等高频场景批处理需求。\r\n\r\n## 快速开始\r\n\r\n1. 将 `SceneTools/` 目录复制到 `<Project>/TA/TAPython/Python/`\r\n2. 将以下 JSON 条目合并到 `<Project>/TA/TAPython/UI/MenuConfig.json` 的 `OnToolBarChameleon.items` 数组：\r\n   ```json\r\n   {\r\n     \"name\": \"Scene Tools\",\r\n     \"tooltip\": \"场景工具集：按范围和类型批量选择，以及隐藏/显示 Actor 可见性控制。\",\r\n     \"ExtensionHookName\": \"OnToolBarChameleon\",\r\n     \"ChameleonTools\": \"../Python/SceneTools/SceneTools.json\"\r\n   }\r\n   ```\r\n3. 在 UE 编辑器中 Reload TAPython 或重启编辑器，从 Chameleon 工具栏打开工具。\r\n\r\n## 文件清单\r\n\r\n| 文件名 | 用途 | 存放路径 |\r\n|--------|------|---------|\r\n| `SceneTools.json` | Chameleon UI 布局（View） | `<Project>/TA/TAPython/Python/SceneTools/` |\r\n| `SceneTools.py` | 业务逻辑控制器（Controller） | `<Project>/TA/TAPython/Python/SceneTools/` |\r\n| `__init__.py` | Python 模块初始化（空文件） | `<Project>/TA/TAPython/Python/SceneTools/` |\r\n| `MenuConfig.snippet.json` | MenuConfig 注册条目片段（安装参考） | 随提交文档，不需复制到项目 |\r\n\r\n## 架构简述\r\n\r\n- **工具名**：SceneTools / 场景工具集\r\n- **Controller 类**：`SceneToolsController`\r\n- **挂载点**：`OnToolBarChameleon`（Chameleon 工具栏下拉菜单）\r\n- **入口 JSON**：`SceneTools/SceneTools.json`\r\n- **核心 UE API**：\r\n  - `unreal.EditorActorSubsystem`（Actor 选择与批量操作）\r\n  - `unreal.EditorLevelLibrary`（关卡上下文）\r\n  - `unreal.EditorLevelUtils.get_levels`（多关卡支持）\r\n  - `unreal.SystemLibrary.line_trace_single_by_profile`（落地射线检测）\r\n  - `unreal.ScopedEditorTransaction`（Ctrl+Z 撤销支持）\r\n  - `unreal.PythonBPLib.set_timer` / `clear_timer`（分帧任务调度）\r\n  - `unreal.Paths.project_saved_dir`（报告导出路径）\r\n- **核心控件 Aka**（共 70 个）：`scene_tools_scroll`、`chk_scope_current`、`list_invalid_actor_results`、`btn_invalid_actor_export_report`、`txt_status` 等\r\n\r\n## MenuConfig\r\n\r\n```json menuconfig path=MenuConfig.snippet.json\r\n@file:MenuConfig.snippet.json\r\n```\r\n\r\n## View\r\n\r\n```json chameleon-ui path=SceneTools/SceneTools.json\r\n@file:SceneTools.json\r\n```\r\n\r\n## Controller\r\n\r\n```python controller path=SceneTools/SceneTools.py\r\n@file:SceneTools.py\r\n```\r\n\r\n## 使用说明\r\n\r\n### 选择工具\r\n1. 在\"选择范围\"中选择**当前关卡**或**所有关卡**。\r\n2. 勾选需要批量选择的物件类型（静态网格体、蓝图、点光源、聚光灯、平行光、矩形光、天空光、贴花、摄像机、触发器）。\r\n3. 点击**执行选择**，工具会将符合条件的 Actor 加入选中集。\r\n\r\n### 变换工具\r\n1. 在视口或大纲中选中目标 Actor。\r\n2. 根据需要点击：**位置归零**、**旋转归零**、**缩放归一**或**全变换重置**。\r\n3. 操作包裹在 `ScopedEditorTransaction` 中，支持 **Ctrl+Z** 撤销。\r\n\r\n### 落地吸附\r\n1. 选中目标 Actor 后展开\"落地吸附\"面板。\r\n2. 配置碰撞预设、最大检测距离、吸附阈值等参数。\r\n3. 先点击**预览**查看修正计划，确认无误后点击**执行吸附**。\r\n\r\n### 渲染属性批量修改\r\n1. 选中目标 Actor，展开\"渲染属性\"面板。\r\n2. 勾选需要修改的属性项并设置目标值。\r\n3. 点击**预览**确认修改范围，再点击**执行**。\r\n\r\n### 接受贴花批量开关\r\n1. 选中包含 StaticMeshComponent 的 Actor。\r\n2. 设置目标值（开/关），点击**预览**后执行。\r\n\r\n### 贴花转平面\r\n1. 选中 DecalActor，展开\"贴花转平面\"面板。\r\n2. 可选配置：保留材质、隐藏源贴花、后缀名。\r\n3. 预览确认后执行转换。\r\n\r\n### 无效 Actor 清理\r\n1. 展开\"无效 Actor 清理\"面板，刷新并选择目标关卡。\r\n2. 配置检测规则（空 Actor、缺失静态网格体）。\r\n3. 执行**预览扫描** → 在结果列表中查看详情 → 可点击**同步到内容浏览器**定位 Actor。\r\n4. 确认后执行**标记**（打 Tag）或**软删除**（移动到指定文件夹）。\r\n5. 点击**导出报告**将扫描结果保存为文本文件（路径：`<ProjectSaved>/InvalidActorReport_<时间戳>.txt`）。\r\n\r\n### 对齐 / 分布 / 阵列\r\n1. 选中两个或以上 Actor。\r\n2. 选择对齐轴（X / Y / Z），展开\"对齐/分布\"面板。\r\n3. 执行**对齐到首个**、**等距分布**或**按步长阵列**。\r\n\r\n## 注意事项\r\n\r\n- 变换重置、渲染属性修改、对齐/分布通过 `ScopedEditorTransaction` 封装，**支持 Ctrl+Z 撤销**。\r\n- **Actor 软删除**（将 Actor 移动到特定文件夹）**不可通过 Ctrl+Z 撤销**，请在执行前确认目标 Actor 列表。\r\n- 贴花转平面勾选\"隐藏源贴花\"后，源 DecalActor 将被隐藏，如需恢复需手动操作。\r\n- 分帧任务（大批量处理时自动开启）执行期间请勿关闭工具窗口。\r\n- 无效 Actor 扫描报告导出到项目 `Saved/` 目录，不修改任何资产，可安全使用。\r\n- 工具依赖 TAPython 提供的 `PythonBPLib`，请确保项目已安装并启用 TAPython 插件。\r\n\r\n## Agent 安装指令\r\n\r\nAgent 可按以下方式读取本文档并完成安装：\r\n\r\n1. **解析 YAML front matter**，获取 `installPath`（`<Project>/TA/TAPython/Python/SceneTools/`）和 `menuConfigMerge` 配置。\r\n2. **展开 `@file:` 引用**：将 `SceneTools.json`、`SceneTools.py`、`__init__.py` 写入 `installPath`。\r\n3. **合并 MenuConfig**：读取 `menuConfigMerge.target` 指向的 JSON 文件，在 `OnToolBarChameleon.items` 数组末尾追加 `menuConfigMerge.itemsToAdd` 中的条目（若同名条目已存在则跳过）。\r\n4. **校验安装**：确认上述文件存在后，提示用户 Reload TAPython 或重启 UE 编辑器。\r\n5. **文件完整性校验**（可选）：对照 `previousVersions` 中当前版本（`1.1.0`）的 sha256 值验证写入文件是否一致。",
+    "documentationMarkdown": "# 场景工具集\r\n\r\n场景批处理工具集，面向关卡美术与 TA，提供 9 大功能面板：批量选择、变换重置、落地吸附、渲染属性批改、接受贴花、贴花转平面、无效 Actor 清理，以及对齐/分布/阵列。所有修改操作均提供预览+执行两步确认，批量操作支持分帧调度避免卡顿。\r\n\r\n## 快速开始\r\n\r\n1. 将 `SceneTools/` 目录整体复制到 `<Project>/TA/TAPython/Python/`\r\n2. 打开 `<Project>/TA/TAPython/UI/MenuConfig.json`，在 `OnToolBarChameleon.items` 数组末尾追加 `MenuConfig.snippet.json` 中的条目\r\n3. 在 UE 编辑器菜单执行 **Reload TAPython**（或重启编辑器）\r\n4. 点击 Chameleon 工具栏 → **Scene Tools** 打开面板\r\n\r\n## 文件清单\r\n\r\n| 文件名 | 用途 | 存放路径 |\r\n|-------|------|---------|\r\n| `SceneTools.json` | Chameleon UI 定义（根面板 + 9 大功能区） | `Python/SceneTools/SceneTools.json` |\r\n| `SceneTools.py` | Python 控制器（`SceneToolsController`） | `Python/SceneTools/SceneTools.py` |\r\n| `__init__.py` | Python 包初始化（空文件） | `Python/SceneTools/__init__.py` |\r\n| `MenuConfig.snippet.json` | MenuConfig 合并片段 | 工具目录根 |\r\n\r\n## 架构简述\r\n\r\n- **工具名**：SceneTools  \r\n- **控制器类**：`SceneToolsController`（位于 `SceneTools.py`）  \r\n- **挂载点**：`OnToolBarChameleon`  \r\n- **入口 JSON**：`../Python/SceneTools/SceneTools.json`  \r\n- **根控件**：`SScrollBox (Aka: scene_tools_scroll)` → 9 个 `SExpandableArea` 面板  \r\n- **核心 API**：  \r\n  - `unreal.EditorActorSubsystem`（批量获取/选中 Actor）  \r\n  - `unreal.ScopedEditorTransaction`（变换操作可撤销包裹）  \r\n  - `unreal.PythonBPLib.get_chameleon_data`（UI 数据绑定）  \r\n  - `unreal.ChameleonData.*`（窗口尺寸自适应）  \r\n\r\n## MenuConfig\r\n\r\n```json menuconfig path=MenuConfig.snippet.json\r\n@file:MenuConfig.snippet.json\r\n```\r\n\r\n## View\r\n\r\n```json chameleon-ui path=SceneTools/SceneTools.json\r\n@file:SceneTools.json\r\n```\r\n\r\n## Controller\r\n\r\n```python controller path=SceneTools/SceneTools.py\r\n@file:SceneTools.py\r\n```\r\n\r\n## 使用说明\r\n\r\n### 1. 选择工具\r\n\r\n1. 在\"选择范围\"中选择\"当前关卡\"或\"所有关卡\"  \r\n2. 在\"物件类型\"中勾选需要选择的类型（静态网格体、蓝图、各类灯光、贴花、摄像机、触发器）  \r\n3. 点击**批量选择**执行；点击**取消所有选择**清空当前 Viewport 选中  \r\n\r\n### 2. 变换工具\r\n\r\n1. 在 Viewport 中选中目标 Actor  \r\n2. 点击**位置归零 / 旋转归零 / 缩放归一 / 全变换重置**（均支持 Ctrl+Z 撤销）  \r\n3. 如需导出 Actor Tag 为 CSV，填写导出路径后点击**导出 Tag**  \r\n\r\n### 3. 落地吸附\r\n\r\n1. 在 Viewport 中选中目标 Actor  \r\n2. 点击**预览落地**查看将被移动的 Actor 及目标 Z 值  \r\n3. 确认预览结果后点击**执行落地**  \r\n4. 可通过\"阈值/偏移/射线距离/起始偏移/Profile\"字段精细控制行为  \r\n\r\n### 4. 渲染属性批处理\r\n\r\n1. 选中目标 Actor  \r\n2. 勾选需要修改的属性并设置目标值  \r\n3. 点击**预览**查看影响范围，再点击**执行**写入  \r\n\r\n### 5. 接受贴花\r\n\r\n1. 选中 StaticMeshActor  \r\n2. 设置\"目标状态\"开关  \r\n3. 点击**预览** → **执行**  \r\n\r\n### 6. 贴花转平面\r\n\r\n1. 在 Viewport 中选中 `DecalActor`  \r\n2. 配置命名后缀、是否赋予材质、是否隐藏源贴花  \r\n3. 点击**预览贴花转平面** → **执行贴花转平面**  \r\n\r\n### 7. 无效 Actor 清理\r\n\r\n1. 点击**刷新关卡列表**，在列表中选择要扫描的关卡（Ctrl/Shift 多选）  \r\n2. 勾选扫描类型（空 Actor / 缺失 StaticMesh）  \r\n3. 点击**预览无效 Actor** 查看扫描结果  \r\n4. 点击**仅标记 Tag** 为无效 Actor 打标记，或点击**软删除无效 Actor** 将其移入隐藏文件夹  \r\n5. 可点击**导出报告**保存扫描结果 TXT  \r\n\r\n### 8. 对齐 / 分布\r\n\r\n1. 选中 2+ 个 Actor  \r\n2. 选择轴向（X/Y/Z）和操作模式  \r\n3. 点击**预览**查看目标位置，再点击**执行**  \r\n\r\n## 注意事项\r\n\r\n- **软删除不可完全撤销**：执行前建议手动保存关卡（Ctrl+S）  \r\n- **贴花隐藏不可撤销**：若勾选\"隐藏源贴花\"，执行后无法通过 Ctrl+Z 还原  \r\n- 变换重置、落地吸附、渲染属性、对齐/分布均通过 `ScopedEditorTransaction` 包裹，支持 Ctrl+Z 撤销  \r\n- 大批量操作（>50 个 Actor）将自动启用分帧调度（`_FRAME_TASK_CHUNK_SIZE = 50`），避免编辑器卡顿  \r\n\r\n## Agent 安装指令\r\n\r\n```text\r\n读取本文档 front matter 中的 installPath 与 entryJson。\r\n1. 将 SceneTools/ 目录完整复制到 installPath 所指位置\r\n2. 读取 menuConfigMerge.target 指定的 MenuConfig.json\r\n3. 在 OnToolBarChameleon.items 数组末尾追加 menuConfigMerge.itemsToAdd[0] 中的对象\r\n4. 保存 MenuConfig.json\r\n5. 提示用户在 UE 编辑器中执行 Reload TAPython\r\n```",
     "codeAssets": [
       {
         "path": "MenuConfig.snippet.json",
-        "sha256": "5e2d045338ccd5aa1802ff168f115c252ba90bf35b73588500fe428c9315d327",
-        "size": 264
-      },
-      {
-        "path": "MenuConfig.snippet.json",
-        "sha256": "616a0995e1f508e077a49ab5a667ce89490ab78d864b6af1cfb57cb11649fb24",
-        "size": 251
+        "sha256": "942b9f3af2e42706a12eae2ccfcbb5e9c60d658b516caed158ba8fed27e7a9a1",
+        "size": 366
       },
       {
         "path": "SceneTools/SceneTools.json",
@@ -194,36 +193,36 @@
     ],
     "versions": [
       {
-        "version": "1.1.0",
-        "releasedAt": "2026-05-09",
-        "author": "WuJunFeng",
-        "changeSummary": "无效 Actor 清理面板新增结果列表与报告导出功能",
+        "version": "1.0.0",
+        "releasedAt": "2026-05-14",
+        "author": "吴俊枫",
+        "changeSummary": "首版发布",
         "breaking": false,
         "downloads": {
-          "manifest": "/downloads/scene-tools/1.1.0/manifest.json",
-          "readme": "/downloads/scene-tools/1.1.0/README.md",
-          "markdown": "/downloads/scene-tools/1.1.0/tool.md",
-          "package": "/downloads/scene-tools/1.1.0/scene-tools-1.1.0.zip",
-          "packageSha256": "6a2489bf3b41d3ab33a5a474e1414e33fdf32e6822c9cd00c95547d02d212466",
-          "packageSize": 342972,
+          "manifest": "/downloads/scene-tools/1.0.0/manifest.json",
+          "readme": "/downloads/scene-tools/1.0.0/README.md",
+          "markdown": "/downloads/scene-tools/1.0.0/tool.md",
+          "package": "/downloads/scene-tools/1.0.0/scene-tools-1.0.0.tapython-tool.zip",
+          "packageSha256": "920a4cd7f8de7e13604e3e4e4b257acc3a0da6fd1f2e817f499d2dd2d8aee314",
+          "packageSize": 335297,
           "packageAvailable": true
         },
         "manifest": {
           "schemaVersion": "1.0.0",
           "name": "SceneTools",
-          "displayName": "Scene Tools",
-          "version": "1.1.0",
-          "author": "WuJunFeng",
-          "description": "场景 Actor 批量处理工具集",
+          "displayName": "场景工具集",
+          "version": "1.0.0",
+          "author": "吴俊枫",
+          "description": "场景批处理工具集",
           "category": "level-editing",
           "tags": [
             "scene",
-            "actor",
             "batch",
+            "actor",
             "transform",
+            "level-editing",
             "ground-snap",
-            "render",
-            "level-editing"
+            "decal"
           ],
           "compatibility": {
             "unrealEngine": [
@@ -244,13 +243,8 @@
           "files": [
             {
               "path": "MenuConfig.snippet.json",
-              "sha256": "5e2d045338ccd5aa1802ff168f115c252ba90bf35b73588500fe428c9315d327",
-              "size": 264
-            },
-            {
-              "path": "MenuConfig.snippet.json",
-              "sha256": "616a0995e1f508e077a49ab5a667ce89490ab78d864b6af1cfb57cb11649fb24",
-              "size": 251
+              "sha256": "942b9f3af2e42706a12eae2ccfcbb5e9c60d658b516caed158ba8fed27e7a9a1",
+              "size": 366
             },
             {
               "path": "SceneTools/SceneTools.json",
@@ -274,122 +268,28 @@
             "itemsToAdd": [
               {
                 "name": "Scene Tools",
-                "tooltip": "场景工具集：按范围和类型批量选择，以及隐藏/显示 Actor 可见性控制。",
+                "tooltip": "场景工具集：按范围和类型批量选择、批量重置变换、落地吸附、渲染属性批改、接受贴花开关、贴花转平面模型、无效 Actor 清理，以及对齐/分布/阵列操作。",
                 "ChameleonTools": "../Python/SceneTools/SceneTools.json",
                 "ExtensionHookName": "OnToolBarChameleon"
               }
             ]
           },
           "preInstallChecks": [
-            "确认项目已安装 TAPython 插件",
+            "确认项目已安装并启用 TAPython 插件",
             "确认 <Project>/TA/TAPython/UI/MenuConfig.json 文件可写",
-            "确认 <Project>/TA/TAPython/Python/ 目录存在"
+            "确认 Python/ 目录下没有同名 SceneTools 模块冲突"
           ],
           "postInstallSteps": [
-            "在 UE 编辑器中 Reload TAPython 或重启编辑器",
-            "在 Chameleon 工具栏中点击 Scene Tools 确认工具窗口可正常打开"
+            "在 UE 编辑器中执行 Reload TAPython 或重启编辑器",
+            "在 Chameleon 工具栏（场景工具集图标下拉）中确认 'Scene Tools' 条目可见并可正常打开"
           ],
           "uninstallSteps": [
             "删除 <Project>/TA/TAPython/Python/SceneTools/ 目录",
-            "从 <Project>/TA/TAPython/UI/MenuConfig.json 的 OnToolBarChameleon.items 中移除 Scene Tools 条目"
+            "从 <Project>/TA/TAPython/UI/MenuConfig.json 的 OnToolBarChameleon.items 中移除 Scene Tools 对应条目",
+            "重启 UE 编辑器或 Reload TAPython"
           ],
-          "createdAt": "2026-05-09",
-          "updatedAt": "2026-05-09"
-        }
-      },
-      {
-        "version": "1.0.0",
-        "releasedAt": "2026-05-08",
-        "author": "WuJunFeng",
-        "changeSummary": "首版发布",
-        "breaking": false,
-        "downloads": {
-          "manifest": "/downloads/scene-tools/1.0.0/manifest.json",
-          "readme": "/downloads/scene-tools/1.0.0/README.md",
-          "markdown": "/downloads/scene-tools/1.0.0/tool.md",
-          "package": "",
-          "packageSha256": "",
-          "packageSize": 0,
-          "packageAvailable": false,
-          "packageUnavailableReason": "One or more manifest files missing from build output"
-        },
-        "manifest": {
-          "schemaVersion": "1.0.0",
-          "name": "SceneTools",
-          "displayName": "Scene Tools",
-          "version": "1.0.0",
-          "author": "WuJunFeng",
-          "description": "场景 Actor 批量处理工具集",
-          "category": "level-editing",
-          "tags": [
-            "scene",
-            "actor",
-            "batch",
-            "transform",
-            "ground-snap",
-            "render",
-            "level-editing"
-          ],
-          "compatibility": {
-            "unrealEngine": [
-              "5.5"
-            ],
-            "tapython": [
-              "1.2+"
-            ],
-            "plugins": [
-              "TAPython"
-            ]
-          },
-          "dependencies": [],
-          "mountPoint": "OnToolBarChameleon",
-          "installPath": "<Project>/TA/TAPython/Python/SceneTools/",
-          "entryJson": "SceneTools/SceneTools.json",
-          "riskLevel": "medium",
-          "files": [
-            {
-              "path": "SceneTools/SceneTools.json",
-              "sha256": "3242d99f8ed0ee9cb97fa0369629e24ffcede29bf8a506cca9f88e2474d0f174",
-              "size": 133514
-            },
-            {
-              "path": "SceneTools/SceneTools.py",
-              "sha256": "f52fcd115ca331793eb94f3597873a4183895737bdb36bd0da2c0f4a3547921f",
-              "size": 171212
-            },
-            {
-              "path": "SceneTools/__init__.py",
-              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-              "size": 0
-            }
-          ],
-          "menuConfigMerge": {
-            "target": "<Project>/TA/TAPython/UI/MenuConfig.json",
-            "mountPoint": "OnToolBarChameleon",
-            "itemsToAdd": [
-              {
-                "name": "Scene Tools",
-                "tooltip": "场景工具集：按范围和类型批量选择，以及隐藏/显示 Actor 可见性控制。",
-                "ChameleonTools": "../Python/SceneTools/SceneTools.json",
-                "ExtensionHookName": "OnToolBarChameleon"
-              }
-            ]
-          },
-          "preInstallChecks": [
-            "确认项目已安装 TAPython 插件",
-            "确认 <Project>/TA/TAPython/UI/MenuConfig.json 文件可写",
-            "确认 <Project>/TA/TAPython/Python/ 目录存在"
-          ],
-          "postInstallSteps": [
-            "在 UE 编辑器中 Reload TAPython 或重启编辑器",
-            "在 Chameleon 工具栏中点击 Scene Tools 确认工具窗口可正常打开"
-          ],
-          "uninstallSteps": [
-            "删除 <Project>/TA/TAPython/Python/SceneTools/ 目录",
-            "从 <Project>/TA/TAPython/UI/MenuConfig.json 的 OnToolBarChameleon.items 中移除 Scene Tools 条目"
-          ],
-          "createdAt": "2026-05-08",
-          "updatedAt": "2026-05-09"
+          "createdAt": "2026-05-14",
+          "updatedAt": "2026-05-14"
         }
       }
     ]

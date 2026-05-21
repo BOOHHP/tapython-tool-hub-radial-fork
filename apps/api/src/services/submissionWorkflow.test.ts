@@ -65,6 +65,89 @@ test('reports a clear validation error when request slug differs from markdown s
   }
 });
 
+test('ignores package README markdown assets during validation', async () => {
+  const context = await createContext();
+  try {
+    const submission = await context.workflow.createSubmission({
+      ...validSubmission('readme-asset-tool', '1.0.0'),
+      assets: [
+        {
+          path: 'SceneTools/README.md',
+          content: '# SceneTools\n\nPackage usage notes without tool front matter.\n'
+        }
+      ]
+    });
+
+    assert.equal(submission.status, 'pending');
+    assert.equal(submission.validationReport.valid, true, JSON.stringify(submission.validationReport.issues));
+  } finally {
+    await context.cleanup();
+  }
+});
+
+test('accepts ToolHub generated v2 packages as package submissions', async () => {
+  const sourceContext = await createContext();
+  const targetContext = await createContext();
+  try {
+    const slug = 'roundtrip-package-tool';
+    const sourceSubmission = await sourceContext.workflow.createSubmission(validSubmissionWithAssets(slug, '1.0.0'));
+    await sourceContext.workflow.reviewSubmission(sourceSubmission.id, {
+      reviewer: 'TA Reviewer',
+      decision: 'approved'
+    });
+
+    const packageBuffer = await fs.readFile(path.join(sourceContext.config.downloadRoot, slug, '1.0.0', `${slug}-1.0.0.zip`));
+    const packageSubmission = await targetContext.workflow.createPackageSubmission({
+      packageBuffer,
+      submitter: 'QA Team',
+      notes: 'Round-trip package upload coverage.',
+      metadata: {
+        author: 'CC',
+        ownerTeam: 'CC',
+        category: 'asset-management',
+        riskLevel: 'low',
+        unrealEngine: ['5.5'],
+        tapython: ['1.2+'],
+        plugins: ['TAPython'],
+        tags: ['texture', 'duplicate'],
+        features: ['扫描指定路径下所有纹理资产，按文件名分组'],
+        unrealApis: ['unreal.AssetRegistryHelpers.get_asset_registry'],
+        widgetAkas: ['GroupList'],
+        riskNotes: ['本工具仅执行只读扫描。']
+      }
+    });
+
+    assert.equal(packageSubmission.status, 'pending');
+    assert.equal(packageSubmission.slug, slug);
+    assert.equal(packageSubmission.validationReport.valid, true, JSON.stringify(packageSubmission.validationReport.issues));
+    assert.match(packageSubmission.markdown, /sourceMode: v2-package-upload/);
+    assert.match(packageSubmission.markdown, /^author: CC$/m);
+    assert.match(packageSubmission.markdown, /^ownerTeam: CC$/m);
+    assert.match(packageSubmission.markdown, /^category: asset-management$/m);
+    assert.match(packageSubmission.markdown, /unreal\.AssetRegistryHelpers\.get_asset_registry/);
+    assert.match(packageSubmission.markdown, /GroupList/);
+
+    await targetContext.workflow.reviewSubmission(packageSubmission.id, {
+      reviewer: 'TA Reviewer',
+      decision: 'approved'
+    });
+
+    const generatedManifest = JSON.parse(await fs.readFile(path.join(targetContext.config.downloadRoot, slug, '1.0.0', 'manifest.json'), 'utf8')) as {
+      packageType?: string;
+      slug?: string;
+      install?: { entryJson?: string };
+      menuEntries?: unknown[];
+    };
+    assert.equal(generatedManifest.packageType, 'TAPythonToolPackage');
+    assert.equal(generatedManifest.slug, slug);
+    assert.equal(generatedManifest.install?.entryJson, 'RoundtripPackageTool/RoundtripPackageTool.json');
+    assert.equal(generatedManifest.menuEntries?.length, 1);
+  } finally {
+    await sourceContext.cleanup();
+    await targetContext.cleanup();
+  }
+});
+
 test('records rejected reviews without publishing artifacts', async () => {
   const context = await createContext();
   try {
@@ -195,6 +278,40 @@ uninstallSteps: []
 
 1. Copy ${toPascalCase(slug)} folder.
 `
+  };
+}
+
+function validSubmissionWithAssets(slug: string, version: string): ToolSubmissionRequest {
+  const request = validSubmission(slug, version);
+  const toolName = toPascalCase(slug);
+  const codeFence = '```';
+  return {
+    ...request,
+    assets: [
+      {
+        path: `${toolName}/${toolName}.json`,
+        content: `${JSON.stringify({ TabLabel: toDisplayName(slug), Root: { type: 'SVerticalBox' } }, null, 2)}\n`
+      },
+      {
+        path: `${toolName}/${toolName}.py`,
+        content: `class ${toolName}Controller:\n    pass\n`
+      }
+    ],
+    markdown: [
+      request.markdown,
+      '## View',
+      '',
+      `${codeFence}json chameleon-ui path=${toolName}/${toolName}.json`,
+      `@file:${toolName}/${toolName}.json`,
+      codeFence,
+      '',
+      '## Controller',
+      '',
+      `${codeFence}python controller path=${toolName}/${toolName}.py`,
+      `@file:${toolName}/${toolName}.py`,
+      codeFence,
+      ''
+    ].join('\n')
   };
 }
 
