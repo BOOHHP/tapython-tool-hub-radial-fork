@@ -31,7 +31,7 @@ if "%REPO_ROOT:~0,2%"=="\\" (
         echo [tapython-tool-hub] ERROR: failed to map UNC path to drive letter.
         exit /b 1
     )
-    for %%%%I in (".") do set "REPO_ROOT=%%%%~fI"
+    for %%I in (".") do set "REPO_ROOT=%%~fI"
     set "LOG_DIR=!REPO_ROOT!\logs"
     echo [tapython-tool-hub] mapped to: !REPO_ROOT!
 )

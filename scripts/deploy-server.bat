@@ -37,7 +37,7 @@ if "%REPO_ROOT:~0,2%"=="\\" (
         echo [tapython-tool-hub deploy] ERROR: failed to map UNC path to drive letter.
         exit /b 1
     )
-    for %%%%I in (".") do set "REPO_ROOT=%%%%~fI"
+    for %%I in (".") do set "REPO_ROOT=%%~fI"
     set "SCRIPT_DIR=!REPO_ROOT!\scripts\"
     set "ENV_FILE=!REPO_ROOT!\.env"
     echo [tapython-tool-hub deploy] mapped to: !REPO_ROOT!
