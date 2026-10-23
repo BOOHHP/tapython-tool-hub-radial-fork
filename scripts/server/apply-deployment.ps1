@@ -17,6 +17,7 @@ param(
     [ValidateSet('dual', 'single')]
     [string]$Mode = 'single',
     [switch]$ForceNpmCi,
+    [switch]$SkipBackup,
     [switch]$FromTrigger
 )
 
@@ -120,6 +121,24 @@ if ($needsCi) {
     }
 } else {
     Write-Log "package-lock.json unchanged since last deploy, skipping npm ci."
+}
+
+# ── 2b. Pre-deploy backup (fail closed: nothing is stopped if the backup fails) ──
+if ($SkipBackup) {
+    Write-Log "Pre-deploy backup skipped (-SkipBackup)."
+} else {
+    $nodeCmd = (Get-Command node.exe -ErrorAction SilentlyContinue).Source
+    if (-not $nodeCmd) { $nodeCmd = 'node.exe' }
+    $previousPreference = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    $backupOutput = & $nodeCmd --no-warnings (Join-Path $repoRoot 'scripts\server\backup.mjs') --kind deploy 2>&1
+    $backupExit = $LASTEXITCODE
+    $ErrorActionPreference = $previousPreference
+    $backupOutput | ForEach-Object { Write-Log "  backup: $_" }
+    if ($backupExit -ne 0) {
+        Write-Log "ERROR: pre-deploy backup failed (exit $backupExit); deployment aborted before touching the running service."
+        exit 1
+    }
 }
 
 # ── 3. Stop old service processes ──

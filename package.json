@@ -19,6 +19,7 @@
     "generate:data": "npm run build -w @tapython-tool-hub/shared && npm run build -w @tapython-tool-hub/tooling && node scripts/generate-data.mjs",
     "validate:v2-package": "npm run build -w @tapython-tool-hub/shared && node scripts/validate-v2-package.mjs",
     "test:ue-python-tools": "py -m unittest scripts.ue-python-toolkit.test_sync",
+    "test:server-scripts": "node --test scripts/server/backup.test.mjs",
     "test:web": "npm run test -w @tapython-tool-hub/web",
     "sync:ue-python-tools:scan": "py scripts/ue-python-toolkit/sync.py --config integration/ue-python-toolkit/config.json scan",
     "sync:ue-python-tools:bootstrap": "py scripts/ue-python-toolkit/sync.py --config integration/ue-python-toolkit/config.json bootstrap --write",
