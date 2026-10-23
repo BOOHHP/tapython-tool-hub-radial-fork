@@ -51,6 +51,7 @@ export interface FeishuProviderOptions {
   appSecret?: string;
   scope?: string;
   fetchDepartment?: boolean;
+  warn?: (message: string, detail: Record<string, unknown>) => void;
 }
 
 const loopbackHosts = new Set(['127.0.0.1', 'localhost', '::1']);
@@ -70,7 +71,7 @@ export function createFeishuProvider(options: FeishuProviderOptions): FeishuProv
     if (!options.appId || !options.appSecret) {
       throw new Error('FEISHU_PROVIDER=real requires FEISHU_APP_ID and FEISHU_APP_SECRET');
     }
-    return new RealFeishuProvider({ appId: options.appId, appSecret: options.appSecret, scope: options.scope, fetchDepartment: options.fetchDepartment });
+    return new RealFeishuProvider({ appId: options.appId, appSecret: options.appSecret, scope: options.scope, fetchDepartment: options.fetchDepartment, warn: options.warn });
   }
   throw new Error(`Unknown FEISHU_PROVIDER: ${options.provider}`);
 }

@@ -5,6 +5,8 @@ export interface RealFeishuConfig {
   appSecret: string;
   scope?: string;
   fetchDepartment?: boolean;
+  // Receives non-secret diagnostics for best-effort steps (department lookup).
+  warn?: (message: string, detail: Record<string, unknown>) => void;
   fetch?: typeof fetch;
   authorizeUrl?: string;
   tokenUrl?: string;
@@ -99,16 +101,22 @@ export class RealFeishuProvider implements FeishuProvider {
       const user = await this.call(`${this.apiBase}/contact/v3/users/${encodeURIComponent(openId)}?user_id_type=open_id&department_id_type=open_department_id`, { method: 'GET', headers });
       const record = user.data?.user;
       if (user.code !== 0 || !record) {
+        this.config.warn?.('feishu department: user lookup failed', { step: 'users.get', code: user.code, msg: user.msg });
         return undefined;
       }
       const primary = (record.orders as Array<{ department_id?: string; is_primary_dept?: boolean }> | undefined)?.find((o) => o.is_primary_dept)?.department_id;
       const departmentId = primary ?? (record.department_ids as string[] | undefined)?.[0];
       if (!departmentId) {
+        this.config.warn?.('feishu department: user has no department id', { step: 'users.get', fields: Object.keys(record) });
         return undefined;
       }
       const department = await this.call(`${this.apiBase}/contact/v3/departments/${encodeURIComponent(departmentId)}?department_id_type=open_department_id`, { method: 'GET', headers });
+      if (department.code !== 0) {
+        this.config.warn?.('feishu department: department lookup failed', { step: 'departments.get', code: department.code, msg: department.msg });
+      }
       return department.code === 0 ? stringOrUndefined(department.data?.department?.name) : undefined;
-    } catch {
+    } catch (error) {
+      this.config.warn?.('feishu department: lookup error', { error: error instanceof Error ? error.message : String(error) });
       return undefined;
     }
   }
@@ -123,7 +131,7 @@ export class RealFeishuProvider implements FeishuProvider {
       body: JSON.stringify({ app_id: this.config.appId, app_secret: this.config.appSecret })
     });
     if (response.code !== 0 || !response.tenant_access_token) {
-      throw new Error('tenant token unavailable');
+      throw new Error(`tenant token unavailable (code ${response.code ?? 'unknown'}: ${response.msg ?? ''})`);
     }
     this.tenantToken = { value: response.tenant_access_token, expiresAt: Date.now() + Number(response.expire ?? 7200) * 1000 };
     return response.tenant_access_token;

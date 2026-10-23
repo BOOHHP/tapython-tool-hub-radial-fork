@@ -67,7 +67,7 @@ export async function createApp(config: ApiConfig) {
       }
       events = new EventStore(hubDatabase.db);
     }
-    identity = buildIdentity(config, hubDatabase?.db, events);
+    identity = buildIdentity(config, hubDatabase?.db, events, (message, detail) => app.log.warn(detail, message));
   } catch (error) {
     hubDatabase?.db.close();
     await databasePool?.end();
@@ -114,7 +114,7 @@ function linkReviewer(db: SqliteDatabase) {
   };
 }
 
-function buildIdentity(config: ApiConfig, db: SqliteDatabase | undefined, events: EventStore | undefined) {
+function buildIdentity(config: ApiConfig, db: SqliteDatabase | undefined, events: EventStore | undefined, warn: (message: string, detail: Record<string, unknown>) => void) {
   if (!config.feishuAuthEnabled) {
     return undefined;
   }
@@ -131,7 +131,8 @@ function buildIdentity(config: ApiConfig, db: SqliteDatabase | undefined, events
     appId: config.feishuAppId,
     appSecret: config.feishuAppSecret,
     scope: config.feishuScope,
-    fetchDepartment: config.feishuFetchDepartment
+    fetchDepartment: config.feishuFetchDepartment,
+    warn
   });
   if (!provider) {
     throw new Error('AUTH_FEISHU_ENABLED requires FEISHU_PROVIDER (real or mock)');

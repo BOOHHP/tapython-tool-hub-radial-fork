@@ -119,8 +119,10 @@ test('department lookup uses the tenant token, prefers the primary department an
   assert.equal((await p.exchangeCode('c', redirectUri)).department, 'Scene C Team');
   assert.equal(calls.find((c) => c.url.startsWith(contactUser))?.headers.Authorization, 'Bearer t-token');
 
-  const failing = provider({ ...handlers, [contactUser]: () => ({ code: 41050, msg: 'no user authority' }) }, { fetchDepartment: true });
+  const warnings: Array<{ message: string; detail: Record<string, unknown> }> = [];
+  const failing = provider({ ...handlers, [contactUser]: () => ({ code: 41050, msg: 'no user authority' }) }, { fetchDepartment: true, warn: (message, detail) => warnings.push({ message, detail }) });
   const identity = await failing.provider.exchangeCode('c', redirectUri);
   assert.equal(identity.department, undefined);
   assert.equal(identity.openId, 'ou_a');
+  assert.deepEqual(warnings.map((w) => w.detail), [{ step: 'users.get', code: 41050, msg: 'no user authority' }]);
 });
