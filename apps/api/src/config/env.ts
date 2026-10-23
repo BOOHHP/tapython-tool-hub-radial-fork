@@ -27,6 +27,7 @@ export interface ApiConfig {
   feishuFetchDepartment?: boolean;
   bootstrapAdminEmails?: string[];
   publicBaseUrl?: string;
+  eventsEnabled?: boolean;
 }
 
 export function loadConfig(): ApiConfig {
@@ -57,7 +58,8 @@ export function loadConfig(): ApiConfig {
     feishuScope: process.env.FEISHU_SCOPE || undefined,
     feishuFetchDepartment: parseBoolean(process.env.FEISHU_FETCH_DEPARTMENT, false),
     bootstrapAdminEmails: (process.env.BOOTSTRAP_ADMIN_EMAILS ?? '').split(',').map((email) => email.trim()).filter(Boolean),
-    publicBaseUrl: process.env.PUBLIC_BASE_URL || undefined
+    publicBaseUrl: process.env.PUBLIC_BASE_URL || undefined,
+    eventsEnabled: parseBoolean(process.env.EVENTS_ENABLED, false)
   };
 }
 

@@ -1,6 +1,7 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { FeishuAuthError, type FeishuProvider } from '../auth/feishuProvider.js';
 import { type HubAuth, parseCookies, refreshCookie, safeReturnTo } from '../identity/hubAuth.js';
+import { type EventStore, idPattern } from '../identity/events.js';
 import { RateLimiter } from '../identity/rateLimiter.js';
 import type { SessionClient } from '../identity/sessionService.js';
 import { EmailConflictError, type UserRecord, type UserRepository, UserDisabledError } from '../identity/userRepository.js';
@@ -9,6 +10,7 @@ export interface IdentityDeps {
   provider: FeishuProvider;
   users: UserRepository;
   hubAuth: HubAuth;
+  events?: EventStore;
   appId?: string;
   authorizeUrl?: string;
   scope?: string;
@@ -123,13 +125,16 @@ export function registerIdentityRoutes(deps?: IdentityDeps) {
         if (typeof body.codeVerifier !== 'string' || !verifierPattern.test(body.codeVerifier)) {
           return reply.code(400).send({ error: 'invalid_code_verifier' });
         }
-        if (body.deviceId !== undefined && (typeof body.deviceId !== 'string' || body.deviceId.length > 128)) {
+        if (body.deviceId !== undefined && (typeof body.deviceId !== 'string' || !idPattern.test(body.deviceId))) {
           return reply.code(400).send({ error: 'invalid_request' });
         }
         try {
           const identity = await provider.exchangeCode(body.code, body.redirectUri, { codeVerifier: body.codeVerifier });
           const user = users.upsertFromFeishu(identity);
           const issued = hubAuth.sessions.createSession(user.openId, client, body.deviceId);
+          if (body.deviceId) {
+            deps.events?.bindDevice(user.openId, body.deviceId);
+          }
           return { user: publicUser(user), ...issued };
         } catch (error) {
           const failure = failureStatus(error);

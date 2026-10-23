@@ -13,6 +13,8 @@ import { registerAuthRoutes } from '../routes/auth.js';
 import { registerDownloadRoutes } from '../routes/downloads.js';
 import { registerHealthRoutes } from '../routes/health.js';
 import { registerIdentityRoutes } from '../routes/identity.js';
+import { registerEventRoutes } from '../routes/events.js';
+import { EventStore } from '../identity/events.js';
 import { createFeishuProvider } from '../auth/feishuProvider.js';
 import { AuditLog } from '../identity/auditLog.js';
 import { createAdminGuard, HubAuth } from '../identity/hubAuth.js';
@@ -36,17 +38,32 @@ export async function createApp(config: ApiConfig) {
   const submissionWorkflow = new SubmissionWorkflow(config, submissionRepository);
   const adminWorkflow = new AdminWorkflow(config);
   const authService = new AuthService(config);
-  const identity = buildIdentity(config, hubDatabase?.db);
+  let events: EventStore | undefined;
+  let identity: ReturnType<typeof buildIdentity>;
+  try {
+    if (config.eventsEnabled) {
+      if (!hubDatabase) {
+        throw new Error('EVENTS_ENABLED requires SQLITE_PATH');
+      }
+      events = new EventStore(hubDatabase.db);
+    }
+    identity = buildIdentity(config, hubDatabase?.db, events);
+  } catch (error) {
+    hubDatabase?.db.close();
+    await databasePool?.end();
+    throw error;
+  }
 
   app.register(cors, {
     origin: true,
     credentials: true,
-    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type']
   });
-  app.register(registerHealthRoutes(databasePool, hubDatabase));
+  app.register(registerHealthRoutes(databasePool, hubDatabase, { auth: Boolean(identity), events: Boolean(events) }));
   app.register(registerToolRoutes(toolRepository));
-  app.register(registerDownloadRoutes(config));
+  app.register(registerDownloadRoutes(config, events ? { store: events, hubAuth: identity?.hubAuth } : undefined));
+  app.register(registerEventRoutes({ store: events, hubAuth: identity?.hubAuth }));
   app.register(registerSubmissionRoutes(submissionRepository, submissionWorkflow));
   app.register(registerAuthRoutes(authService));
   app.register(registerIdentityRoutes(identity?.routeDeps));
@@ -66,7 +83,7 @@ export async function createApp(config: ApiConfig) {
 
   return app;
 }
-function buildIdentity(config: ApiConfig, db: SqliteDatabase | undefined) {
+function buildIdentity(config: ApiConfig, db: SqliteDatabase | undefined, events: EventStore | undefined) {
   if (!config.feishuAuthEnabled) {
     return undefined;
   }
@@ -102,6 +119,7 @@ function buildIdentity(config: ApiConfig, db: SqliteDatabase | undefined) {
       provider,
       users,
       hubAuth,
+      events,
       appId: config.feishuAppId,
       authorizeUrl: config.feishuProvider === 'real' ? 'https://accounts.feishu.cn/open-apis/authen/v1/authorize' : undefined,
       scope: config.feishuScope,
