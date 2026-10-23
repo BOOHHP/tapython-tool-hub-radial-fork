@@ -6,6 +6,8 @@ import { createDatabasePool } from '../database/client.js';
 import { openHubDatabase } from '../database/hubDatabase.js';
 import { FileSubmissionRepository } from '../repositories/fileSubmissionRepository.js';
 import { PgSubmissionRepository } from '../repositories/pgSubmissionRepository.js';
+import { SqliteSubmissionRepository } from '../repositories/sqliteSubmissionRepository.js';
+import type { SubmissionRepository } from '../repositories/submissionRepository.js';
 import { StaticToolRepository } from '../repositories/staticToolRepository.js';
 import { registerAdminRoutes } from '../routes/admin.js';
 import { registerAdminUserRoutes } from '../routes/adminUsers.js';
@@ -32,15 +34,20 @@ export async function createApp(config: ApiConfig) {
   const databasePool = createDatabasePool(config);
   const hubDatabase = await openHubDatabase(config);
   const toolRepository = new StaticToolRepository(config);
-  const submissionRepository = databasePool
-    ? new PgSubmissionRepository(databasePool)
-    : new FileSubmissionRepository(config);
-  const submissionWorkflow = new SubmissionWorkflow(config, submissionRepository);
   const adminWorkflow = new AdminWorkflow(config);
   const authService = new AuthService(config);
+  let submissionRepository: SubmissionRepository;
   let events: EventStore | undefined;
   let identity: ReturnType<typeof buildIdentity>;
   try {
+    if (config.storeBackend === 'sqlite') {
+      if (!hubDatabase) {
+        throw new Error('STORE_BACKEND=sqlite requires SQLITE_PATH');
+      }
+      submissionRepository = new SqliteSubmissionRepository(hubDatabase.db);
+    } else {
+      submissionRepository = databasePool ? new PgSubmissionRepository(databasePool) : new FileSubmissionRepository(config);
+    }
     if (config.eventsEnabled) {
       if (!hubDatabase) {
         throw new Error('EVENTS_ENABLED requires SQLITE_PATH');
@@ -53,6 +60,7 @@ export async function createApp(config: ApiConfig) {
     await databasePool?.end();
     throw error;
   }
+  const submissionWorkflow = new SubmissionWorkflow(config, submissionRepository);
 
   app.register(cors, {
     origin: true,
@@ -60,7 +68,7 @@ export async function createApp(config: ApiConfig) {
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type']
   });
-  app.register(registerHealthRoutes(databasePool, hubDatabase, { auth: Boolean(identity), events: Boolean(events) }));
+  app.register(registerHealthRoutes(databasePool, hubDatabase, { auth: Boolean(identity), events: Boolean(events), storeBackend: config.storeBackend === 'sqlite' ? 'sqlite' : 'files' }));
   app.register(registerToolRoutes(toolRepository));
   app.register(registerDownloadRoutes(config, events ? { store: events, hubAuth: identity?.hubAuth } : undefined));
   app.register(registerEventRoutes({ store: events, hubAuth: identity?.hubAuth }));

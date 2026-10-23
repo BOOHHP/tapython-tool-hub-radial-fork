@@ -62,7 +62,7 @@ async function login(app: App, email: string, deviceId?: string) {
 test('events stay off unless enabled', async () => {
   await withApp({ eventsEnabled: false }, async ({ app }) => {
     assert.deepEqual((await app.inject({ url: '/api/v1/features' })).json(), { auth: true, events: false });
-    assert.deepEqual((await app.inject({ url: '/health' })).json().features, { auth: true, events: false });
+    assert.deepEqual((await app.inject({ url: '/health' })).json().features, { auth: true, events: false, storeBackend: 'files' });
     assert.equal((await app.inject({ method: 'POST', url: '/api/v1/events', payload: batch([event('e1')]) })).statusCode, 404);
   });
   await assert.rejects(() => withApp({ sqlitePath: undefined, feishuAuthEnabled: false }, async () => {}), /SQLITE_PATH/);

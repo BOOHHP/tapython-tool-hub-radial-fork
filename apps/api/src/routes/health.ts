@@ -6,6 +6,7 @@ import type { HubDatabase } from '../database/hubDatabase.js';
 export interface HealthFeatures {
   auth: boolean;
   events: boolean;
+  storeBackend?: 'files' | 'sqlite';
 }
 
 export function registerHealthRoutes(pool: Pool | undefined, hubDatabase?: HubDatabase, features?: HealthFeatures) {
