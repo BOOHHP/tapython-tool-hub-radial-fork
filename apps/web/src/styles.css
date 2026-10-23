@@ -78,8 +78,8 @@ li,
 
 .app-header-inner {
   display: grid !important;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 0 !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 16px !important;
   align-items: center;
 }
 
@@ -1874,8 +1874,8 @@ li,
 
 @media (max-width: 920px) {
   .app-header-inner {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 14px !important;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0 14px !important;
   }
 
   .marketplace-layout {
@@ -1916,7 +1916,7 @@ li,
   }
 
   .app-header-inner {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) auto;
   }
 
   .view-return-panel {
@@ -2028,12 +2028,15 @@ li,
   margin-inline-start: 8px;
 }
 
-.header-account-button,
-.header-account-avatar {
-  flex: none;
+.app-header-inner > .header-account-button,
+.app-header-inner > .header-account-avatar {
+  justify-self: end;
+  align-self: center;
 }
 
 .header-account-avatar {
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: 2px solid rgba(255, 255, 255, 0.18);
   border-radius: 50%;
