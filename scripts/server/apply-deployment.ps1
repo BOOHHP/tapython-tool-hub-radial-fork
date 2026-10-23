@@ -190,7 +190,7 @@ Write-Log "  API(static) create result: $($apiResult.ReturnValue) PID=$($apiResu
 Write-Log "Waiting for API health check..."
 $healthUrl = "http://127.0.0.1:$ApiPort/api/health"
 $healthy = $false
-for ($i = 1; $i -le 30; $i++) {
+for ($i = 1; $i -le 120; $i++) {
     Start-Sleep -Seconds 1
     try {
         $resp = Invoke-WebRequest -Uri $healthUrl -TimeoutSec 2 -UseBasicParsing
@@ -200,10 +200,15 @@ for ($i = 1; $i -le 30; $i++) {
 
 if ($healthy) {
     Write-Log "API is healthy after ${i}s."
+    try {
+        & (Join-Path $repoRoot 'scripts\server\install-backup-task.ps1') | ForEach-Object { Write-Log "  $_" }
+    } catch {
+        Write-Log "WARNING: could not register the daily backup task: $($_.Exception.Message)"
+    }
     Write-Log "=== apply-deployment finished successfully ==="
     Write-Log "web/api: http://${HostIp}:${ApiPort}/ (single mode)"
     exit 0
 } else {
-    Write-Log "WARNING: API health check timed out after 30s. Check logs\api.log"
+    Write-Log "WARNING: API health check timed out after 120s. Check logs\api.log"
     exit 2
 }

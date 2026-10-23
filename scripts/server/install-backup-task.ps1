@@ -6,7 +6,9 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
-$node = (Get-Command node.exe -ErrorAction Stop).Source
+$node = (Get-Command node.exe -ErrorAction SilentlyContinue).Source
+if (-not $node) { $node = Join-Path $env:ProgramFiles 'nodejs\node.exe' }
+if (-not (Test-Path -LiteralPath $node)) { throw "node.exe not found (looked in PATH and $node)" }
 $script = Join-Path $repoRoot 'scripts\server\backup.mjs'
 
 $action = New-ScheduledTaskAction -Execute $node -Argument "`"$script`" --kind daily" -WorkingDirectory $repoRoot
