@@ -250,3 +250,30 @@ test('admin sets a team override and binds author aliases to people or teams', a
     assert.equal((await app.inject({ url: '/api/admin/author-aliases', headers: member })).statusCode, 403);
   });
 });
+test('stats are for signed-in members; process detail needs a reviewer; reviews link to the reviewing user', async () => {
+  await withApp({ storeBackend: 'sqlite' }, async ({ app, config }) => {
+    const admin = await bearerFor(app, 'dev@example.com');
+    const member = await bearerFor(app, 'member@example.com');
+
+    assert.equal((await app.inject({ url: '/api/v1/stats/platform' })).statusCode, 401);
+    assert.equal((await app.inject({ url: '/api/v1/stats/contribution', headers: member })).statusCode, 200);
+    const platform = await app.inject({ url: '/api/v1/stats/platform', headers: member });
+    assert.equal(platform.json().tools.total, 0);
+    assert.equal(platform.headers['cache-control'], 'no-store');
+    assert.equal((await app.inject({ url: '/api/v1/stats/process', headers: member })).statusCode, 403);
+    assert.equal((await app.inject({ url: '/api/v1/stats/process', headers: admin })).statusCode, 200);
+
+    const db = openSqlite(config.sqlitePath!);
+    try {
+      db.prepare("INSERT INTO submissions (id, slug, submitter, status, record, created_at, updated_at) VALUES ('a-1', 't1', 's', 'pending', ?, 'now', 'now')").run(JSON.stringify({
+        id: 'a-1', slug: 't1', submitter: 's', status: 'pending', markdown: '#', assets: [], validationReport: { valid: true, issues: [] }, reviews: [], createdAt: 'now', updatedAt: 'now'
+      }));
+    } finally {
+      db.close();
+    }
+    const review = await app.inject({ method: 'POST', url: '/api/admin/submissions/a-1/review', headers: admin, payload: { reviewer: 'x', decision: 'rejected', comment: 'no' } });
+    assert.equal(review.statusCode, 200, review.body);
+    const contribution = (await app.inject({ url: '/api/v1/stats/contribution', headers: admin })).json();
+    assert.equal(contribution.people.find((p: { reviews: number }) => p.reviews === 1)?.name, 'dev');
+  });
+});

@@ -2059,3 +2059,60 @@ li,
   display: block;
   margin-bottom: 16px;
 }
+.stat-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stat-bar-row {
+  display: grid;
+  grid-template-columns: minmax(80px, 38%) 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.stat-bar-track {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.stat-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: #2563eb;
+}
+
+.stat-bar-value {
+  min-width: 48px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-columns {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 140px;
+  margin-bottom: 8px;
+}
+
+.stat-column-slot {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.stat-column {
+  width: 100%;
+  border-radius: 3px 3px 0 0;
+  background: #2563eb;
+  opacity: 0.85;
+}
+
+.stat-column-slot:hover .stat-column {
+  opacity: 1;
+}

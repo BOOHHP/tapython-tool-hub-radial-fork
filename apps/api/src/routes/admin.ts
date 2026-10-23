@@ -13,7 +13,8 @@ export function registerAdminRoutes(
   adminWorkflow: AdminWorkflow,
   authService: AuthService,
   hubAuth?: HubAuth,
-  audit?: AuditLog
+  audit?: AuditLog,
+  linkReviewer?: (reviewId: string, openId: string) => void
 ) {
   const guard = createAdminGuard(authService, hubAuth);
   return async function adminRoutes(app: FastifyInstance) {
@@ -38,6 +39,10 @@ export function registerAdminRoutes(
           return reply.code(404).send({ error: 'submission_not_found' });
         }
         audit?.record({ actor: request.actor?.id ?? 'unknown', action: 'submission.review', entityType: 'submission', entityId: request.params.id, after: { decision: payload.decision } });
+        const reviewId = submission.reviews[0]?.id;
+        if (reviewId && request.actor && !request.actor.id.startsWith('emergency:')) {
+          linkReviewer?.(reviewId, request.actor.id);
+        }
         return submission;
       } catch (error) {
         return reply.code(409).send({ error: 'review_rejected', message: error instanceof Error ? error.message : String(error) });

@@ -1,6 +1,7 @@
 import {
   ApiOutlined,
   AppstoreOutlined,
+  BarChartOutlined,
   ArrowLeftOutlined,
   CheckCircleOutlined,
   CloudDownloadOutlined,
@@ -47,6 +48,7 @@ import type { ColumnsType } from 'antd/es/table';
 import { useEffect, useMemo, useState } from 'react';
 import type { FileDiffRow, ManifestDiffRow, ToolFileManifest, ToolManifest, ToolRecord, ToolVersion } from '@tapython-tool-hub/shared';
 import { AdminConsole } from '../features/admin/AdminConsole';
+import { StatsDashboard, StatsPageHeader } from '../features/stats/StatsDashboard';
 import { HeaderAccount } from '../features/account/HeaderAccount';
 import { CollectionDetail } from '../features/collections/CollectionDetail';
 import { getCatalogTools, getCollectionModules } from '../features/collections/model';
@@ -59,7 +61,7 @@ import { getApiBaseUrl, getApiUrl, getCategories, getRiskLevels, getStatuses, ge
 const { Header, Content } = Layout;
 const { Paragraph, Text, Title } = Typography;
 
-type ViewMode = 'tools' | 'tool' | 'submit' | 'admin';
+type ViewMode = 'tools' | 'tool' | 'submit' | 'admin' | 'stats';
 type ToolViewMode = 'detail' | 'compare';
 type InstallMode = 'ai' | 'cli' | 'zip';
 type CliPlatform = 'posix' | 'windows' | 'download';
@@ -77,12 +79,13 @@ function viewModeFromHash(hash: string): ViewMode | undefined {
   const normalized = hash.replace(/^#\/?/, '').toLowerCase();
   if (normalized === 'submit') return 'submit';
   if (normalized === 'admin') return 'admin';
+  if (normalized === 'stats') return 'stats';
   return undefined;
 }
 
 function writeViewModeHash(viewMode: ViewMode) {
   if (typeof window === 'undefined') return;
-  const nextHash = viewMode === 'submit' || viewMode === 'admin' ? `#${viewMode}` : '';
+  const nextHash = viewMode === 'submit' || viewMode === 'admin' || viewMode === 'stats' ? `#${viewMode}` : '';
   const nextUrl = `${window.location.pathname}${window.location.search}${nextHash}`;
   window.history.replaceState(null, '', nextUrl);
 }
@@ -236,10 +239,12 @@ export function ToolHubPage() {
             onBrowse={() => scrollToElement('tool-catalog')}
             onSubmit={() => navigateToView('submit')}
             onAdmin={() => navigateToView('admin')}
+            onStats={() => navigateToView('stats')}
           />
         ) : null}
         {viewMode === 'submit' ? <SubmitPageHeader onBack={goHome} /> : null}
         {viewMode === 'admin' ? <AdminPageHeader onBack={goHome} /> : null}
+        {viewMode === 'stats' ? <StatsPageHeader onBack={goHome} /> : null}
         {viewMode === 'tools' ? <OverviewStats tools={catalogTools} loading={loadingTools} /> : null}
         {toolError ? <Alert className="tool-load-alert" type="error" showIcon message="工具数据加载失败" description={toolError} /> : null}
         {viewMode === 'tools' && (
@@ -304,6 +309,7 @@ export function ToolHubPage() {
         )}
         {viewMode === 'submit' && <SubmissionWorkbench />}
         {viewMode === 'admin' && <AdminConsole tools={tools} loadingTools={loadingTools} onToolsChanged={refreshTools} />}
+      {viewMode === 'stats' && <StatsDashboard />}
       </Content>
     </Layout>
   );
@@ -342,7 +348,7 @@ function AdminPageHeader({ onBack }: { onBack: () => void }) {
   );
 }
 
-function RegistryHero({ tools, loading, onBrowse, onSubmit, onAdmin }: { tools: ToolRecord[]; loading: boolean; onBrowse: () => void; onSubmit: () => void; onAdmin: () => void }) {
+function RegistryHero({ tools, loading, onBrowse, onSubmit, onAdmin, onStats }: { tools: ToolRecord[]; loading: boolean; onBrowse: () => void; onSubmit: () => void; onAdmin: () => void; onStats: () => void }) {
   const approvedTools = tools.filter((tool) => tool.status === 'approved').length;
   const pendingTools = tools.filter((tool) => tool.status === 'pending').length;
 
@@ -365,6 +371,7 @@ function RegistryHero({ tools, loading, onBrowse, onSubmit, onAdmin }: { tools: 
         <Space wrap>
           <Button type="primary" icon={<AppstoreOutlined />} onClick={onBrowse}>浏览工具库</Button>
           <Button icon={<UploadOutlined />} onClick={onSubmit}>提交或发布工具</Button>
+          <Button icon={<BarChartOutlined />} onClick={onStats}>数据看板</Button>
           <Button icon={<SettingOutlined />} onClick={onAdmin}>后台管理</Button>
           <Button icon={<GithubOutlined />} href={INSTALLER_DOWNLOAD_URL}>下载 TAPython Installer</Button>
         </Space>

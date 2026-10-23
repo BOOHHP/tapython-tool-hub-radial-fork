@@ -16,6 +16,8 @@ import { registerDownloadRoutes } from '../routes/downloads.js';
 import { registerHealthRoutes } from '../routes/health.js';
 import { registerIdentityRoutes } from '../routes/identity.js';
 import { registerEventRoutes } from '../routes/events.js';
+import { registerStatsRoutes } from '../routes/stats.js';
+import { StatsService } from '../stats/statsService.js';
 import { syncToolIndex } from '../catalog/toolIndex.js';
 import { EventStore } from '../identity/events.js';
 import { createFeishuProvider } from '../auth/feishuProvider.js';
@@ -87,7 +89,10 @@ export async function createApp(config: ApiConfig) {
   app.register(registerSubmissionRoutes(submissionRepository, submissionWorkflow));
   app.register(registerAuthRoutes(authService));
   app.register(registerIdentityRoutes(identity?.routeDeps));
-  app.register(registerAdminRoutes(submissionRepository, submissionWorkflow, adminWorkflow, authService, identity?.hubAuth, identity?.audit));
+  app.register(registerAdminRoutes(submissionRepository, submissionWorkflow, adminWorkflow, authService, identity?.hubAuth, identity?.audit, hubDatabase ? linkReviewer(hubDatabase.db) : undefined));
+  if (identity && hubDatabase) {
+    app.register(registerStatsRoutes(new StatsService(hubDatabase.db), identity.hubAuth, authService));
+  }
   if (identity) {
     app.register(registerAdminUserRoutes(identity.users, createAdminGuard(authService, identity.hubAuth), new AuthorAliases(hubDatabase!.db)));
   }
@@ -103,6 +108,12 @@ export async function createApp(config: ApiConfig) {
 
   return app;
 }
+function linkReviewer(db: SqliteDatabase) {
+  return (reviewId: string, openId: string) => {
+    db.prepare('UPDATE submission_reviews SET reviewer_open_id = ? WHERE review_id = ?').run(openId, reviewId);
+  };
+}
+
 function buildIdentity(config: ApiConfig, db: SqliteDatabase | undefined, events: EventStore | undefined) {
   if (!config.feishuAuthEnabled) {
     return undefined;
