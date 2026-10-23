@@ -75,6 +75,7 @@ During the first ToolHub migration step, generated download ZIPs may contain onl
   "ownerTeam": "Scene Team B",
   "description": "Asset governance tool for Unreal Editor projects.",
   "category": "asset-management",
+  "toolType": "chameleon",
   "riskLevel": "medium",
   "tags": ["asset-management", "texture"],
   "compatibility": {
@@ -129,6 +130,34 @@ During the first ToolHub migration step, generated download ZIPs may contain onl
 - `install.pythonRoot` MUST point to a directory under `Python/`.
 - `install.targetPath` MUST contain `<Project>` and resolve inside the selected Unreal project.
 - `install.entryJson` is relative to `<Project>/TA/TAPython/Python/` for TAPython menu references.
+
+## Tool Types
+
+`toolType` identifies the TAPython execution model:
+
+- `chameleon`: a Slate UI tool. `install.entryJson` is required, menu entries use `ChameleonTools`, and the usual mount point is `OnToolBarChameleon`.
+- `python-script`: a pure Python command without a Slate UI. `install.entryJson` is omitted, menu entries use `command`, and the usual mount point is `OnToolbar`.
+
+Example pure Python menu entry:
+
+```json
+{
+  "toolType": "python-script",
+  "install": {
+    "pythonRoot": "Python/SelectionAuditScript",
+    "targetPath": "<Project>/TA/TAPython/Python/SelectionAuditScript",
+    "mountPoint": "OnToolbar"
+  },
+  "menuEntries": [
+    {
+      "name": "Selection Audit Script",
+      "command": "import SelectionAuditScript; SelectionAuditScript.run()"
+    }
+  ]
+}
+```
+
+Every menu entry MUST contain exactly one of `ChameleonTools` or `command`.
 
 ## Hash Rules
 
@@ -197,6 +226,30 @@ Invoke-WebRequest `
 ```
 
 The endpoint also accepts `application/octet-stream` and `x-submitter: <name>`. During migration, ToolHub converts the v2 package into the existing submission review model so the admin console can reuse the current pending-review flow.
+
+### AI-generated package repair
+
+The Tool Hub submission page can analyze an AI-generated ZIP before creating a submission. The preview endpoint never writes a submission:
+
+```text
+POST /api/submissions/package/repair
+```
+
+After the user reviews the repair report and supplies any required decisions, the same package can be submitted with:
+
+```text
+POST /api/submissions/package?repair=true&submitter=<name>
+```
+
+The repair flow normalizes deterministic package metadata only: path separators, v2 constants, the single `Python/<Tool>` root, file hashes and sizes, tool-type-specific menu entries, and safe project-relative install paths. It does not rewrite Python business logic or silently guess ambiguous `toolType`, `command`, `entryJson`, or version values. Semantic defaults and default mount points are listed in the preview report for confirmation.
+
+The first repair version is intentionally conservative:
+
+- only UTF-8 `.py` and `.json` files under one `Python/<Tool>/` root are accepted;
+- `Docs/**`, `Assets/**`, `Config/**`, binary files, extra Python-root files, `hotkeyEntries`, and `externalJson` are blocked instead of dropped;
+- Windows-unsafe paths, case-insensitive collisions, duplicate manifests, mixed Chameleon/command menus, and nested menu type mismatches are blocked;
+- uploads are limited to 20 MiB compressed, 256 ZIP entries, 5 MiB per extracted file, 10 MiB total extracted data, and a 100:1 compression ratio;
+- repaired submissions are revalidated before persistence, preserve published version history, and use a repaired-manifest fingerprint for idempotent retry handling.
 
 ### tapython-hub-publisher Skill
 

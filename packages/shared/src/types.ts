@@ -1,4 +1,5 @@
 export type RiskLevel = 'low' | 'medium' | 'high';
+export type ToolType = 'chameleon' | 'python-script';
 export type ToolStatus = 'draft' | 'pending' | 'approved' | 'rejected' | 'deprecated' | 'archived';
 export type SubmissionStatus = 'draft' | 'pending' | 'approved' | 'rejected';
 export type ReviewDecision = 'approved' | 'rejected' | 'changes_requested';
@@ -24,14 +25,17 @@ export interface TapythonToolPackageFile {
 
 export interface MenuConfigItem {
   name: string;
-  ChameleonTools: string;
-  ExtensionHookName: string;
+  ChameleonTools?: string;
+  command?: string;
+  ExtensionHookName?: string;
+  items?: MenuConfigItem[];
+  [key: string]: unknown;
 }
 
 export interface TapythonToolPackageInstall {
   pythonRoot: string;
   targetPath: string;
-  entryJson: string;
+  entryJson?: string;
   mountPoint: string;
 }
 
@@ -40,6 +44,16 @@ export interface TapythonToolPackageSummary {
   unrealApis: string[];
   widgetAkas: string[];
   riskNotes: string[];
+}
+
+export interface ToolCollectionMetadata {
+  id: string;
+  role: 'shell' | 'module';
+  uiKind?: string;
+  moduleId?: string;
+  categoryPath?: string[];
+  requiredShellVersion?: string;
+  sourceSha256?: string;
 }
 
 export interface TapythonToolPackageManifest {
@@ -55,6 +69,7 @@ export interface TapythonToolPackageManifest {
   ownerTeam: string;
   description: string;
   category: string;
+  toolType: ToolType;
   riskLevel: RiskLevel;
   tags: string[];
   compatibility: Compatibility;
@@ -70,6 +85,7 @@ export interface TapythonToolPackageManifest {
   uninstallSteps: string[];
   createdAt: string;
   updatedAt: string;
+  collection?: ToolCollectionMetadata;
 }
 
 export interface ToolManifest {
@@ -80,12 +96,13 @@ export interface ToolManifest {
   author: string;
   description: string;
   category: string;
+  toolType: ToolType;
   tags: string[];
   compatibility: Compatibility;
   dependencies: string[];
   mountPoint: string;
   installPath: string;
-  entryJson: string;
+  entryJson?: string;
   riskLevel: RiskLevel;
   files: ToolFileManifest[];
   menuConfigMerge: {
@@ -98,6 +115,7 @@ export interface ToolManifest {
   uninstallSteps: string[];
   createdAt: string;
   updatedAt: string;
+  collection?: ToolCollectionMetadata;
 }
 
 export interface ToolVersion {
@@ -129,14 +147,16 @@ export interface ToolRecord {
   ownerTeam: string;
   status: ToolStatus;
   riskLevel: RiskLevel;
+  toolType: ToolType;
   tags: string[];
   compatibility: Compatibility;
   mountPoint: string;
   installPath: string;
-  entryJson: string;
+  entryJson?: string;
   sourceDocument: string;
   sourceMode?: string;
   updatedAt: string;
+  collection?: ToolCollectionMetadata;
   downloads: {
     latestManifest: string;
     latestReadme: string;
@@ -183,6 +203,7 @@ export interface SubmissionAssetPayload {
 export interface ToolSubmissionRequest {
   slug: string;
   submitter: string;
+  toolType?: ToolType;
   markdown: string;
   assets: SubmissionAssetPayload[];
   notes?: string;
@@ -198,6 +219,38 @@ export interface ValidationReport {
   valid: boolean;
   issues: ValidationIssue[];
   generatedToolCount?: number;
+}
+
+export interface PackageRepairChange {
+  path: string;
+  before?: string;
+  after: string;
+  reason: string;
+}
+
+export interface PackageRepairIssue {
+  code: string;
+  level: 'error' | 'needs-input' | 'warning';
+  message: string;
+  path?: string;
+}
+
+export interface PackageRepairReport {
+  repairable: boolean;
+  detected: {
+    slug?: string;
+    version?: string;
+    toolType?: ToolType;
+  };
+  changes: PackageRepairChange[];
+  issues: PackageRepairIssue[];
+}
+
+export interface PackageRepairDecisions {
+  toolType?: ToolType;
+  version?: string;
+  entryJson?: string;
+  command?: string;
 }
 
 export interface ReviewRecord {
@@ -220,6 +273,11 @@ export interface SubmissionRecord {
   reviews: ReviewRecord[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface RepairedPackageSubmissionResponse {
+  submission?: SubmissionRecord;
+  repairReport: PackageRepairReport;
 }
 
 export interface ReviewSubmissionRequest {

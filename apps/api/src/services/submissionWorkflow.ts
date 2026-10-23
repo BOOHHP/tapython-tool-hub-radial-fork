@@ -6,13 +6,16 @@ import zlib from 'node:zlib';
 import matter from 'gray-matter';
 import { generateToolData } from '@tapython-tool-hub/tooling';
 import { tapythonToolPackageManifestSchema } from '@tapython-tool-hub/shared';
-import type { ReviewRecord, ReviewSubmissionRequest, SubmissionAssetPayload, SubmissionRecord, TapythonToolPackageManifest, ToolSubmissionRequest, ValidationIssue, ValidationReport } from '@tapython-tool-hub/shared';
+import type { PackageRepairReport, ReviewRecord, ReviewSubmissionRequest, SubmissionAssetPayload, SubmissionRecord, TapythonToolPackageManifest, ToolSubmissionRequest, ValidationIssue, ValidationReport } from '@tapython-tool-hub/shared';
 import type { ApiConfig } from '../config/env.js';
 import type { SubmissionRepository } from '../repositories/submissionRepository.js';
+import { repairToolPackage } from './packageRepair.js';
+import type { PackageRepairOptions } from './packageRepair.js';
 
 interface GeneratedToolApiPayload {
   tool?: {
     slug?: string;
+    toolType?: 'chameleon' | 'python-script';
     versions?: Array<{ version: string }>;
   };
 }
@@ -26,6 +29,23 @@ interface PackageSubmissionInput {
   submitter: string;
   notes?: string;
   metadata?: PackageSubmissionMetadata;
+}
+
+interface PackageRepairInput extends PackageRepairOptions {
+  packageBuffer: Buffer;
+}
+
+interface RawPackageForRepair {
+  manifest: unknown;
+  entries: Map<string, Buffer>;
+  manifestError?: string;
+}
+
+interface RepairedPackageSubmissionInput extends PackageSubmissionInput, PackageRepairOptions {}
+
+export interface RepairedPackageSubmissionResult {
+  submission?: SubmissionRecord;
+  repairReport: PackageRepairReport;
 }
 
 export interface PackageSubmissionMetadata {
@@ -51,7 +71,22 @@ interface ParsedToolPackage {
   packageSha256: string;
 }
 
+export const MAX_PACKAGE_UPLOAD_BYTES = 20 * 1024 * 1024;
+const MAX_ZIP_ENTRIES = 256;
+const MAX_ZIP_ENTRY_BYTES = 5 * 1024 * 1024;
+const MAX_ZIP_TOTAL_UNCOMPRESSED_BYTES = 10 * 1024 * 1024;
+const MAX_ZIP_COMPRESSION_RATIO = 100;
+
+export class PackageResourceLimitError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'PackageResourceLimitError';
+  }
+}
+
 export class SubmissionWorkflow {
+  private readonly packageSubmissionLocks = new Map<string, Promise<void>>();
+
   constructor(
     private readonly config: ApiConfig,
     private readonly repository: SubmissionRepository
@@ -71,6 +106,99 @@ export class SubmissionWorkflow {
     return submission;
   }
 
+  analyzePackageRepair(input: PackageRepairInput): PackageRepairReport {
+    const rawPackage = readRawPackageForRepair(input.packageBuffer);
+    if (rawPackage.manifestError) return invalidManifestRepairReport(rawPackage.manifestError);
+    return repairToolPackage(rawPackage.manifest, rawPackage.entries, input).report;
+  }
+
+  async createRepairedPackageSubmission(input: RepairedPackageSubmissionInput): Promise<RepairedPackageSubmissionResult> {
+    const rawPackage = readRawPackageForRepair(input.packageBuffer);
+    if (rawPackage.manifestError) {
+      return { repairReport: invalidManifestRepairReport(rawPackage.manifestError) };
+    }
+    const repaired = repairToolPackage(rawPackage.manifest, rawPackage.entries, input);
+    if (!repaired.manifest) {
+      return { repairReport: repaired.report };
+    }
+
+    const publishManifest = applyPackageSubmissionMetadata(repaired.manifest, input.submitter, input.metadata);
+    const parsedPackage: ParsedToolPackage = {
+      manifest: publishManifest,
+      entries: new Map(Array.from(repaired.entries, ([entryPath, content]) => [entryPath, { content }])),
+      packageSha256: crypto.createHash('sha256').update(input.packageBuffer).digest('hex')
+    };
+    const repairFingerprint = crypto.createHash('sha256').update(JSON.stringify(publishManifest)).digest('hex');
+    const repairNote = `Package repair: ${repaired.report.changes.length} deterministic change(s).`;
+    const fingerprintNote = `Repair fingerprint: ${repairFingerprint}`;
+    const request = await this.preservePublishedVersionHistory(buildSubmissionRequestFromPackage(
+      parsedPackage,
+      input.submitter,
+      [input.notes, repairNote, fingerprintNote].filter(Boolean).join('\n')
+    ));
+    const validationReport = await this.validate(request);
+    if (!validationReport.valid) {
+      return {
+        repairReport: {
+          ...repaired.report,
+          repairable: false,
+          issues: [
+            ...repaired.report.issues,
+            ...validationReport.issues.map((issue) => ({
+              code: 'submission_validation_failed',
+              level: 'error' as const,
+              path: issue.path,
+              message: issue.message
+            }))
+          ]
+        }
+      };
+    }
+
+    const lockKey = `${publishManifest.slug}@${publishManifest.version}`;
+    return this.withPackageSubmissionLock(lockKey, async () => {
+      const existingSubmissions = await this.findPendingPackageSubmissions(publishManifest.slug, publishManifest.version);
+      const matchingSubmission = existingSubmissions.find((submission) =>
+        submission.notes?.includes(fingerprintNote) &&
+        submission.submitter === request.submitter &&
+        submission.markdown === request.markdown &&
+        JSON.stringify(submission.assets) === JSON.stringify(request.assets)
+      );
+      if (matchingSubmission) {
+        await this.writeRepairedPackageArchive(publishManifest, repairFingerprint, input.packageBuffer);
+        return { submission: matchingSubmission, repairReport: repaired.report };
+      }
+      if (existingSubmissions.length > 0) {
+        return {
+          repairReport: {
+            ...repaired.report,
+            repairable: false,
+            issues: [
+              ...repaired.report.issues,
+              {
+                code: 'pending_submission_conflict',
+                level: 'error' as const,
+                path: 'version',
+                message: `工具 ${publishManifest.slug}@${publishManifest.version} 已有内容不同的待审核投稿；请撤回旧投稿或使用新版本。`
+              }
+            ]
+          }
+        };
+      }
+
+      const archiveCreated = await this.writeRepairedPackageArchive(publishManifest, repairFingerprint, input.packageBuffer);
+      try {
+        const submission = await this.repository.create(request, validationReport);
+        return { submission, repairReport: repaired.report };
+      } catch (error) {
+        if (archiveCreated) {
+          await fs.rm(this.getRepairedPackagePath(publishManifest, repairFingerprint), { force: true });
+        }
+        throw error;
+      }
+    });
+  }
+
   async reviewSubmission(id: string, request: ReviewSubmissionRequest): Promise<SubmissionRecord | undefined> {
     const submission = await this.repository.get(id);
     if (!submission) {
@@ -86,12 +214,27 @@ export class SubmissionWorkflow {
     };
 
     if (request.decision === 'approved') {
-      if (!submission.validationReport.valid) {
-        throw new Error('Cannot approve a submission with failed validation.');
-      }
-      await this.publish(submission);
-      submission.status = 'approved';
-    } else if (request.decision === 'rejected') {
+      return this.withPackageSubmissionLock('__publish__', async () => {
+        const current = await this.repository.get(id);
+        if (!current) return undefined;
+        if (current.status === 'approved') return current;
+
+        const latestValidation = await this.validate(current);
+        current.validationReport = latestValidation;
+        if (!latestValidation.valid) {
+          current.status = 'draft';
+          await this.repository.save(current);
+          throw new Error(`Cannot approve submission after revalidation: ${latestValidation.issues.map((issue) => issue.message).join('; ')}`);
+        }
+
+        await this.publish(current);
+        current.status = 'approved';
+        current.reviews = [review, ...current.reviews];
+        return this.repository.save(current);
+      });
+    }
+
+    if (request.decision === 'rejected') {
       submission.status = 'rejected';
     } else {
       submission.status = 'draft';
@@ -136,6 +279,15 @@ export class SubmissionWorkflow {
         });
       }
 
+      const generatedToolType = generatedTool?.tool?.toolType ?? 'chameleon';
+      if (request.toolType && request.toolType !== generatedToolType) {
+        issues.push({
+          level: 'error',
+          path: 'toolType',
+          message: `提交类型 (${request.toolType}) 与 Markdown toolType (${generatedToolType}) 不一致；请保持一致。`
+        });
+      }
+
       const submittedVersion = generatedTool?.tool?.versions?.[0]?.version;
       if (submittedVersion && await versionAlreadyPublished(this.config.toolApiRoot, generatedSlug ?? request.slug, submittedVersion)) {
         issues.push({
@@ -177,9 +329,157 @@ export class SubmissionWorkflow {
   private async writeSubmittedPackage(id: string, manifest: TapythonToolPackageManifest, packageBuffer: Buffer): Promise<void> {
     const packageRoot = path.join(this.config.submissionRoot, 'packages');
     await fs.mkdir(packageRoot, { recursive: true });
-    const packagePath = path.join(packageRoot, `${id}-${manifest.slug}-${manifest.version}.tapython-tool.zip`);
-    await fs.writeFile(packagePath, packageBuffer);
+    await fs.writeFile(this.getSubmittedPackagePath(id, manifest), packageBuffer);
   }
+
+  private getSubmittedPackagePath(id: string, manifest: Pick<TapythonToolPackageManifest, 'slug' | 'version'>): string {
+    return path.join(this.config.submissionRoot, 'packages', `${id}-${manifest.slug}-${manifest.version}.tapython-tool.zip`);
+  }
+
+  private async findPendingPackageSubmissions(slug: string, version: string): Promise<SubmissionRecord[]> {
+    const matches: SubmissionRecord[] = [];
+    for (const submission of await this.repository.list()) {
+      if (submission.status !== 'pending' || submission.slug !== slug) continue;
+      try {
+        if (String(matter(submission.markdown).data.version ?? '') === version) matches.push(submission);
+      } catch {
+        // Ignore malformed historical records; normal validation handles new submissions.
+      }
+    }
+    return matches;
+  }
+
+  private async preservePublishedVersionHistory(request: ToolSubmissionRequest): Promise<ToolSubmissionRequest> {
+    let existingPayload: {
+      tool?: {
+        versions?: Array<{
+          version: string;
+          releasedAt?: string;
+          author?: string;
+          changeSummary?: string;
+          breaking?: boolean;
+          manifest?: Record<string, unknown>;
+        }>;
+      };
+    };
+    try {
+      existingPayload = JSON.parse(await fs.readFile(path.join(this.config.toolApiRoot, `${request.slug}.json`), 'utf8'));
+    } catch (error) {
+      if (error instanceof Error && 'code' in error && error.code === 'ENOENT') return request;
+      throw error;
+    }
+
+    const parsed = matter(request.markdown);
+    const currentVersion = String(parsed.data.version ?? '');
+    const previousVersions = (existingPayload.tool?.versions ?? [])
+      .filter((version) => version.version !== currentVersion)
+      .map((version) => {
+        const manifest = version.manifest ?? {};
+        return {
+          version: version.version,
+          releasedAt: version.releasedAt,
+          author: version.author,
+          changeSummary: version.changeSummary,
+          breaking: Boolean(version.breaking),
+          files: Array.isArray(manifest.files) ? manifest.files : [],
+          manifestOverrides: {
+            description: manifest.description,
+            compatibility: manifest.compatibility,
+            tags: manifest.tags,
+            menuConfigMerge: manifest.menuConfigMerge,
+            preInstallChecks: manifest.preInstallChecks,
+            postInstallSteps: manifest.postInstallSteps,
+            uninstallSteps: manifest.uninstallSteps,
+            ...(manifest.collection ? { collection: manifest.collection } : {})
+          }
+        };
+      });
+
+    if (previousVersions.length === 0) return request;
+    return {
+      ...request,
+      markdown: matter.stringify(parsed.content, { ...parsed.data, previousVersions })
+    };
+  }
+
+  private getRepairedPackagePath(manifest: Pick<TapythonToolPackageManifest, 'slug' | 'version'>, repairFingerprint: string): string {
+    return path.join(this.config.submissionRoot, 'packages', `${manifest.slug}-${manifest.version}-${repairFingerprint}.tapython-tool.zip`);
+  }
+
+  private async writeRepairedPackageArchive(manifest: TapythonToolPackageManifest, repairFingerprint: string, packageBuffer: Buffer): Promise<boolean> {
+    const packageRoot = path.join(this.config.submissionRoot, 'packages');
+    const packagePath = this.getRepairedPackagePath(manifest, repairFingerprint);
+    await fs.mkdir(packageRoot, { recursive: true });
+    try {
+      await fs.access(packagePath);
+      return false;
+    } catch (error) {
+      if (!(error instanceof Error && 'code' in error && error.code === 'ENOENT')) throw error;
+    }
+
+    const temporaryPath = `${packagePath}.${crypto.randomUUID()}.tmp`;
+    try {
+      await fs.writeFile(temporaryPath, packageBuffer, { flag: 'wx' });
+      await fs.rename(temporaryPath, packagePath);
+      return true;
+    } finally {
+      await fs.rm(temporaryPath, { force: true });
+    }
+  }
+
+  private async withPackageSubmissionLock<T>(key: string, action: () => Promise<T>): Promise<T> {
+    const previous = this.packageSubmissionLocks.get(key) ?? Promise.resolve();
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    const tail = previous.then(() => gate);
+    this.packageSubmissionLocks.set(key, tail);
+    await previous;
+    try {
+      return await action();
+    } finally {
+      release();
+      if (this.packageSubmissionLocks.get(key) === tail) this.packageSubmissionLocks.delete(key);
+    }
+  }
+}
+
+function readRawPackageForRepair(packageBuffer: Buffer): RawPackageForRepair {
+  const zipEntries = readZipEntries(packageBuffer);
+  const manifestEntries = Array.from(zipEntries.entries()).filter(([entryPath]) => entryPath.toLowerCase() === 'manifest.json');
+  if (manifestEntries.length > 1) {
+    return {
+      manifest: {},
+      entries: new Map(Array.from(zipEntries, ([entryPath, entry]) => [entryPath, entry.content])),
+      manifestError: 'ZIP 中存在多个大小写不同的根 manifest.json。'
+    };
+  }
+  const manifestEntry = manifestEntries[0];
+  let manifest: unknown = {};
+  if (manifestEntry) {
+    try {
+      manifest = JSON.parse(manifestEntry[1].content.toString('utf8'));
+    } catch (error) {
+      return {
+        manifest: {},
+        entries: new Map(Array.from(zipEntries, ([entryPath, entry]) => [entryPath, entry.content])),
+        manifestError: error instanceof Error ? error.message : String(error)
+      };
+    }
+  }
+
+  return {
+    manifest,
+    entries: new Map(Array.from(zipEntries, ([entryPath, entry]) => [entryPath, entry.content]))
+  };
+}
+
+function invalidManifestRepairReport(message: string): PackageRepairReport {
+  return {
+    repairable: false,
+    detected: {},
+    changes: [],
+    issues: [{ code: 'invalid_manifest_json', level: 'error', path: 'manifest.json', message: `manifest.json 不是有效 JSON：${message}` }]
+  };
 }
 
 function applyPackageSubmissionMetadata(
@@ -310,14 +610,16 @@ function buildMarkdownFromPackageManifest(manifest: TapythonToolPackageManifest)
     description: manifest.description,
     manifestDescription: manifest.description,
     category: manifest.category,
+    toolType: manifest.toolType,
     riskLevel: manifest.riskLevel,
     sourceMode: 'v2-package-upload',
+    ...(manifest.collection ? { collection: manifest.collection } : {}),
     tags: manifest.tags,
     compatibility: manifest.compatibility,
     dependencies: manifest.dependencies,
     mountPoint: manifest.install.mountPoint,
     installPath: manifest.install.targetPath,
-    entryJson: manifest.install.entryJson,
+    ...(manifest.install.entryJson ? { entryJson: manifest.install.entryJson } : {}),
     changeSummary: 'v2 package upload.',
     summary: {
       ...manifest.summary,
@@ -476,13 +778,25 @@ function resolveInside(baseDir: string, relativePath: string): string {
 }
 
 function readZipEntries(buffer: Buffer): Map<string, ZipEntryContent> {
+  if (buffer.length > MAX_PACKAGE_UPLOAD_BYTES) {
+    throw new PackageResourceLimitError(`ZIP package exceeds ${MAX_PACKAGE_UPLOAD_BYTES} byte upload limit`);
+  }
+
   const endOffset = findEndOfCentralDirectory(buffer);
   const totalEntries = buffer.readUInt16LE(endOffset + 10);
+  if (totalEntries > MAX_ZIP_ENTRIES) {
+    throw new PackageResourceLimitError(`ZIP has too many entries: ${totalEntries} > ${MAX_ZIP_ENTRIES}`);
+  }
   const centralDirectoryOffset = buffer.readUInt32LE(endOffset + 16);
   let offset = centralDirectoryOffset;
+  let totalUncompressedSize = 0;
+  let actualUncompressedSize = 0;
   const entries = new Map<string, ZipEntryContent>();
 
   for (let index = 0; index < totalEntries; index += 1) {
+    if (offset + 46 > buffer.length) {
+      throw new Error(`Invalid ZIP central directory bounds at offset ${offset}`);
+    }
     if (buffer.readUInt32LE(offset) !== 0x02014b50) {
       throw new Error(`Invalid ZIP central directory at offset ${offset}`);
     }
@@ -494,11 +808,38 @@ function readZipEntries(buffer: Buffer): Map<string, ZipEntryContent> {
     const extraLength = buffer.readUInt16LE(offset + 30);
     const commentLength = buffer.readUInt16LE(offset + 32);
     const localHeaderOffset = buffer.readUInt32LE(offset + 42);
+    if (uncompressedSize > MAX_ZIP_ENTRY_BYTES) {
+      throw new PackageResourceLimitError(`ZIP entry is too large: ${uncompressedSize} > ${MAX_ZIP_ENTRY_BYTES}`);
+    }
+    totalUncompressedSize += uncompressedSize;
+    if (totalUncompressedSize > MAX_ZIP_TOTAL_UNCOMPRESSED_BYTES) {
+      throw new PackageResourceLimitError(`ZIP total uncompressed size exceeds ${MAX_ZIP_TOTAL_UNCOMPRESSED_BYTES} bytes`);
+    }
+    if (uncompressedSize > 0 && (compressedSize === 0 || uncompressedSize / compressedSize > MAX_ZIP_COMPRESSION_RATIO)) {
+      throw new PackageResourceLimitError(`ZIP entry compression ratio exceeds ${MAX_ZIP_COMPRESSION_RATIO}:1`);
+    }
+    if (offset + 46 + fileNameLength + extraLength + commentLength > buffer.length) {
+      throw new Error(`Invalid ZIP central directory entry bounds at offset ${offset}`);
+    }
     const fileName = normalizeZipEntryPath(buffer.subarray(offset + 46, offset + 46 + fileNameLength).toString('utf8'));
 
     if (!fileName.endsWith('/')) {
+      if (entries.has(fileName)) {
+        throw new Error(`ZIP contains duplicate entry: ${fileName}`);
+      }
+      const content = readLocalEntryContent(buffer, localHeaderOffset, compressedSize, uncompressedSize, compressionMethod);
+      if (content.length > MAX_ZIP_ENTRY_BYTES) {
+        throw new PackageResourceLimitError(`ZIP entry is too large: ${content.length} > ${MAX_ZIP_ENTRY_BYTES}`);
+      }
+      actualUncompressedSize += content.length;
+      if (actualUncompressedSize > MAX_ZIP_TOTAL_UNCOMPRESSED_BYTES) {
+        throw new PackageResourceLimitError(`ZIP total uncompressed size exceeds ${MAX_ZIP_TOTAL_UNCOMPRESSED_BYTES} bytes`);
+      }
+      if (content.length > 0 && (compressedSize === 0 || content.length / compressedSize > MAX_ZIP_COMPRESSION_RATIO)) {
+        throw new PackageResourceLimitError(`ZIP entry compression ratio exceeds ${MAX_ZIP_COMPRESSION_RATIO}:1`);
+      }
       entries.set(fileName, {
-        content: readLocalEntryContent(buffer, localHeaderOffset, compressedSize, uncompressedSize, compressionMethod)
+        content
       });
     }
 
@@ -520,7 +861,15 @@ function readLocalEntryContent(buffer: Buffer, localHeaderOffset: number, compre
 
   if (compressionMethod === 0) return compressedContent;
   if (compressionMethod === 8) {
-    const inflated = zlib.inflateRawSync(compressedContent);
+    let inflated: Buffer;
+    try {
+      inflated = zlib.inflateRawSync(compressedContent, { maxOutputLength: MAX_ZIP_ENTRY_BYTES + 1 });
+    } catch (error) {
+      if (error instanceof RangeError || (error instanceof Error && 'code' in error && error.code === 'ERR_BUFFER_TOO_LARGE')) {
+        throw new PackageResourceLimitError(`ZIP entry is too large: actual output exceeds ${MAX_ZIP_ENTRY_BYTES}`);
+      }
+      throw error;
+    }
     if (inflated.length !== uncompressedSize) {
       throw new Error(`ZIP entry size mismatch at offset ${localHeaderOffset}`);
     }

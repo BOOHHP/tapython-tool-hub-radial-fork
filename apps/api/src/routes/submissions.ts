@@ -2,9 +2,15 @@ import type { FastifyInstance } from 'fastify';
 import { submissionListResponseSchema, toolSubmissionRequestSchema } from '@tapython-tool-hub/shared';
 import type { SubmissionRepository } from '../repositories/submissionRepository.js';
 import type { PackageSubmissionMetadata } from '../services/submissionWorkflow.js';
+import { MAX_PACKAGE_UPLOAD_BYTES, PackageResourceLimitError } from '../services/submissionWorkflow.js';
 import type { SubmissionWorkflow } from '../services/submissionWorkflow.js';
 
 interface PackageSubmissionQuery {
+  repair?: string;
+  toolType?: string;
+  version?: string;
+  entryJson?: string;
+  command?: string;
   submitter?: string;
   notes?: string;
   displayName?: string;
@@ -45,7 +51,28 @@ export function registerSubmissionRoutes(repository: SubmissionRepository, workf
       return reply.code(201).send(submission);
     });
 
-    app.post<{ Querystring: PackageSubmissionQuery; Headers: { 'x-submitter'?: string } }>('/api/submissions/package', async (request, reply) => {
+    app.post<{ Querystring: PackageSubmissionQuery }>('/api/submissions/package/repair', { bodyLimit: MAX_PACKAGE_UPLOAD_BYTES }, async (request, reply) => {
+      if (!Buffer.isBuffer(request.body)) {
+        return reply.code(415).send({ error: 'package_body_required' });
+      }
+
+      try {
+        return workflow.analyzePackageRepair({
+          packageBuffer: request.body,
+          toolType: readToolType(request.query.toolType),
+          entryJson: cleanScalar(request.query.entryJson),
+          command: cleanScalar(request.query.command),
+          version: cleanScalar(request.query.version)
+        });
+      } catch (error) {
+        if (error instanceof PackageResourceLimitError) {
+          return reply.code(413).send({ error: 'package_resource_limit', message: error.message });
+        }
+        throw error;
+      }
+    });
+
+    app.post<{ Querystring: PackageSubmissionQuery; Headers: { 'x-submitter'?: string } }>('/api/submissions/package', { bodyLimit: MAX_PACKAGE_UPLOAD_BYTES }, async (request, reply) => {
       const submitter = request.query.submitter ?? request.headers['x-submitter'];
       if (!submitter) {
         return reply.code(400).send({ error: 'submitter_required' });
@@ -55,13 +82,34 @@ export function registerSubmissionRoutes(repository: SubmissionRepository, workf
         return reply.code(415).send({ error: 'package_body_required' });
       }
 
-      const submission = await workflow.createPackageSubmission({
-        packageBuffer: request.body,
-        submitter,
-        notes: request.query.notes,
-        metadata: readPackageSubmissionMetadata(request.query)
-      });
-      return reply.code(201).send(submission);
+      try {
+        if (request.query.repair === 'true') {
+          const result = await workflow.createRepairedPackageSubmission({
+            packageBuffer: request.body,
+            submitter,
+            notes: request.query.notes,
+            metadata: readPackageSubmissionMetadata(request.query),
+            toolType: readToolType(request.query.toolType),
+            entryJson: cleanScalar(request.query.entryJson),
+            command: cleanScalar(request.query.command),
+            version: cleanScalar(request.query.version)
+          });
+          return reply.code(result.submission ? 201 : 422).send(result);
+        }
+
+        const submission = await workflow.createPackageSubmission({
+          packageBuffer: request.body,
+          submitter,
+          notes: request.query.notes,
+          metadata: readPackageSubmissionMetadata(request.query)
+        });
+        return reply.code(201).send(submission);
+      } catch (error) {
+        if (error instanceof PackageResourceLimitError) {
+          return reply.code(413).send({ error: 'package_resource_limit', message: error.message });
+        }
+        throw error;
+      }
     });
 
     app.get<{ Params: { id: string } }>('/api/submissions/:id', async (request, reply) => {
@@ -113,4 +161,8 @@ function readRiskLevel(value: string | undefined): PackageSubmissionMetadata['ri
 
 function removeUndefined<T extends Record<string, unknown>>(value: T): T {
   return Object.fromEntries(Object.entries(value).filter(([, item]) => item !== undefined)) as T;
+}
+
+function readToolType(value: string | undefined): 'chameleon' | 'python-script' | undefined {
+  return value === 'chameleon' || value === 'python-script' ? value : undefined;
 }

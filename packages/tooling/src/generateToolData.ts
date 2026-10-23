@@ -75,6 +75,8 @@ export async function generateToolData(options: GenerateToolDataOptions): Promis
       ownerTeam: tool.ownerTeam,
       status: tool.status,
       riskLevel: tool.riskLevel,
+      toolType: tool.toolType ?? 'chameleon',
+      collection: tool.collection,
       tags: tool.tags,
       compatibility: tool.compatibility,
       mountPoint: tool.mountPoint,
@@ -137,6 +139,9 @@ function isToolMarkdownCandidate(fileName: string): boolean {
 async function buildToolFromMarkdown(data: ToolData, markdown: string, sourcePath: string, root: string): Promise<ToolData> {
   const slug = required(data.slug, 'slug', sourcePath);
   const version = required(data.version, 'version', sourcePath);
+  const toolType = data.toolType ?? 'chameleon';
+  const mountPoint = data.mountPoint ?? (toolType === 'python-script' ? 'OnToolbar' : 'OnToolBarChameleon');
+  const entryJson = toolType === 'chameleon' ? required(data.entryJson, 'entryJson', sourcePath) : data.entryJson;
   const sourceDocument = path.relative(root, sourcePath).split(path.sep).join('/');
   const assetFiles = await extractCodeAssets(markdown, path.dirname(sourcePath));
   const codeAssets = assetFiles.map(stripAssetContent);
@@ -174,11 +179,13 @@ async function buildToolFromMarkdown(data: ToolData, markdown: string, sourcePat
     ownerTeam: data.ownerTeam ?? data.author,
     status: data.status ?? 'draft',
     riskLevel: data.riskLevel ?? 'medium',
+    toolType,
+    collection: data.collection,
     tags: data.tags ?? [],
     compatibility: normalizeCompatibility(data.compatibility),
-    mountPoint: required(data.mountPoint, 'mountPoint', sourcePath),
+    mountPoint,
     installPath: required(data.installPath, 'installPath', sourcePath),
-    entryJson: required(data.entryJson, 'entryJson', sourcePath),
+    entryJson,
     sourceDocument,
     sourceMode: data.sourceMode ?? 'markdown-first',
     updatedAt: data.updatedAt ?? data.releasedAt ?? new Date().toISOString().slice(0, 10),
@@ -466,6 +473,7 @@ function buildToolPackageManifest(tool: ToolData, version: ToolData, packageFile
     ownerTeam: tool.ownerTeam,
     description: manifest.description ?? tool.description,
     category: tool.category,
+    toolType: tool.toolType ?? 'chameleon',
     riskLevel: tool.riskLevel,
     tags: tool.tags ?? [],
     compatibility: manifest.compatibility ?? tool.compatibility,
@@ -473,7 +481,7 @@ function buildToolPackageManifest(tool: ToolData, version: ToolData, packageFile
     install: {
       pythonRoot: inferPythonRoot(manifest.installPath, manifest.entryJson, packageFiles),
       targetPath: manifest.installPath,
-      entryJson: manifest.entryJson,
+      ...(manifest.entryJson ? { entryJson: manifest.entryJson } : {}),
       mountPoint: manifest.mountPoint
     },
     files: packageFiles.map(({ content, ...file }) => file),
@@ -490,11 +498,12 @@ function buildToolPackageManifest(tool: ToolData, version: ToolData, packageFile
     postInstallSteps: manifest.postInstallSteps ?? [],
     uninstallSteps: manifest.uninstallSteps ?? [],
     createdAt,
-    updatedAt
+    updatedAt,
+    ...(manifest.collection ?? tool.collection ? { collection: manifest.collection ?? tool.collection } : {})
   };
 }
 
-function inferPythonRoot(installPath: string, entryJson: string, packageFiles: PackageAssetFile[]): string {
+function inferPythonRoot(installPath: string, entryJson: string | undefined, packageFiles: PackageAssetFile[]): string {
   const normalizedInstallPath = normalizePackagePath(installPath).replace(/\/$/, '');
   const marker = '/TA/TAPython/Python/';
   const markerIndex = normalizedInstallPath.toLowerCase().indexOf(marker.toLowerCase());
@@ -502,11 +511,13 @@ function inferPythonRoot(installPath: string, entryJson: string, packageFiles: P
     return `Python/${normalizedInstallPath.slice(markerIndex + marker.length)}`.replace(/\/$/, '');
   }
 
-  const normalizedEntryJson = normalizePackagePath(entryJson);
-  const matchingFile = packageFiles.find((file) => file.path.endsWith(normalizedEntryJson));
-  if (matchingFile) {
-    const fileDir = matchingFile.path.slice(0, -path.posix.basename(matchingFile.path).length).replace(/\/$/, '');
-    return fileDir || 'Python';
+  if (entryJson) {
+    const normalizedEntryJson = normalizePackagePath(entryJson);
+    const matchingFile = packageFiles.find((file) => file.path.endsWith(normalizedEntryJson));
+    if (matchingFile) {
+      const fileDir = matchingFile.path.slice(0, -path.posix.basename(matchingFile.path).length).replace(/\/$/, '');
+      return fileDir || 'Python';
+    }
   }
 
   const firstFile = packageFiles[0]?.path;
@@ -544,12 +555,13 @@ function buildManifest(data: ToolData, version: string, files: AssetFile[] | und
     author: data.author,
     description: data.manifestDescription ?? data.description,
     category: data.category,
+    toolType: data.toolType ?? 'chameleon',
     tags: data.tags ?? [],
     compatibility: normalizeCompatibility(data.compatibility),
     dependencies: data.dependencies ?? [],
     mountPoint: data.mountPoint,
     installPath: data.installPath,
-    entryJson: data.entryJson,
+    ...(data.entryJson ? { entryJson: data.entryJson } : {}),
     riskLevel: data.riskLevel ?? 'medium',
     files: (files ?? data.files ?? []).map(stripAssetContent),
     menuConfigMerge: data.menuConfigMerge,
@@ -557,7 +569,8 @@ function buildManifest(data: ToolData, version: string, files: AssetFile[] | und
     postInstallSteps: data.postInstallSteps ?? [],
     uninstallSteps: data.uninstallSteps ?? [],
     createdAt: data.createdAt ?? fallbackDate,
-    updatedAt: data.updatedAt ?? fallbackDate
+    updatedAt: data.updatedAt ?? fallbackDate,
+    ...(data.collection ? { collection: data.collection } : {})
   };
 }
 

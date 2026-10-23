@@ -1,6 +1,8 @@
 import { z } from 'zod';
+import type { MenuConfigItem, ToolType } from './types.js';
 
 export const riskLevelSchema = z.enum(['low', 'medium', 'high']);
+export const toolTypeSchema = z.enum(['chameleon', 'python-script']);
 export const toolStatusSchema = z.enum(['draft', 'pending', 'approved', 'rejected', 'deprecated', 'archived']);
 export const submissionStatusSchema = z.enum(['draft', 'pending', 'approved', 'rejected']);
 export const reviewDecisionSchema = z.enum(['approved', 'rejected', 'changes_requested']);
@@ -18,22 +20,31 @@ export const toolFileManifestSchema = z.object({
 });
 
 export const tapythonToolPackageFileSchema = z.object({
-  path: z.string(),
+  path: z.string().refine(isSafePackagePath, 'file path must be a safe relative Windows path'),
   sha256: z.string().regex(/^[a-f0-9]{64}$/),
   size: z.number().int().nonnegative(),
   role: z.string().optional()
 });
 
-export const menuConfigItemSchema = z.object({
+export const menuConfigItemSchema: z.ZodType<MenuConfigItem> = z.lazy(() => z.object({
   name: z.string(),
-  ChameleonTools: z.string(),
-  ExtensionHookName: z.string()
-});
+  ChameleonTools: z.string().optional(),
+  command: z.string().optional(),
+  ExtensionHookName: z.string().optional(),
+  items: z.array(menuConfigItemSchema).optional()
+}).passthrough().superRefine((item, ctx) => {
+    if (Boolean(item.ChameleonTools) === Boolean(item.command)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'menu entry requires exactly one of "ChameleonTools" (chameleon tool) or "command" (python script)'
+      });
+    }
+  }));
 
 export const tapythonToolPackageInstallSchema = z.object({
-  pythonRoot: z.string(),
-  targetPath: z.string(),
-  entryJson: z.string(),
+  pythonRoot: z.string().refine(isSafePackagePath, 'pythonRoot must be a safe relative Windows path'),
+  targetPath: z.string().refine(isSafeProjectTargetPath, 'targetPath must stay inside <Project> using safe Windows path segments'),
+  entryJson: z.string().refine(isSafePackagePath, 'entryJson must be a safe relative Windows path').optional(),
   mountPoint: z.string()
 });
 
@@ -44,9 +55,21 @@ export const tapythonToolPackageSummarySchema = z.object({
   riskNotes: z.array(z.string())
 });
 
-const tapythonToolPackageMenuConfigItemSchema = menuConfigItemSchema.extend({
-  ExtensionHookName: z.string().optional()
-}).passthrough();
+export const toolCollectionMetadataSchema = z.discriminatedUnion('role', [
+  z.object({
+    id: z.string().regex(/^[a-z0-9-]+$/),
+    role: z.literal('shell'),
+    uiKind: z.string().min(1).optional()
+  }).strict(),
+  z.object({
+    id: z.string().regex(/^[a-z0-9-]+$/),
+    role: z.literal('module'),
+    moduleId: z.string().regex(/^[a-z0-9_-]+$/),
+    categoryPath: z.array(z.string().min(1)).min(1),
+    requiredShellVersion: z.string().min(1),
+    sourceSha256: z.string().regex(/^[a-f0-9]{64}$/)
+  }).strict()
+]);
 
 export const tapythonToolPackageManifestSchema = z.object({
   formatVersion: z.literal(2),
@@ -61,13 +84,14 @@ export const tapythonToolPackageManifestSchema = z.object({
   ownerTeam: z.string(),
   description: z.string(),
   category: z.string(),
+  toolType: toolTypeSchema.default('chameleon'),
   riskLevel: riskLevelSchema,
   tags: z.array(z.string()),
   compatibility: compatibilitySchema,
   dependencies: z.array(z.string()),
   install: tapythonToolPackageInstallSchema,
-  files: z.array(tapythonToolPackageFileSchema),
-  menuEntries: z.array(tapythonToolPackageMenuConfigItemSchema),
+  files: z.array(tapythonToolPackageFileSchema).min(1, 'v2 packages require at least one installable file'),
+  menuEntries: z.array(menuConfigItemSchema),
   hotkeyEntries: z.record(z.unknown()),
   externalJson: z.array(z.string()),
   summary: tapythonToolPackageSummarySchema,
@@ -75,7 +99,16 @@ export const tapythonToolPackageManifestSchema = z.object({
   postInstallSteps: z.array(z.string()),
   uninstallSteps: z.array(z.string()),
   createdAt: z.string(),
-  updatedAt: z.string()
+  updatedAt: z.string(),
+  collection: toolCollectionMetadataSchema.optional()
+}).superRefine((manifest, ctx) => {
+  if (manifest.toolType === 'chameleon' && !manifest.install.entryJson) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['install', 'entryJson'], message: 'chameleon tools require install.entryJson' });
+  }
+  if (manifest.toolType === 'python-script' && manifest.install.entryJson) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['install', 'entryJson'], message: 'python scripts must not declare install.entryJson' });
+  }
+  validateMenuToolType(manifest.menuEntries, manifest.toolType, ctx, ['menuEntries']);
 }).transform((manifest) => ({
   ...manifest,
   menuEntries: manifest.menuEntries.map((entry) => ({
@@ -83,6 +116,34 @@ export const tapythonToolPackageManifestSchema = z.object({
     ExtensionHookName: entry.ExtensionHookName ?? manifest.install.mountPoint
   }))
 }));
+
+function isSafePackagePath(value: string): boolean {
+  return Boolean(value) && !value.startsWith('/') && !/^[a-zA-Z]:/.test(value) && value.replace(/\\/g, '/').split('/').every(isSafeWindowsPathSegment);
+}
+
+function validateMenuToolType(entries: MenuConfigItem[], toolType: ToolType, ctx: z.RefinementCtx, pathPrefix: Array<string | number>): void {
+  entries.forEach((entry, index) => {
+    const entryPath = [...pathPrefix, index];
+    if (toolType === 'chameleon' && !entry.ChameleonTools) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: entryPath, message: 'chameleon tools require ChameleonTools menu entries' });
+    }
+    if (toolType === 'python-script' && !entry.command) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: entryPath, message: 'python scripts require command menu entries' });
+    }
+    if (entry.items) validateMenuToolType(entry.items, toolType, ctx, [...entryPath, 'items']);
+  });
+}
+
+function isSafeProjectTargetPath(value: string): boolean {
+  const normalized = value.replace(/\\/g, '/').replace(/\/$/, '');
+  return normalized.startsWith('<Project>/') && normalized.slice('<Project>/'.length).split('/').every(isSafeWindowsPathSegment);
+}
+
+function isSafeWindowsPathSegment(segment: string): boolean {
+  if (!segment || segment === '.' || segment === '..' || /[<>:"|?*\x00-\x1f]/.test(segment) || /[. ]$/.test(segment)) return false;
+  const stem = segment.split('.')[0];
+  return !/^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/i.test(stem);
+}
 
 export const toolManifestSchema = z.object({
   schemaVersion: z.string(),
@@ -97,7 +158,7 @@ export const toolManifestSchema = z.object({
   dependencies: z.array(z.string()),
   mountPoint: z.string(),
   installPath: z.string(),
-  entryJson: z.string(),
+  entryJson: z.string().optional(),
   riskLevel: riskLevelSchema,
   files: z.array(toolFileManifestSchema),
   menuConfigMerge: z.object({
@@ -109,7 +170,8 @@ export const toolManifestSchema = z.object({
   postInstallSteps: z.array(z.string()),
   uninstallSteps: z.array(z.string()),
   createdAt: z.string(),
-  updatedAt: z.string()
+  updatedAt: z.string(),
+  collection: toolCollectionMetadataSchema.optional()
 });
 
 export const toolVersionSchema = z.object({
@@ -141,14 +203,16 @@ export const toolRecordSchema = z.object({
   ownerTeam: z.string(),
   status: toolStatusSchema,
   riskLevel: riskLevelSchema,
+  toolType: toolTypeSchema.default('chameleon'),
   tags: z.array(z.string()),
   compatibility: compatibilitySchema,
   mountPoint: z.string(),
   installPath: z.string(),
-  entryJson: z.string(),
+  entryJson: z.string().optional(),
   sourceDocument: z.string(),
   sourceMode: z.string().optional(),
   updatedAt: z.string(),
+  collection: toolCollectionMetadataSchema.optional(),
   downloads: z.object({
     latestManifest: z.string(),
     latestReadme: z.string(),
@@ -180,12 +244,14 @@ export const toolIndexRecordSchema = toolRecordSchema.pick({
   ownerTeam: true,
   status: true,
   riskLevel: true,
+  toolType: true,
   tags: true,
   compatibility: true,
   mountPoint: true,
   installPath: true,
   sourceDocument: true,
   sourceMode: true,
+  collection: true,
   downloads: true
 }).extend({
   latestVersion: z.string(),
@@ -213,6 +279,7 @@ export const submissionAssetPayloadSchema = z.object({
 export const toolSubmissionRequestSchema = z.object({
   slug: z.string().regex(/^[a-z0-9-]+$/),
   submitter: z.string().min(1),
+  toolType: toolTypeSchema.optional(),
   markdown: z.string().min(1),
   assets: z.array(submissionAssetPayloadSchema),
   notes: z.string().optional()

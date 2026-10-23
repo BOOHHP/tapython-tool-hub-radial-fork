@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-06-26T03:44:07.828Z",
+  "generatedAt": "2026-10-08T10:00:54.028Z",
   "tool": {
     "slug": "asset-organizer",
     "name": "AssetOrganizer",
@@ -11,6 +11,7 @@
     "ownerTeam": "Scene Team B",
     "status": "approved",
     "riskLevel": "medium",
+    "toolType": "chameleon",
     "tags": [
       "asset",
       "texture",
@@ -40,8 +41,8 @@
       "latestReadme": "/downloads/asset-organizer/1.0.0/README.md",
       "latestMarkdown": "/downloads/asset-organizer/1.0.0/tool.md",
       "latestPackage": "/downloads/asset-organizer/1.0.0/asset-organizer-1.0.0.tapython-tool.zip",
-      "latestPackageSha256": "9a5b4e248097cb3bc6975309c8242119285d6f87975af1ee7637ee6b46dbc425",
-      "latestPackageSize": 89277,
+      "latestPackageSha256": "33b4660126f529cd8fd9d076a721764335734071f9cdaf92b290cb58cbdf557f",
+      "latestPackageSize": 89304,
       "latestPackageAvailable": true
     },
     "summary": {
@@ -145,8 +146,8 @@
           "readme": "/downloads/asset-organizer/1.0.0/README.md",
           "markdown": "/downloads/asset-organizer/1.0.0/tool.md",
           "package": "/downloads/asset-organizer/1.0.0/asset-organizer-1.0.0.tapython-tool.zip",
-          "packageSha256": "9a5b4e248097cb3bc6975309c8242119285d6f87975af1ee7637ee6b46dbc425",
-          "packageSize": 89277,
+          "packageSha256": "33b4660126f529cd8fd9d076a721764335734071f9cdaf92b290cb58cbdf557f",
+          "packageSize": 89304,
           "packageAvailable": true
         },
         "manifest": {
@@ -157,6 +158,7 @@
           "author": "WuJunFeng",
           "description": "资产整理：非 POT 纹理扫描与修复",
           "category": "asset-management",
+          "toolType": "chameleon",
           "tags": [
             "asset",
             "texture",

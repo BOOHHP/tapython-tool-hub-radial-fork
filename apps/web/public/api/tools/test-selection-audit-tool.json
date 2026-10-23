@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-06-26T03:44:07.846Z",
+  "generatedAt": "2026-10-08T10:00:54.232Z",
   "tool": {
     "slug": "test-selection-audit-tool",
     "name": "TestSelectionAuditTool",
@@ -11,6 +11,7 @@
     "ownerTeam": "Pipeline QA",
     "status": "approved",
     "riskLevel": "low",
+    "toolType": "chameleon",
     "tags": [
       "test-fixture",
       "validation",
@@ -41,8 +42,8 @@
       "latestReadme": "/downloads/test-selection-audit-tool/0.2.0/README.md",
       "latestMarkdown": "/downloads/test-selection-audit-tool/0.2.0/tool.md",
       "latestPackage": "/downloads/test-selection-audit-tool/0.2.0/test-selection-audit-tool-0.2.0.tapython-tool.zip",
-      "latestPackageSha256": "22b1329feeeb0e93a265395b7bb489f643c0c7572b8f43399d2fb33028e3cd08",
-      "latestPackageSize": 6856,
+      "latestPackageSha256": "3c2f990f7a3fc880d8dad7da2cc66a805eb7c0d5263f0af3f2c31e4d896d7150",
+      "latestPackageSize": 6883,
       "latestPackageAvailable": true
     },
     "summary": {
@@ -110,8 +111,8 @@
           "readme": "/downloads/test-selection-audit-tool/0.2.0/README.md",
           "markdown": "/downloads/test-selection-audit-tool/0.2.0/tool.md",
           "package": "/downloads/test-selection-audit-tool/0.2.0/test-selection-audit-tool-0.2.0.tapython-tool.zip",
-          "packageSha256": "22b1329feeeb0e93a265395b7bb489f643c0c7572b8f43399d2fb33028e3cd08",
-          "packageSize": 6856,
+          "packageSha256": "3c2f990f7a3fc880d8dad7da2cc66a805eb7c0d5263f0af3f2c31e4d896d7150",
+          "packageSize": 6883,
           "packageAvailable": true
         },
         "manifest": {
@@ -122,6 +123,7 @@
           "author": "Tool Hub QA",
           "description": "伪造的选中 Actor 审计工具，用于测试 Tool Hub 数据链路。",
           "category": "validation",
+          "toolType": "chameleon",
           "tags": [
             "test-fixture",
             "validation",
@@ -219,6 +221,7 @@
           "author": "Tool Hub QA",
           "description": "伪造的选中 Actor 审计工具，用于测试 Tool Hub 数据链路。",
           "category": "validation",
+          "toolType": "chameleon",
           "tags": [
             "test-fixture",
             "validation",

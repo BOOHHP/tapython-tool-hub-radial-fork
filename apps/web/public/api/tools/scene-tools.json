@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-06-26T03:44:07.838Z",
+  "generatedAt": "2026-10-08T10:00:54.172Z",
   "tool": {
     "slug": "scene-tools",
     "name": "SceneTools",
@@ -11,6 +11,7 @@
     "ownerTeam": "场景B组",
     "status": "approved",
     "riskLevel": "medium",
+    "toolType": "chameleon",
     "tags": [
       "scene",
       "batch",
@@ -42,8 +43,8 @@
       "latestReadme": "/downloads/scene-tools/1.0.0/README.md",
       "latestMarkdown": "/downloads/scene-tools/1.0.0/tool.md",
       "latestPackage": "/downloads/scene-tools/1.0.0/scene-tools-1.0.0.tapython-tool.zip",
-      "latestPackageSha256": "920a4cd7f8de7e13604e3e4e4b257acc3a0da6fd1f2e817f499d2dd2d8aee314",
-      "latestPackageSize": 335297,
+      "latestPackageSha256": "f8cfdfe8b4d28f6e23a4df02e5c362dcea6111dec7bc4606547ff40b8e88237f",
+      "latestPackageSize": 335324,
       "latestPackageAvailable": true
     },
     "summary": {
@@ -203,8 +204,8 @@
           "readme": "/downloads/scene-tools/1.0.0/README.md",
           "markdown": "/downloads/scene-tools/1.0.0/tool.md",
           "package": "/downloads/scene-tools/1.0.0/scene-tools-1.0.0.tapython-tool.zip",
-          "packageSha256": "920a4cd7f8de7e13604e3e4e4b257acc3a0da6fd1f2e817f499d2dd2d8aee314",
-          "packageSize": 335297,
+          "packageSha256": "f8cfdfe8b4d28f6e23a4df02e5c362dcea6111dec7bc4606547ff40b8e88237f",
+          "packageSize": 335324,
           "packageAvailable": true
         },
         "manifest": {
@@ -215,6 +216,7 @@
           "author": "吴俊枫",
           "description": "场景批处理工具集",
           "category": "level-editing",
+          "toolType": "chameleon",
           "tags": [
             "scene",
             "batch",

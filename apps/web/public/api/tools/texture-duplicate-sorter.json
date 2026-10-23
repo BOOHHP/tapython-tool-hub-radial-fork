@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-06-26T03:44:07.854Z",
+  "generatedAt": "2026-10-08T10:00:54.243Z",
   "tool": {
     "slug": "texture-duplicate-sorter",
     "name": "TextureDuplicateSorter",
@@ -11,6 +11,7 @@
     "ownerTeam": "CC",
     "status": "approved",
     "riskLevel": "low",
+    "toolType": "chameleon",
     "tags": [
       "texture",
       "duplicate",
@@ -39,8 +40,8 @@
       "latestReadme": "/downloads/texture-duplicate-sorter/1.0.0/README.md",
       "latestMarkdown": "/downloads/texture-duplicate-sorter/1.0.0/tool.md",
       "latestPackage": "/downloads/texture-duplicate-sorter/1.0.0/texture-duplicate-sorter-1.0.0.tapython-tool.zip",
-      "latestPackageSha256": "5143699901c57714f62037b111ceb1e19c3fb63349d04e03da32c12d0e3fe1cf",
-      "latestPackageSize": 40240,
+      "latestPackageSha256": "5e2273f4517a1c63611d56c3dbc6a3585aff1aa6602637019bf39cd3caa1d07f",
+      "latestPackageSize": 40267,
       "latestPackageAvailable": true
     },
     "summary": {
@@ -110,8 +111,8 @@
           "readme": "/downloads/texture-duplicate-sorter/1.0.0/README.md",
           "markdown": "/downloads/texture-duplicate-sorter/1.0.0/tool.md",
           "package": "/downloads/texture-duplicate-sorter/1.0.0/texture-duplicate-sorter-1.0.0.tapython-tool.zip",
-          "packageSha256": "5143699901c57714f62037b111ceb1e19c3fb63349d04e03da32c12d0e3fe1cf",
-          "packageSize": 40240,
+          "packageSha256": "5e2273f4517a1c63611d56c3dbc6a3585aff1aa6602637019bf39cd3caa1d07f",
+          "packageSize": 40267,
           "packageAvailable": true
         },
         "manifest": {
@@ -122,6 +123,7 @@
           "author": "CC",
           "description": "同名纹理扫描定位",
           "category": "asset-management",
+          "toolType": "chameleon",
           "tags": [
             "texture",
             "duplicate",

@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-06-26T03:44:07.818Z",
+  "generatedAt": "2026-10-08T10:00:54.014Z",
   "tool": {
     "slug": "actor-rename-tool",
     "name": "ActorRenameTool",
@@ -11,6 +11,7 @@
     "ownerTeam": "Technical Art",
     "status": "approved",
     "riskLevel": "medium",
+    "toolType": "chameleon",
     "tags": [
       "actor",
       "batch-rename",
@@ -42,8 +43,8 @@
       "latestReadme": "/downloads/actor-rename-tool/1.2.0/README.md",
       "latestMarkdown": "/downloads/actor-rename-tool/1.2.0/tool.md",
       "latestPackage": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.tapython-tool.zip",
-      "latestPackageSha256": "003ce7bdca2f84cad77d438466d9c9c9cb78363525eaa7112c54c9ccee5d3781",
-      "latestPackageSize": 9208,
+      "latestPackageSha256": "36a85f1abb992731a910a02f7f1e017af755126805e817f581dcbd05c3d5782e",
+      "latestPackageSize": 9235,
       "latestPackageAvailable": true
     },
     "summary": {
@@ -118,8 +119,8 @@
           "readme": "/downloads/actor-rename-tool/1.2.0/README.md",
           "markdown": "/downloads/actor-rename-tool/1.2.0/tool.md",
           "package": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.tapython-tool.zip",
-          "packageSha256": "003ce7bdca2f84cad77d438466d9c9c9cb78363525eaa7112c54c9ccee5d3781",
-          "packageSize": 9208,
+          "packageSha256": "36a85f1abb992731a910a02f7f1e017af755126805e817f581dcbd05c3d5782e",
+          "packageSize": 9235,
           "packageAvailable": true
         },
         "manifest": {
@@ -130,6 +131,7 @@
           "author": "WeiXuLu",
           "description": "场景 Actor 批量重命名与 Tag 管理工具",
           "category": "level-editing",
+          "toolType": "chameleon",
           "tags": [
             "actor",
             "batch-rename",
@@ -229,6 +231,7 @@
           "author": "WeiXuLu",
           "description": "场景 Actor 批量重命名与 Tag 管理工具",
           "category": "level-editing",
+          "toolType": "chameleon",
           "tags": [
             "actor",
             "batch-rename"
