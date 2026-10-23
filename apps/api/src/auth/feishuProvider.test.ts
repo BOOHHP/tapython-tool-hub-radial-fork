@@ -41,7 +41,8 @@ test('mock provider is only allowed on a loopback host so it can never ship to t
   assert.throws(() => createFeishuProvider({ provider: 'mock', host: '10.2.13.8' }), /loopback/i);
 });
 
-test('the real provider is not available before phase 1', () => {
-  assert.throws(() => createFeishuProvider({ provider: 'real', host: '127.0.0.1' }), /phase 1/i);
+test('the real provider needs the app id and secret', () => {
+  assert.throws(() => createFeishuProvider({ provider: 'real', host: '0.0.0.0' }), /FEISHU_APP_ID/);
+  assert.ok(createFeishuProvider({ provider: 'real', host: '0.0.0.0', appId: 'cli_x', appSecret: 's' }));
   assert.throws(() => createFeishuProvider({ provider: 'bogus', host: '127.0.0.1' }), /unknown/i);
 });

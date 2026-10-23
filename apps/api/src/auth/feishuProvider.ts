@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { RealFeishuProvider } from './realFeishuProvider.js';
 
 export interface FeishuIdentity {
   openId: string;
@@ -9,8 +10,8 @@ export interface FeishuIdentity {
 }
 
 export interface FeishuProvider {
-  buildAuthorizeUrl(state: string, redirectUri: string): string;
-  exchangeCode(code: string, redirectUri: string): Promise<FeishuIdentity>;
+  buildAuthorizeUrl(state: string, redirectUri: string, options?: { codeChallenge?: string }): string;
+  exchangeCode(code: string, redirectUri: string, options?: { codeVerifier?: string }): Promise<FeishuIdentity>;
 }
 
 export class FeishuAuthError extends Error {
@@ -33,7 +34,7 @@ export class MockFeishuProvider implements FeishuProvider {
     return url.toString();
   }
 
-  async exchangeCode(code: string, _redirectUri?: string): Promise<FeishuIdentity> {
+  async exchangeCode(code: string, _redirectUri?: string, _options?: { codeVerifier?: string }): Promise<FeishuIdentity> {
     const email = code.startsWith(mockPrefix) ? code.slice(mockPrefix.length).trim() : '';
     if (!email) {
       throw new FeishuAuthError('invalid_code', 'Mock provider only accepts codes of the form mock:<email>');
@@ -46,6 +47,10 @@ export class MockFeishuProvider implements FeishuProvider {
 export interface FeishuProviderOptions {
   provider?: string;
   host?: string;
+  appId?: string;
+  appSecret?: string;
+  scope?: string;
+  fetchDepartment?: boolean;
 }
 
 const loopbackHosts = new Set(['127.0.0.1', 'localhost', '::1']);
@@ -62,7 +67,10 @@ export function createFeishuProvider(options: FeishuProviderOptions): FeishuProv
     return new MockFeishuProvider();
   }
   if (options.provider === 'real') {
-    throw new Error('The real Feishu provider arrives in phase 1');
+    if (!options.appId || !options.appSecret) {
+      throw new Error('FEISHU_PROVIDER=real requires FEISHU_APP_ID and FEISHU_APP_SECRET');
+    }
+    return new RealFeishuProvider({ appId: options.appId, appSecret: options.appSecret, scope: options.scope, fetchDepartment: options.fetchDepartment });
   }
   throw new Error(`Unknown FEISHU_PROVIDER: ${options.provider}`);
 }
