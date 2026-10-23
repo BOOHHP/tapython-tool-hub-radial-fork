@@ -6,7 +6,7 @@ import type { CommandContext } from '../lib/types.js';
 import { CliError } from '../lib/types.js';
 import { output, printHuman } from '../lib/output.js';
 import { readLedger, writeLedger, findInstalledTool, removeToolFromLedger } from '../lib/ledger.js';
-import { readMenuConfig } from '../lib/menuConfig.js';
+import { readMenuConfig, removeMenuConfigItems } from '../lib/menuConfig.js';
 import { backupFile } from '../lib/backup.js';
 
 export async function run(ctx: CommandContext): Promise<void> {
@@ -68,7 +68,7 @@ export async function run(ctx: CommandContext): Promise<void> {
       ...filesToRemove.map(f => `  - ${f.path}`),
       '',
       `MenuConfig items to remove (${menuItemsToRemove.length}):`,
-      ...menuItemsToRemove.map(item => `  - ${item.name} → ${item.ChameleonTools}`),
+      ...menuItemsToRemove.map(item => `  - ${item.name} → ${item.ChameleonTools ?? item.command ?? '(unknown)'}`),
       '',
       `MenuConfig backup: ${installed.menuConfig.target}.bak.<timestamp>`,
       ...(installed.files.some(file => file.backup) ? ['Existing install backups:', ...installed.files.filter(file => file.backup).map(file => `  - ${file.path}: ${file.backup}`)] : []),
@@ -98,10 +98,8 @@ export async function run(ctx: CommandContext): Promise<void> {
       await backupFile(menuConfigPath);
       const config = await readMenuConfig(menuConfigPath);
       const mountPoint = installed.menuConfig.mountPoint;
-      const items = (config[mountPoint] ?? []) as Array<Record<string, string>>;
-      const chameleonPaths = new Set(menuItemsToRemove.map(i => i.ChameleonTools));
-      config[mountPoint] = items.filter(item => !chameleonPaths.has(item.ChameleonTools));
-      await fs.writeFile(menuConfigPath, JSON.stringify(config, null, 2) + '\n', 'utf8');
+      const nextConfig = removeMenuConfigItems(config, mountPoint, menuItemsToRemove);
+      await fs.writeFile(menuConfigPath, JSON.stringify(nextConfig, null, 2) + '\n', 'utf8');
     } catch { /* MenuConfig may not exist anymore */ }
   }
 

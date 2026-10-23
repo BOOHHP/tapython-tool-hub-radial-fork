@@ -86,7 +86,7 @@ function printUsage(): void {
 Usage:
   tapython-tool-hub --version
   tapython-tool-hub hub ping --hub <url>
-  tapython-tool-hub search <query> --hub <url>
+  tapython-tool-hub search <query> --hub <url> [--type chameleon|python-script]
   tapython-tool-hub show <slug> --hub <url>
   tapython-tool-hub plan <slug> --hub <url> --project <path>
   tapython-tool-hub download <slug> --hub <url> [--version <ver>] --output <dir>

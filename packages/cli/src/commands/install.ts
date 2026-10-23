@@ -13,6 +13,9 @@ import { readMenuConfig, planMenuConfigMerge, applyMenuConfigMerge, formatMenuCo
 import { readLedger, writeLedger, addToolToLedger, findInstalledTool } from '../lib/ledger.js';
 import type { InstalledFile } from '../lib/ledger.js';
 import { backupFile } from '../lib/backup.js';
+import { normalizeV2InstallDescriptor } from '../lib/installDescriptor.js';
+import type { V2InstallManifest } from '../lib/installDescriptor.js';
+import type { MenuConfigItem } from '@tapython-tool-hub/shared';
 
 export interface ToolDetailResponse {
   tool: {
@@ -37,7 +40,7 @@ export interface ToolDetailResponse {
         menuConfigMerge: {
           target: string;
           mountPoint: string;
-          itemsToAdd: Array<{ name: string; ChameleonTools: string; ExtensionHookName: string }>;
+          itemsToAdd: MenuConfigItem[];
         };
         postInstallSteps: string[];
       };
@@ -93,10 +96,11 @@ export async function run(ctx: CommandContext): Promise<void> {
   let manifest: ToolDetailResponse['tool']['versions'][0]['manifest'];
   let downloads: ToolDetailResponse['tool']['versions'][0]['downloads'];
   let toolMeta: { slug: string; displayName: string; version: string };
+  let v2Manifest: V2InstallManifest;
 
   if (isUrl) {
-    const manifestData = await fetchJson<Record<string, unknown>>(target);
-    manifest = manifestData as unknown as typeof manifest;
+    v2Manifest = await fetchJson<V2InstallManifest>(target);
+    manifest = v2Manifest as unknown as typeof manifest;
     const urlParts = target.match(/\/downloads\/([^/]+)\/([^/]+)\//);
     const slug = urlParts?.[1] ?? 'unknown';
     const version = urlParts?.[2] ?? (manifest as unknown as { version: string }).version ?? 'unknown';
@@ -116,22 +120,25 @@ export async function run(ctx: CommandContext): Promise<void> {
     manifest = version.manifest;
     downloads = version.downloads;
     toolMeta = { slug: data.tool.slug, displayName: data.tool.displayName, version: version.version };
+    v2Manifest = await fetchJson<V2InstallManifest>(resolveUrl(downloads.manifest, hub));
   }
+
+  const descriptor = normalizeV2InstallDescriptor(v2Manifest);
 
   if (!allowRemote && downloads.package) {
     validateHubDomain(resolveUrl(downloads.package, hub), hub);
   }
 
   const absProject = path.resolve(projectRoot);
-  const installDir = expandInstallPath(manifest.installPath, absProject);
+  const installDir = expandInstallPath(descriptor.installPath, absProject);
   const tapython = await detectTAPythonDir(absProject);
-  const menuConfigPath = expandInstallPath(manifest.menuConfigMerge.target, absProject);
+  const menuConfigPath = expandInstallPath(descriptor.menuConfigMerge.target, absProject);
   const menuConfigStatus = await checkFileWritable(menuConfigPath);
   const existingMenuConfig = await readMenuConfig(menuConfigPath);
   const menuDiff = planMenuConfigMerge(
     existingMenuConfig,
-    manifest.menuConfigMerge.itemsToAdd,
-    manifest.menuConfigMerge.mountPoint,
+    descriptor.menuConfigMerge.itemsToAdd,
+    descriptor.menuConfigMerge.mountPoint,
     menuConfigPath
   );
 
@@ -153,14 +160,14 @@ export async function run(ctx: CommandContext): Promise<void> {
   }
 
   const filePlan: FilePlanEntry[] = [];
-  for (const file of manifest.files) {
-    const targetPath = path.join(installDir, file.path);
+  for (const file of descriptor.files) {
+    const targetPath = path.join(installDir, file.targetPath);
     let action: 'add' | 'overwrite' | 'skip' = 'add';
     try {
       await fs.access(targetPath);
       action = 'overwrite';
     } catch { /* new file */ }
-    filePlan.push({ path: file.path, action });
+    filePlan.push({ path: file.targetPath, action });
   }
 
   const warnings = buildWarnings(tapython.exists, menuConfigStatus, filePlan, hashValid, downloads);
@@ -178,7 +185,7 @@ export async function run(ctx: CommandContext): Promise<void> {
     downloads: { manifest: downloads.manifest, package: downloads.package, readme: downloads.readme, markdown: downloads.markdown },
     checks: { hashValid, pathExists: tapython.exists, tapythonDirExists: tapython.exists, menuConfigWritable: menuConfigStatus.writable },
     filePlan,
-    menuConfigDiff: { target: menuConfigPath, mountPoint: manifest.menuConfigMerge.mountPoint, itemsToAdd: menuDiff.itemsToAdd },
+    menuConfigDiff: { target: menuConfigPath, mountPoint: descriptor.menuConfigMerge.mountPoint, itemsToAdd: menuDiff.itemsToAdd },
     warnings,
     nextCommand: `tapython-tool-hub install ${toolMeta.slug} --hub ${hub} --project "${projectRoot}" --yes`,
     nextHumanStep: dryRun ? 'Save or review this dry-run plan; run the install command only after confirming file overwrites and MenuConfig changes.' : 'Confirm the prompt to write files, or rerun with --dry-run before changing the project.',
@@ -222,21 +229,21 @@ export async function run(ctx: CommandContext): Promise<void> {
   let menuConfigBackupPath: string | null = null;
   const writtenFiles: Array<{ targetPath: string; backup: string | null }> = [];
 
-  for (const file of manifest.files) {
-    const entry = entries.find(e => e.path === file.path);
-    if (!entry) throw new CliError(`File ${file.path} not found in package`, 'FILE_MISSING');
+  for (const file of descriptor.files) {
+    const entry = entries.find(e => e.path === file.packagePath);
+    if (!entry) throw new CliError(`File ${file.packagePath} not found in package`, 'FILE_MISSING');
     const actual = sha256Buffer(entry.content);
     if (!verifySha256(actual, file.sha256)) {
-      throw new CliError(`SHA256 mismatch for ${file.path}`, 'FILE_HASH_MISMATCH');
+      throw new CliError(`SHA256 mismatch for ${file.packagePath}`, 'FILE_HASH_MISMATCH');
     }
   }
 
   try {
-    for (const file of manifest.files) {
-      const entry = entries.find(e => e.path === file.path)!;
-      const targetPath = resolveInside(installDir, file.path);
+    for (const file of descriptor.files) {
+      const entry = entries.find(e => e.path === file.packagePath)!;
+      const targetPath = resolveInside(installDir, file.targetPath);
       await fs.mkdir(path.dirname(targetPath), { recursive: true });
-      const planEntry = filePlan.find(p => p.path === file.path)!;
+      const planEntry = filePlan.find(p => p.path === file.targetPath)!;
       let backup: string | null = null;
       if (planEntry.action === 'overwrite') {
         backup = await backupFile(targetPath);
@@ -257,7 +264,7 @@ export async function run(ctx: CommandContext): Promise<void> {
   }
 
   const installedFiles: InstalledFile[] = filePlan.map(p => {
-    const fileEntry = manifest.files.find((f: { path: string; sha256: string }) => f.path === p.path)!;
+    const fileEntry = descriptor.files.find((f) => f.targetPath === p.path)!;
     return { path: p.path, sha256: fileEntry.sha256, backup: p.backup };
   });
 
@@ -270,7 +277,7 @@ export async function run(ctx: CommandContext): Promise<void> {
     files: installedFiles,
     menuConfig: {
       target: menuConfigPath,
-      mountPoint: manifest.menuConfigMerge.mountPoint,
+      mountPoint: descriptor.menuConfigMerge.mountPoint,
       itemsAdded: menuDiff.itemsToAdd,
       backup: menuConfigBackupPath ?? undefined,
     },
@@ -284,7 +291,7 @@ export async function run(ctx: CommandContext): Promise<void> {
       `✓ Installed ${toolMeta.displayName} ${toolMeta.version} to ${installDir}`,
       `  Files written: ${filePlan.length}`,
       `  MenuConfig items added: ${menuDiff.itemsToAdd.length}`,
-      ...(manifest.postInstallSteps.length > 0 ? ['', 'Post-install steps:', ...manifest.postInstallSteps.map((s, i) => `  ${i + 1}. ${s}`)] : []),
+      ...(descriptor.postInstallSteps.length > 0 ? ['', 'Post-install steps:', ...descriptor.postInstallSteps.map((s, i) => `  ${i + 1}. ${s}`)] : []),
     ]);
   }
 }

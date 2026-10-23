@@ -11,6 +11,7 @@ interface ToolIndex {
     latestVersion: string;
     category: string;
     riskLevel: string;
+    toolType?: string;
     description: string;
     tags: string[];
     author: string;
@@ -23,6 +24,7 @@ export async function run(ctx: CommandContext): Promise<void> {
     options: {
       hub: { type: 'string' },
       json: { type: 'boolean' },
+      type: { type: 'string' },
     },
     allowPositionals: true,
     strict: false,
@@ -33,12 +35,13 @@ export async function run(ctx: CommandContext): Promise<void> {
 
   const query = positionals[0] ?? '';
   const json = ctx.json || Boolean(values.json);
+  const typeFilter = (values.type as string)?.toLowerCase();
 
   const url = `${hub.replace(/\/$/, '')}/api/tools/index.json`;
   const data = await fetchJson<ToolIndex>(url);
 
   const queryLower = query.toLowerCase();
-  const results = query
+  let results = query
     ? data.tools.filter((t) =>
         t.slug.toLowerCase().includes(queryLower) ||
         t.displayName.toLowerCase().includes(queryLower) ||
@@ -48,6 +51,13 @@ export async function run(ctx: CommandContext): Promise<void> {
         t.author.toLowerCase().includes(queryLower)
       )
     : data.tools;
+
+  if (typeFilter) {
+    if (typeFilter !== 'chameleon' && typeFilter !== 'python-script') {
+      throw new CliError('--type must be "chameleon" or "python-script"', 'INVALID_ARG');
+    }
+    results = results.filter((t) => (t.toolType ?? 'chameleon') === typeFilter);
+  }
 
   if (json) {
     output('json', '', { query, total: results.length, results });
@@ -60,7 +70,7 @@ export async function run(ctx: CommandContext): Promise<void> {
   }
 
   printTable(
-    ['Slug', 'Name', 'Version', 'Category', 'Risk'],
-    results.map((t) => [t.slug, t.displayName, t.latestVersion, t.category, t.riskLevel])
+    ['Slug', 'Name', 'Version', 'Type', 'Category', 'Risk'],
+    results.map((t) => [t.slug, t.displayName, t.latestVersion, t.toolType ?? 'chameleon', t.category, t.riskLevel])
   );
 }

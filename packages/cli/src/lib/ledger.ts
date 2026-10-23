@@ -10,7 +10,7 @@ export interface InstalledFile {
 export interface InstalledMenuConfigEntry {
   target: string;
   mountPoint: string;
-  itemsAdded: Array<{ name: string; ChameleonTools: string; ExtensionHookName: string }>;
+  itemsAdded: Array<{ name: string; ChameleonTools?: string; command?: string; ExtensionHookName?: string }>;
   backup?: string;
 }
 

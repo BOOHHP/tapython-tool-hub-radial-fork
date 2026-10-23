@@ -3,12 +3,14 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import type { CommandContext, InstallPlan } from '../lib/types.js';
 import { CliError } from '../lib/types.js';
-import { fetchJson } from '../lib/http.js';
+import { fetchJson, resolveUrl } from '../lib/http.js';
 import { output, printHuman } from '../lib/output.js';
 import { expandInstallPath, detectTAPythonDir, checkFileWritable } from '../lib/paths.js';
 import { readMenuConfig, planMenuConfigMerge, formatMenuConfigDiff } from '../lib/menuConfig.js';
 import { resolveToolVersion } from './install.js';
 import type { ToolDetailResponse } from './install.js';
+import { normalizeV2InstallDescriptor } from '../lib/installDescriptor.js';
+import type { V2InstallManifest } from '../lib/installDescriptor.js';
 
 export async function run(ctx: CommandContext): Promise<void> {
   const { values, positionals } = parseArgs({
@@ -38,31 +40,33 @@ export async function run(ctx: CommandContext): Promise<void> {
   const url = `${hub.replace(/\/$/, '')}/api/tools/${slug}.json`;
   const data = await fetchJson<ToolDetailResponse>(url);
   const version = resolveToolVersion(data.tool, requestedVersion);
+  const v2Manifest = await fetchJson<V2InstallManifest>(resolveUrl(version.downloads.manifest, hub));
+  const descriptor = normalizeV2InstallDescriptor(v2Manifest);
 
-  const installDir = expandInstallPath(version.manifest.installPath, path.resolve(projectRoot));
+  const installDir = expandInstallPath(descriptor.installPath, path.resolve(projectRoot));
   const tapython = await detectTAPythonDir(path.resolve(projectRoot));
 
   const menuConfigPath = expandInstallPath(
-    version.manifest.menuConfigMerge.target,
+    descriptor.menuConfigMerge.target,
     path.resolve(projectRoot)
   );
   const menuConfigStatus = await checkFileWritable(menuConfigPath);
   const existingMenuConfig = await readMenuConfig(menuConfigPath);
   const menuDiff = planMenuConfigMerge(
     existingMenuConfig,
-    version.manifest.menuConfigMerge.itemsToAdd,
-    version.manifest.menuConfigMerge.mountPoint,
+    descriptor.menuConfigMerge.itemsToAdd,
+    descriptor.menuConfigMerge.mountPoint,
     menuConfigPath
   );
 
-  const filePlan = await Promise.all(version.manifest.files.map(async (f: { path: string }) => {
-    const targetPath = path.join(installDir, f.path);
+  const filePlan = await Promise.all(descriptor.files.map(async (file) => {
+    const targetPath = path.join(installDir, file.targetPath);
     let action: 'add' | 'overwrite' | 'skip' = 'add';
     try {
       await fs.access(targetPath);
       action = 'overwrite';
     } catch { /* file doesn't exist */ }
-    return { path: f.path, action };
+    return { path: file.targetPath, action };
   }));
 
   const plan: InstallPlan = {
@@ -82,7 +86,7 @@ export async function run(ctx: CommandContext): Promise<void> {
     filePlan,
     menuConfigDiff: {
       target: menuConfigPath,
-      mountPoint: version.manifest.menuConfigMerge.mountPoint,
+      mountPoint: descriptor.menuConfigMerge.mountPoint,
       itemsToAdd: menuDiff.itemsToAdd,
     },
     warnings: buildWarnings(tapython.exists, menuConfigStatus, filePlan),
