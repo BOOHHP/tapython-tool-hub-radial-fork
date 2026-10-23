@@ -47,6 +47,8 @@ import type { ColumnsType } from 'antd/es/table';
 import { useEffect, useMemo, useState } from 'react';
 import type { FileDiffRow, ManifestDiffRow, ToolFileManifest, ToolManifest, ToolRecord, ToolVersion } from '@tapython-tool-hub/shared';
 import { AdminConsole } from '../features/admin/AdminConsole';
+import { CollectionDetail } from '../features/collections/CollectionDetail';
+import { getCatalogTools, getCollectionModules } from '../features/collections/model';
 import { SubmissionWorkbench } from '../features/submissions/SubmissionWorkbench';
 import { buildFileDiff, buildManifestDiff } from '../features/tools/diff';
 import { riskColor, statusColor } from '../features/tools/display';
@@ -111,12 +113,27 @@ export function ToolHubPage() {
   const [favoriteOnly, setFavoriteOnly] = useState(false);
   const [loadingTools, setLoadingTools] = useState(true);
   const [toolError, setToolError] = useState<string>();
-  const { filteredTools, query, category, riskLevel, status, setQuery, setCategory, setRiskLevel, setStatus } = useToolFilters(tools);
-  const categories = useMemo(() => getCategories(tools), [tools]);
-  const riskLevels = useMemo(() => getRiskLevels(tools), [tools]);
-  const statuses = useMemo(() => getStatuses(tools), [tools]);
+  const catalogTools = useMemo(() => getCatalogTools(tools), [tools]);
+  const { filteredTools, query, category, riskLevel, status, toolType, setQuery, setCategory, setRiskLevel, setStatus, setToolType } = useToolFilters(catalogTools);
+  const categories = useMemo(() => getCategories(catalogTools), [catalogTools]);
+  const riskLevels = useMemo(() => getRiskLevels(catalogTools), [catalogTools]);
+  const statuses = useMemo(() => getStatuses(catalogTools), [catalogTools]);
+  const collectionModuleCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const tool of tools) {
+      if (tool.collection?.role !== 'module') continue;
+      counts.set(tool.collection.id, (counts.get(tool.collection.id) ?? 0) + 1);
+    }
+    return counts;
+  }, [tools]);
 
   const selectedTool = selectedSlug ? tools.find((tool) => tool.slug === selectedSlug) : undefined;
+  const selectedCollectionModules = selectedTool?.collection?.role === 'shell'
+    ? getCollectionModules(tools, selectedTool.collection.id)
+    : [];
+  const selectedModuleShell = selectedTool?.collection?.role === 'module'
+    ? tools.find((tool) => tool.collection?.role === 'shell' && tool.collection.id === selectedTool.collection?.id)
+    : undefined;
   const navigateToView = (nextViewMode: ViewMode) => {
     setViewMode(nextViewMode);
     writeViewModeHash(nextViewMode);
@@ -212,7 +229,7 @@ export function ToolHubPage() {
       <Content className="app-content">
         {viewMode === 'tools' ? (
           <RegistryHero
-            tools={tools}
+            tools={catalogTools}
             loading={loadingTools}
             onBrowse={() => scrollToElement('tool-catalog')}
             onSubmit={() => navigateToView('submit')}
@@ -221,7 +238,7 @@ export function ToolHubPage() {
         ) : null}
         {viewMode === 'submit' ? <SubmitPageHeader onBack={goHome} /> : null}
         {viewMode === 'admin' ? <AdminPageHeader onBack={goHome} /> : null}
-        {viewMode === 'tools' ? <OverviewStats tools={tools} loading={loadingTools} /> : null}
+        {viewMode === 'tools' ? <OverviewStats tools={catalogTools} loading={loadingTools} /> : null}
         {toolError ? <Alert className="tool-load-alert" type="error" showIcon message="工具数据加载失败" description={toolError} /> : null}
         {viewMode === 'tools' && (
           <ToolCatalog
@@ -231,16 +248,19 @@ export function ToolHubPage() {
             category={category}
             riskLevel={riskLevel}
             status={status}
+            toolType={toolType}
             categories={categories}
             riskLevels={riskLevels}
             statuses={statuses}
-            totalTools={tools}
+            totalTools={catalogTools}
+            collectionModuleCounts={collectionModuleCounts}
             favoriteSlugs={favoriteSlugs}
             favoriteOnly={favoriteOnly}
             setQuery={setQuery}
             setCategory={setCategory}
             setRiskLevel={setRiskLevel}
             setStatus={setStatus}
+            setToolType={setToolType}
             setFavoriteOnly={setFavoriteOnly}
             onOpenTool={(tool) => {
               setSelectedSlug(tool.slug);
@@ -250,10 +270,28 @@ export function ToolHubPage() {
             }}
           />
         )}
-        {viewMode === 'tool' && selectedTool && toolViewMode === 'detail' && (
+        {viewMode === 'tool' && selectedTool?.collection?.role === 'shell' && toolViewMode === 'detail' && (
+          <CollectionDetail
+            shell={selectedTool}
+            modules={selectedCollectionModules}
+            onBack={goHome}
+            onOpenModule={(module) => {
+              setSelectedSlug(module.slug);
+              setToolViewMode('detail');
+            }}
+          />
+        )}
+        {viewMode === 'tool' && selectedTool && selectedTool.collection?.role !== 'shell' && toolViewMode === 'detail' && (
           <ToolDetail
             tool={selectedTool}
-            onBack={() => setViewMode('tools')}
+            onBack={() => {
+              if (selectedModuleShell) {
+                setSelectedSlug(selectedModuleShell.slug);
+                setToolViewMode('detail');
+              } else {
+                goHome();
+              }
+            }}
             onCompare={() => setToolViewMode('compare')}
             isFavorite={favoriteSlugs.has(selectedTool.slug)}
             onToggleFavorite={() => toggleFavorite(selectedTool)}
@@ -384,16 +422,19 @@ interface ToolCatalogProps {
   category?: string;
   riskLevel?: string;
   status?: string;
+  toolType?: string;
   categories: string[];
   riskLevels: string[];
   statuses: string[];
   totalTools: ToolRecord[];
+  collectionModuleCounts: Map<string, number>;
   favoriteSlugs: Set<string>;
   favoriteOnly: boolean;
   setQuery: (value: string) => void;
   setCategory: (value?: string) => void;
   setRiskLevel: (value?: string) => void;
   setStatus: (value?: string) => void;
+  setToolType: (value?: string) => void;
   setFavoriteOnly: (value: boolean) => void;
   onOpenTool: (tool: ToolRecord) => void;
 }
@@ -405,22 +446,25 @@ function ToolCatalog({
   category,
   riskLevel,
   status,
+  toolType,
   categories,
   riskLevels,
   statuses,
   totalTools,
+  collectionModuleCounts,
   favoriteSlugs,
   favoriteOnly,
   setQuery,
   setCategory,
   setRiskLevel,
   setStatus,
+  setToolType,
   setFavoriteOnly,
   onOpenTool
 }: ToolCatalogProps) {
   const visibleTools = favoriteOnly ? filteredTools.filter((tool) => favoriteSlugs.has(tool.slug)) : filteredTools;
   const favoriteCount = totalTools.filter((tool) => favoriteSlugs.has(tool.slug)).length;
-  const activeFilterCount = [query.trim(), category, riskLevel, status, favoriteOnly ? 'favorites' : undefined].filter(Boolean).length;
+  const activeFilterCount = [query.trim(), category, riskLevel, status, toolType, favoriteOnly ? 'favorites' : undefined].filter(Boolean).length;
   const categoryCounts = categories.map((item) => ({
     category: item,
     count: totalTools.filter((tool) => tool.category === item).length
@@ -430,6 +474,7 @@ function ToolCatalog({
     setCategory(undefined);
     setRiskLevel(undefined);
     setStatus(undefined);
+    setToolType(undefined);
     setFavoriteOnly(false);
   };
   const emptyDescription = favoriteOnly
@@ -504,6 +549,17 @@ function ToolCatalog({
             <Select
               className="filter-select"
               allowClear
+              placeholder="工具类型"
+              value={toolType}
+              onChange={setToolType}
+              options={[
+                { value: 'chameleon', label: '🦎 Chameleon 工具' },
+                { value: 'python-script', label: '🐍 Python 脚本' }
+              ]}
+            />
+            <Select
+              className="filter-select"
+              allowClear
               placeholder="分类"
               value={category}
               onChange={setCategory}
@@ -562,8 +618,8 @@ function ToolCatalog({
                 <Paragraph className="tool-description">{tool.description}</Paragraph>
                 <div className="tool-meta-grid">
                   <div>
-                    <Text type="secondary">版本</Text>
-                    <Text strong>{tool.versions[0]?.version ?? '-'}</Text>
+                    <Text type="secondary">{tool.collection?.role === 'shell' ? '模块' : '版本'}</Text>
+                    <Text strong>{tool.collection?.role === 'shell' ? collectionModuleCounts.get(tool.collection.id) ?? 0 : tool.versions[0]?.version ?? '-'}</Text>
                   </div>
                   <div>
                     <Text type="secondary">风险</Text>
@@ -593,7 +649,7 @@ function ToolCatalog({
                     </Flex>
                   </Space>
                   <Button type="primary" onClick={() => onOpenTool(tool)}>
-                    查看详情
+                    {tool.collection?.role === 'shell' ? '浏览模块' : '查看详情'}
                   </Button>
                 </div>
               </Card>

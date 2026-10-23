@@ -1,14 +1,16 @@
 import {
   CheckCircleOutlined,
   CopyOutlined,
+  FileTextOutlined,
   InboxOutlined,
   ReloadOutlined,
+  ToolOutlined,
   UploadOutlined
 } from '@ant-design/icons';
-import { Alert, Button, Card, Collapse, Divider, Empty, Flex, Form, Input, List, Segmented, Space, Tag, Timeline, Typography, Upload, message } from 'antd';
+import { Alert, Button, Card, Collapse, Divider, Empty, Flex, Form, Input, List, Modal, Radio, Segmented, Space, Tag, Timeline, Typography, Upload, message } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
-import type { SubmissionAssetPayload, SubmissionRecord, ToolSubmissionRequest } from '@tapython-tool-hub/shared';
-import { createSubmission, listSubmissions } from '../../services/submissionWorkflow';
+import type { PackageRepairDecisions, PackageRepairReport, SubmissionAssetPayload, SubmissionRecord, ToolSubmissionRequest, ToolType } from '@tapython-tool-hub/shared';
+import { analyzePackageRepair, createSubmission, listSubmissions, submitRepairedPackage } from '../../services/submissionWorkflow';
 import { statusColor } from '../tools/display';
 
 const { Paragraph, Text, Title } = Typography;
@@ -49,12 +51,20 @@ const submissionModeCopy: Record<SubmissionMode, {
 
 export function SubmissionWorkbench() {
   const [form] = Form.useForm<ToolSubmissionRequest>();
+  const toolType = Form.useWatch('toolType', form) ?? 'chameleon';
   const [messageApi, contextHolder] = message.useMessage();
   const [assets, setAssets] = useState<SubmissionAssetPayload[]>([]);
   const [submissions, setSubmissions] = useState<SubmissionRecord[]>([]);
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState<SubmissionFilter>('all');
   const [submissionMode, setSubmissionMode] = useState<SubmissionMode>('new-tool');
+  const [repairFile, setRepairFile] = useState<File>();
+  const [repairReport, setRepairReport] = useState<PackageRepairReport>();
+  const [repairDecisions, setRepairDecisions] = useState<PackageRepairDecisions>({});
+  const [repairSubmitter, setRepairSubmitter] = useState('');
+  const [repairLoading, setRepairLoading] = useState(false);
+  const [repairError, setRepairError] = useState<string>();
+  const [repairSubmission, setRepairSubmission] = useState<SubmissionRecord>();
   const modeCopy = submissionModeCopy[submissionMode];
 
   const filteredSubmissions = useMemo(() => submissions.filter((submission) => {
@@ -84,6 +94,17 @@ export function SubmissionWorkbench() {
       const errorMessage = `表单 slug (${values.slug}) 与 Markdown front matter slug (${markdownSlug}) 不一致，请保持一致。`;
       form.setFields([
         { name: 'slug', errors: [errorMessage] },
+        { name: 'markdown', errors: [errorMessage] }
+      ]);
+      messageApi.error(errorMessage);
+      return;
+    }
+
+    const markdownToolType = extractMarkdownToolType(values.markdown) ?? 'chameleon';
+    if (markdownToolType !== values.toolType) {
+      const errorMessage = `所选工具类型为“${toolTypeLabel(values.toolType ?? 'chameleon')}”，但 Markdown front matter 为“${markdownToolType}”。请保持一致。`;
+      form.setFields([
+        { name: 'toolType', errors: [errorMessage] },
         { name: 'markdown', errors: [errorMessage] }
       ]);
       messageApi.error(errorMessage);
@@ -138,10 +159,112 @@ export function SubmissionWorkbench() {
     if (markdownSubmitter && !form.getFieldValue('submitter')) {
       form.setFieldValue('submitter', markdownSubmitter);
     }
+    const markdownToolType = extractMarkdownToolType(content);
+    if (markdownToolType) {
+      form.setFieldValue('toolType', markdownToolType);
+    } else {
+      form.setFieldValue('toolType', 'chameleon');
+      messageApi.info('Markdown 未声明 toolType，已按兼容规则识别为 Chameleon 工具。');
+    }
     void form.validateFields(['markdown']).catch(() => undefined);
-    messageApi.success(`已导入 ${file.name}`);
+    messageApi.success(`已导入 ${file.name}，识别为${toolTypeLabel(markdownToolType ?? 'chameleon')}`);
     return Upload.LIST_IGNORE;
   };
+
+  const applyMarkdownTemplate = () => {
+    const writeTemplate = () => {
+      const slug = form.getFieldValue('slug') || (toolType === 'python-script' ? 'my-python-script' : 'my-chameleon-tool');
+      const submitter = form.getFieldValue('submitter') || 'TA Team';
+      form.setFieldValue('slug', slug);
+      form.setFieldValue('markdown', buildMarkdownTemplate(toolType, slug, submitter));
+      void form.validateFields(['slug', 'markdown']).catch(() => undefined);
+    };
+    if (!form.getFieldValue('markdown')?.trim()) {
+      writeTemplate();
+      return;
+    }
+    Modal.confirm({
+      title: '覆盖当前 Markdown？',
+      content: '使用模板会替换当前 Markdown 文本，但不会删除已上传的资源文件。',
+      okText: '使用模板',
+      cancelText: '取消',
+      onOk: writeTemplate
+    });
+  };
+
+  const analyzeRepairPackage = async (file: File, decisions: PackageRepairDecisions) => {
+    setRepairLoading(true);
+    setRepairError(undefined);
+    try {
+      const report = await analyzePackageRepair(file, decisions);
+      setRepairReport(report);
+      messageApi[report.repairable ? 'success' : 'warning'](
+        report.repairable
+          ? `分析完成：将执行 ${report.changes.length} 项确定性修复`
+          : `分析完成：仍有 ${report.issues.length} 项需要处理`
+      );
+    } catch (error) {
+      setRepairReport(undefined);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      setRepairError(errorMessage);
+      messageApi.error(errorMessage);
+    } finally {
+      setRepairLoading(false);
+    }
+  };
+
+  const importRepairPackage = async (file: File) => {
+    setRepairFile(file);
+    setRepairDecisions({});
+    setRepairReport(undefined);
+    setRepairError(undefined);
+    setRepairSubmission(undefined);
+    await analyzeRepairPackage(file, {});
+    return Upload.LIST_IGNORE;
+  };
+
+  const submitRepairPackage = async () => {
+    if (!repairFile || !repairReport?.repairable || !repairSubmitter.trim()) return;
+    setRepairLoading(true);
+    setRepairError(undefined);
+    try {
+      const result = await submitRepairedPackage(repairFile, repairSubmitter.trim(), repairDecisions);
+      setRepairReport(result.repairReport);
+      if (!result.submission) {
+        setRepairError('修复结果仍未通过投稿校验，请根据下方问题调整后重新分析。');
+        messageApi.warning('仍有问题需要确认，尚未创建投稿。');
+        return;
+      }
+      if (!result.submission.validationReport.valid || result.submission.status !== 'pending') {
+        setRepairError('服务器未创建有效的待审核投稿，请重新分析后再试。');
+        messageApi.error('修复后投稿未通过校验。');
+        return;
+      }
+      setSubmissions((current) => [result.submission!, ...current]);
+      setRepairSubmission(result.submission);
+      messageApi.success('工具包已规范化并进入待审核队列');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      setRepairError(errorMessage);
+      messageApi.error(errorMessage);
+    } finally {
+      setRepairLoading(false);
+    }
+  };
+
+  const resetRepairPackage = () => {
+    setRepairFile(undefined);
+    setRepairReport(undefined);
+    setRepairDecisions({});
+    setRepairError(undefined);
+    setRepairSubmission(undefined);
+  };
+
+  const repairIssueCodes = new Set(repairReport?.issues.map((issue) => issue.code));
+  const showRepairToolType = repairIssueCodes.has('tool_type_required') || Boolean(repairDecisions.toolType);
+  const showRepairVersion = repairIssueCodes.has('version_required') || repairIssueCodes.has('version_invalid') || Boolean(repairDecisions.version);
+  const showRepairEntryJson = Array.from(repairIssueCodes).some((code) => code.startsWith('entry_json') || code === 'chameleon_menu_mismatch') || Boolean(repairDecisions.entryJson);
+  const showRepairCommand = repairIssueCodes.has('command_required') || repairIssueCodes.has('python_menu_invalid') || Boolean(repairDecisions.command);
 
   return (
     <Space direction="vertical" size={16} className="full-width submission-workbench">
@@ -190,18 +313,224 @@ export function SubmissionWorkbench() {
         />
       </Card>
 
+      <Card className="release-desk-card" title={<Space><ToolOutlined />AI 工具包格式修复</Space>}>
+        <Space direction="vertical" size={14} className="full-width" aria-busy={repairLoading}>
+          <Alert
+            type="info"
+            showIcon
+            message="上传前统一为 TAPython Tool Package v2"
+            description="仅修复可验证的结构问题，不会猜测不明确的 toolType、command 或 entryJson；原 ZIP 不会被覆盖。"
+          />
+          <Flex gap={12} wrap="wrap" align="flex-start">
+            <div style={{ flex: '1 1 360px' }}>
+              <Upload.Dragger
+                accept=".zip,.tapython-tool.zip,application/zip"
+                multiple={false}
+                showUploadList={false}
+                beforeUpload={importRepairPackage}
+                disabled={repairLoading || Boolean(repairSubmission)}
+              >
+                <p className="ant-upload-drag-icon"><ToolOutlined /></p>
+                <p className="ant-upload-text">上传 AI 生成的 ZIP 并检查</p>
+                <p className="ant-upload-hint">自动统一路径、协议常量、files hash/size 和菜单容器。</p>
+              </Upload.Dragger>
+            </div>
+            <Space direction="vertical" size={8} style={{ flex: '1 1 260px' }}>
+              <Text strong>提交人</Text>
+              <Input id="repair-submitter" name="repairSubmitter" value={repairSubmitter} onChange={(event) => setRepairSubmitter(event.target.value)} placeholder="TA Team" aria-label="修复包提交人" />
+              {repairFile ? <Text type="secondary">当前文件：{repairFile.name}</Text> : <Text type="secondary">尚未选择 ZIP</Text>}
+            </Space>
+          </Flex>
+
+          {repairError ? <Alert type="error" showIcon message="本次操作未完成" description={repairError} /> : null}
+          {repairSubmission ? (
+            <Alert
+              type="success"
+              showIcon
+              message="已进入待审核队列"
+              description={`投稿 ${repairSubmission.slug} · ${repairSubmission.id} 已创建，不会重复提交。`}
+            />
+          ) : null}
+
+          {showRepairToolType ? (
+            <Space direction="vertical" size={6}>
+              <Text strong id="repair-tool-type-label">确认工具类型</Text>
+              <Radio.Group
+                name="repairToolType"
+                aria-labelledby="repair-tool-type-label"
+                optionType="button"
+                buttonStyle="solid"
+                value={repairDecisions.toolType}
+                onChange={(event) => setRepairDecisions((current) => ({ ...current, toolType: event.target.value as ToolType }))}
+              >
+                <Radio.Button value="chameleon">Chameleon 工具</Radio.Button>
+                <Radio.Button value="python-script">Python 脚本</Radio.Button>
+              </Radio.Group>
+            </Space>
+          ) : null}
+          {showRepairVersion ? (
+            <Space direction="vertical" size={6} className="full-width">
+              <Text strong>确认发布版本</Text>
+              <Input
+                id="repair-version"
+                name="repairVersion"
+                value={repairDecisions.version}
+                onChange={(event) => setRepairDecisions((current) => ({ ...current, version: event.target.value }))}
+                placeholder="1.0.0"
+                aria-label="发布版本"
+              />
+            </Space>
+          ) : null}
+          {showRepairEntryJson ? (
+            <Space direction="vertical" size={6} className="full-width">
+              <Text strong>确认 Chameleon 入口</Text>
+              <Input
+                id="repair-entry-json"
+                name="repairEntryJson"
+                value={repairDecisions.entryJson}
+                onChange={(event) => setRepairDecisions((current) => ({ ...current, entryJson: event.target.value }))}
+                placeholder="ToolName/ToolName.json"
+                aria-label="Chameleon entryJson"
+              />
+            </Space>
+          ) : null}
+          {showRepairCommand ? (
+            <Space direction="vertical" size={6} className="full-width">
+              <Text strong>确认 Python 执行命令</Text>
+              <Input
+                id="repair-command"
+                name="repairCommand"
+                value={repairDecisions.command}
+                onChange={(event) => setRepairDecisions((current) => ({ ...current, command: event.target.value }))}
+                placeholder="import ToolName; ToolName.run()"
+                aria-label="Python 执行命令"
+              />
+            </Space>
+          ) : null}
+
+          {repairReport ? (
+            <Space direction="vertical" size={10} className="full-width">
+              <div aria-live="polite">
+                <Alert
+                  type={repairReport.repairable ? 'success' : repairReport.issues.some((issue) => issue.level === 'error') ? 'error' : 'warning'}
+                  showIcon
+                  message={repairReport.repairable ? '可以生成标准投稿' : '仍需处理后才能投稿'}
+                  description={`拟执行 ${repairReport.changes.length} 项修复，当前有 ${repairReport.issues.length} 项问题。`}
+                />
+              </div>
+              <Flex gap={8} wrap="wrap" align="center" className="repair-identity-summary">
+                <Text type="secondary">最终身份</Text>
+                <Tag>{repairReport.detected.slug ?? 'slug 待确认'}</Tag>
+                <Tag>{repairReport.detected.version ?? '版本待确认'}</Tag>
+                <Tag color={repairReport.detected.toolType === 'python-script' ? 'blue' : 'cyan'}>
+                  {repairReport.detected.toolType ? toolTypeLabel(repairReport.detected.toolType) : '类型待确认'}
+                </Tag>
+              </Flex>
+              {repairReport.changes.length > 0 ? (
+                <Collapse
+                  size="small"
+                  items={[{
+                    key: 'changes',
+                    label: `查看 ${repairReport.changes.length} 项修复`,
+                    children: (
+                      <List
+                        size="small"
+                        dataSource={repairReport.changes}
+                        renderItem={(change) => (
+                          <List.Item>
+                            <Space direction="vertical" size={2} className="repair-wrap-content">
+                              <Text code>{change.path}</Text>
+                              <Text>{change.before ? `修改前：${change.before} · ` : ''}修改后：{change.after}</Text>
+                              <Text type="secondary">{change.reason}</Text>
+                            </Space>
+                          </List.Item>
+                        )}
+                      />
+                    )
+                  }]}
+                />
+              ) : null}
+              {repairReport.issues.length > 0 ? (
+                <List
+                  size="small"
+                  dataSource={repairReport.issues}
+                  renderItem={(issue) => (
+                    <List.Item>
+                      <Space align="start">
+                        <Tag color={issue.level === 'error' ? 'red' : issue.level === 'needs-input' ? 'gold' : 'blue'}>{issue.level}</Tag>
+                        <Text className="repair-wrap-content">{issue.path ? `${issue.path}：` : ''}{issue.message}</Text>
+                      </Space>
+                    </List.Item>
+                  )}
+                />
+              ) : null}
+            </Space>
+          ) : null}
+
+          <Flex gap={10} wrap="wrap">
+            <Button
+              icon={<ReloadOutlined />}
+              disabled={!repairFile || Boolean(repairSubmission)}
+              loading={repairLoading}
+              onClick={() => repairFile && void analyzeRepairPackage(repairFile, repairDecisions)}
+            >
+              重新分析
+            </Button>
+            <Button
+              type="primary"
+              icon={<UploadOutlined />}
+              disabled={!repairFile || !repairReport?.repairable || !repairSubmitter.trim() || Boolean(repairSubmission)}
+              loading={repairLoading}
+              onClick={() => void submitRepairPackage()}
+            >
+              修复并提交审核
+            </Button>
+            {repairSubmission ? <Button onClick={resetRepairPackage}>修复另一个包</Button> : null}
+            {!repairSubmitter.trim() && repairReport?.repairable ? <Text type="secondary">填写提交人后即可投稿。</Text> : null}
+          </Flex>
+        </Space>
+      </Card>
+
       <section className="submission-grid">
         <Card id="submission-form" className="release-form-card" title={modeCopy.title}>
           <Alert type={submissionMode === 'new-tool' ? 'info' : 'warning'} showIcon message={modeCopy.title} description={modeCopy.description} />
           <Divider className="compact-divider" />
-          <Form form={form} layout="vertical" onFinish={submit} disabled={loading}>
+          <Form form={form} layout="vertical" initialValues={{ toolType: 'chameleon' }} onFinish={submit} disabled={loading}>
             <Form.Item name="slug" label={modeCopy.slugLabel} rules={[{ required: true }, { pattern: /^[a-z0-9-]+$/, message: '只允许小写字母、数字和连字符' }]}>
               <Input placeholder={modeCopy.slugPlaceholder} />
             </Form.Item>
             <Form.Item name="submitter" label="提交人" rules={[{ required: true }]}>
               <Input placeholder="TA Team" />
             </Form.Item>
-            <Form.Item label="工具 Markdown" required>
+            <Form.Item
+              name="toolType"
+              label="工具类型"
+              htmlFor="submission-tool-type-chameleon"
+              rules={[{ required: true, message: '请选择工具类型' }]}
+              extra={(
+                <span aria-live="polite">
+                  {toolType === 'python-script'
+                    ? '纯 Python、无 Slate 界面；MenuConfig 使用 command，默认挂载到 OnToolbar。'
+                    : '包含 Slate JSON 界面；MenuConfig 使用 ChameleonTools，默认挂载到 OnToolBarChameleon。'}
+                </span>
+              )}
+            >
+              <Radio.Group optionType="button" buttonStyle="solid">
+                <Radio.Button id="submission-tool-type-chameleon" value="chameleon">Chameleon 工具</Radio.Button>
+                <Radio.Button value="python-script">Python 脚本</Radio.Button>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item
+              label={(
+                <Flex align="center" gap={8} wrap="wrap">
+                  <span>工具 Markdown</span>
+                  <Button type="link" size="small" icon={<FileTextOutlined />} onClick={applyMarkdownTemplate}>
+                    使用{toolTypeLabel(toolType)}模板
+                  </Button>
+                </Flex>
+              )}
+              required
+            >
               <Space direction="vertical" size={10} className="full-width markdown-input-group">
                 <Upload.Dragger
                   className="markdown-file-dropzone"
@@ -234,7 +563,11 @@ export function SubmissionWorkbench() {
             >
               <p className="ant-upload-drag-icon"><InboxOutlined /></p>
               <p className="ant-upload-text">拖入 @file 引用资源，或点击选择</p>
-              <p className="ant-upload-hint">上传 Markdown 中 @file 引用的文件：工具 UI .json、Controller .py、__init__.py、MenuConfig.snippet.json，以及其他被引用的文本资源。</p>
+              <p className="ant-upload-hint">
+                {toolType === 'python-script'
+                  ? '上传 Markdown 中 @file 引用的 .py、__init__.py、MenuConfig.snippet.json 等文本资源；纯脚本工具不需要 Slate UI JSON。'
+                  : '上传 Markdown 中 @file 引用的 Slate UI .json、Controller .py、__init__.py、MenuConfig.snippet.json 等文本资源。'}
+              </p>
             </Upload.Dragger>
             {assets.length > 0 ? (
               <List
@@ -340,6 +673,82 @@ function extractMarkdownSlug(markdown: string): string | undefined {
 
 function extractMarkdownSubmitter(markdown: string): string | undefined {
   return extractMarkdownFrontMatterValue(markdown, 'author') ?? extractMarkdownFrontMatterValue(markdown, 'ownerTeam');
+}
+
+function extractMarkdownToolType(markdown: string): ToolType | undefined {
+  const value = extractMarkdownFrontMatterValue(markdown, 'toolType');
+  return value === 'chameleon' || value === 'python-script' ? value : undefined;
+}
+
+function toolTypeLabel(toolType: ToolType): string {
+  return toolType === 'python-script' ? 'Python 脚本' : 'Chameleon 工具';
+}
+
+function buildMarkdownTemplate(toolType: ToolType, slug: string, submitter: string): string {
+  const toolName = slug.split('-').filter(Boolean).map((part) => part[0]?.toUpperCase() + part.slice(1)).join('') || 'MyTool';
+  const isScript = toolType === 'python-script';
+  const mountPoint = isScript ? 'OnToolbar' : 'OnToolBarChameleon';
+  const menuEntry = isScript
+    ? `    - name: ${toolName}\n      command: import ${toolName}; ${toolName}.run()`
+    : `    - name: ${toolName}\n      ChameleonTools: ../Python/${toolName}/${toolName}.json\n      ExtensionHookName: OnToolBarChameleon`;
+  const entryJson = isScript ? '' : `entryJson: ${toolName}/${toolName}.json\n`;
+  const resourceBlocks = isScript
+    ? `\`\`\`python controller path=${toolName}/${toolName}.py\n@file:${toolName}/${toolName}.py\n\`\`\``
+    : `\`\`\`json chameleon-ui path=${toolName}/${toolName}.json\n@file:${toolName}/${toolName}.json\n\`\`\`\n\n\`\`\`python controller path=${toolName}/${toolName}.py\n@file:${toolName}/${toolName}.py\n\`\`\``;
+  return `---
+schemaVersion: "1.0.0"
+slug: ${slug}
+name: ${toolName}
+displayName: ${toolName}
+version: "1.0.0"
+releasedAt: "${new Date().toISOString().slice(0, 10)}"
+updatedAt: "${new Date().toISOString().slice(0, 10)}"
+author: ${submitter}
+ownerTeam: ${submitter}
+status: pending
+description: 请填写工具用途和适用场景。
+category: utility
+toolType: ${toolType}
+riskLevel: low
+sourceMode: markdown-with-external-files
+tags: [python]
+compatibility:
+  unrealEngine: ["5.5"]
+  tapython: ["1.2+"]
+  plugins: ["TAPython"]
+dependencies: []
+mountPoint: ${mountPoint}
+installPath: <Project>/TA/TAPython/Python/${toolName}/
+${entryJson}changeSummary: Initial release.
+summary:
+  features:
+    - 请填写核心功能。
+  unrealApis: []
+  widgetAkas: []
+  installSteps:
+    - 安装 Python 文件并合并菜单配置。
+  riskNotes: []
+menuConfigMerge:
+  target: <Project>/TA/TAPython/UI/MenuConfig.json
+  mountPoint: ${mountPoint}
+  itemsToAdd:
+${menuEntry}
+preInstallChecks: []
+postInstallSteps:
+  - Reload TAPython 或重启 UE 编辑器
+uninstallSteps: []
+---
+
+# ${toolName}
+
+## 快速开始
+
+1. 安装工具并 Reload TAPython。
+
+## 资源
+
+${resourceBlocks}
+`;
 }
 
 function extractMarkdownFrontMatterValue(markdown: string, fieldName: string): string | undefined {

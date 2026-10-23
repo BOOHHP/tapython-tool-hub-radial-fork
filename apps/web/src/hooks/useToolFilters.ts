@@ -6,6 +6,7 @@ export function useToolFilters(tools: ToolRecord[]) {
   const [category, setCategory] = useState<string>();
   const [riskLevel, setRiskLevel] = useState<string>();
   const [status, setStatus] = useState<string>();
+  const [toolType, setToolType] = useState<string>();
 
   const filteredTools = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -28,10 +29,11 @@ export function useToolFilters(tools: ToolRecord[]) {
         (!normalizedQuery || searchText.includes(normalizedQuery)) &&
         (!category || tool.category === category) &&
         (!riskLevel || tool.riskLevel === riskLevel) &&
-        (!status || tool.status === status)
+        (!status || tool.status === status) &&
+        (!toolType || (tool.toolType ?? 'chameleon') === toolType)
       );
     });
-  }, [category, query, riskLevel, status, tools]);
+  }, [category, query, riskLevel, status, toolType, tools]);
 
   return {
     filteredTools,
@@ -39,9 +41,11 @@ export function useToolFilters(tools: ToolRecord[]) {
     category,
     riskLevel,
     status,
+    toolType,
     setQuery,
     setCategory,
     setRiskLevel,
-    setStatus
+    setStatus,
+    setToolType
   };
 }

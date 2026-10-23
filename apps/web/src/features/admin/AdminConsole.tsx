@@ -205,6 +205,9 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
       render: (_, submission) => (
         <Space direction="vertical" size={4}>
           <Tag color={statusColor[submission.status]}>{submission.status}</Tag>
+          <Tag color={extractSubmissionToolType(submission.markdown) === 'python-script' ? 'blue' : 'cyan'}>
+            {extractSubmissionToolType(submission.markdown) === 'python-script' ? 'Python 脚本' : 'Chameleon'}
+          </Tag>
           <Tag color={submission.validationReport.valid ? 'green' : 'red'}>
             {submission.validationReport.valid ? 'valid' : 'invalid'}
           </Tag>
@@ -298,33 +301,40 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
                   ]}
                 />
               </Flex>
-              <Table
-                rowKey="id"
-                size="middle"
-                columns={submissionColumns}
-                dataSource={filteredSubmissions}
-                loading={loadingSubmissions}
-                tableLayout="fixed"
-                scroll={{ x: 980 }}
-                expandable={{
-                  expandedRowRender: (submission) => {
-                    const summary = extractSubmissionSummary(submission.markdown);
-                    return (
-                      <Space direction="vertical" size={10} className="full-width">
-                        <SubmissionSummaryPanel summary={summary} />
-                        {submission.notes ? <Paragraph type="secondary">备注：{submission.notes}</Paragraph> : null}
-                        {submission.validationReport.issues.length > 0 ? (
-                          submission.validationReport.issues.map((issue, index) => (
-                            <Alert key={`${submission.id}-${index}`} type={issue.level === 'error' ? 'error' : 'warning'} showIcon message={issue.path ?? issue.level} description={issue.message} />
-                          ))
-                        ) : <Alert type="success" showIcon message="校验通过" description="可发布为工具库产物。" />}
-                        {submission.reviews[0] ? <Text type="secondary">最近审核：{submission.reviews[0].reviewer} / {submission.reviews[0].decision}</Text> : null}
-                      </Space>
-                    );
-                  }
-                }}
-                locale={{ emptyText: <Empty description="暂无匹配投稿" /> }}
-              />
+              <div
+                className="admin-submission-table-scroll"
+                role="region"
+                aria-label="投稿审核表格，可横向滚动"
+                tabIndex={0}
+              >
+                <Table
+                  rowKey="id"
+                  size="middle"
+                  columns={submissionColumns}
+                  dataSource={filteredSubmissions}
+                  loading={loadingSubmissions}
+                  tableLayout="fixed"
+                  scroll={{ x: 1040 }}
+                  expandable={{
+                    expandedRowRender: (submission) => {
+                      const summary = extractSubmissionSummary(submission.markdown);
+                      return (
+                        <Space direction="vertical" size={10} className="full-width">
+                          <SubmissionSummaryPanel summary={summary} />
+                          {submission.notes ? <Paragraph type="secondary">备注：{submission.notes}</Paragraph> : null}
+                          {submission.validationReport.issues.length > 0 ? (
+                            submission.validationReport.issues.map((issue, index) => (
+                              <Alert key={`${submission.id}-${index}`} type={issue.level === 'error' ? 'error' : 'warning'} showIcon message={issue.path ?? issue.level} description={issue.message} />
+                            ))
+                          ) : <Alert type="success" showIcon message="校验通过" description="可发布为工具库产物。" />}
+                          {submission.reviews[0] ? <Text type="secondary">最近审核：{submission.reviews[0].reviewer} / {submission.reviews[0].decision}</Text> : null}
+                        </Space>
+                      );
+                    }
+                  }}
+                  locale={{ emptyText: <Empty description="暂无匹配投稿" /> }}
+                />
+              </div>
             </Space>
           </Card>
         </Col>
@@ -429,6 +439,7 @@ function AdminLoginPanel({ loading, onLogin }: { loading: boolean; onLogin: (val
 }
 
 interface SubmissionSummary {
+  toolType?: string;
   description?: string;
   changeSummary?: string;
   features: string[];
@@ -441,6 +452,14 @@ function SubmissionSummaryPanel({ summary }: { summary: SubmissionSummary }) {
 
   return (
     <div className="admin-submission-summary-panel">
+      {summary.toolType ? (
+        <div className="admin-submission-summary-section">
+          <Text strong>工具类型</Text>
+          <Tag color={summary.toolType === 'python-script' ? 'blue' : 'cyan'}>
+            {summary.toolType === 'python-script' ? 'Python 脚本' : 'Chameleon 工具'}
+          </Tag>
+        </div>
+      ) : null}
       {summary.description ? (
         <div className="admin-submission-summary-section">
           <Text strong>工具描述</Text>
@@ -472,10 +491,16 @@ function extractSubmissionSummary(markdown: string): SubmissionSummary {
   }
 
   return {
+    toolType: extractYamlScalar(frontMatter, 'toolType') ?? 'chameleon',
     description: extractYamlScalar(frontMatter, 'description'),
     changeSummary: extractYamlScalar(frontMatter, 'changeSummary'),
     features: extractYamlList(frontMatter, ['summary', 'features'])
   };
+}
+
+function extractSubmissionToolType(markdown: string): string {
+  const frontMatter = extractMarkdownFrontMatter(markdown);
+  return frontMatter ? extractYamlScalar(frontMatter, 'toolType') ?? 'chameleon' : 'chameleon';
 }
 
 function extractMarkdownFrontMatter(markdown: string): string | undefined {
