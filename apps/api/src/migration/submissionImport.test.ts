@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { memoryDb, sampleRecord } from '../testSupport/submissions.js';
-import { importSubmissions, verifySubmissions } from './submissionImport.js';
+import { importSubmissions, migrateSubmissions, verifySubmissions } from './submissionImport.js';
 
 function sourceDir(files: Record<string, string>) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tapython-import-'));
@@ -96,4 +96,28 @@ test('verify passes after import and flags tampering, missing rows and baseline 
 
   fs.writeFileSync(inventory, JSON.stringify({ submissionRecords: { total: 3, reviewEntries: 1, records: [...records, { id: 'extra', sha256: 'x' }] } }), 'utf8');
   assert.match(verifySubmissions(db, dir, inventory).problems.join('\n'), /baseline but not in source/);
+});
+
+test('migrate imports once, verifies in the same transaction and never re-imports afterwards', async () => {
+  const db = await memoryDb();
+  const dir = standardSource();
+  const first = migrateSubmissions(db, dir);
+  assert.equal(first.status, 'migrated');
+  assert.equal(Number(db.prepare("SELECT COUNT(*) AS n FROM audit_log WHERE action = 'migration.submissions'").get()?.n), 1);
+
+  db.prepare('DELETE FROM submissions WHERE id = ?').run(idA);
+  fs.writeFileSync(path.join(dir, 'dddddddd-0000-0000-0000-000000000004.json'), json(sampleRecord('dddddddd-0000-0000-0000-000000000004')), 'utf8');
+  assert.deepEqual(migrateSubmissions(db, dir), { status: 'already_migrated' });
+  assert.equal(Number(db.prepare('SELECT COUNT(*) AS n FROM submissions').get()?.n), 1);
+});
+
+test('a failed migration leaves no rows and no marker so it can be retried', async () => {
+  const db = await memoryDb();
+  const dir = sourceDir({ [`${idA}.json`]: json(sampleRecord(idA)), 'broken.json': '{ nope' });
+  assert.equal(migrateSubmissions(db, dir).status, 'failed');
+  assert.equal(Number(db.prepare('SELECT COUNT(*) AS n FROM submissions').get()?.n), 0);
+  assert.equal(Number(db.prepare("SELECT COUNT(*) AS n FROM audit_log WHERE action = 'migration.submissions'").get()?.n), 0);
+
+  fs.rmSync(path.join(dir, 'broken.json'));
+  assert.equal(migrateSubmissions(db, dir).status, 'migrated');
 });

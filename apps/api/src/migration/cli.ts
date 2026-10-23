@@ -1,8 +1,8 @@
 import { openHubDatabase } from '../database/hubDatabase.js';
 import type { ApiConfig } from '../config/env.js';
-import { importSubmissions, verifySubmissions } from './submissionImport.js';
+import { importSubmissions, migrateSubmissions, verifySubmissions } from './submissionImport.js';
 
-// Usage: node dist/migration/cli.js <import|verify> --sqlite <file> --submissions <dir> [--dry-run] [--inventory <file>]
+// Usage: node dist/migration/cli.js <migrate|import|verify> --sqlite <file> --submissions <dir> [--dry-run] [--inventory <file>]
 const [command, ...rest] = process.argv.slice(2);
 const flags = new Map<string, string | true>();
 for (let i = 0; i < rest.length; i += 1) {
@@ -20,14 +20,18 @@ for (let i = 0; i < rest.length; i += 1) {
 
 const sqlite = flags.get('--sqlite');
 const submissions = flags.get('--submissions');
-if ((command !== 'import' && command !== 'verify') || typeof sqlite !== 'string' || typeof submissions !== 'string') {
-  console.error('Usage: cli.js <import|verify> --sqlite <file> --submissions <dir> [--dry-run] [--inventory <file>]');
+if ((command !== 'migrate' && command !== 'import' && command !== 'verify') || typeof sqlite !== 'string' || typeof submissions !== 'string') {
+  console.error('Usage: cli.js <migrate|import|verify> --sqlite <file> --submissions <dir> [--dry-run] [--inventory <file>]');
   process.exit(2);
 }
 
 const hub = await openHubDatabase({ sqlitePath: sqlite } as ApiConfig);
 try {
-  if (command === 'import') {
+  if (command === 'migrate') {
+    const outcome = migrateSubmissions(hub!.db, submissions);
+    console.log(JSON.stringify(outcome, null, 2));
+    process.exitCode = outcome.status === 'failed' ? 1 : 0;
+  } else if (command === 'import') {
     const report = importSubmissions(hub!.db, submissions, { dryRun: flags.get('--dry-run') === true });
     console.log(JSON.stringify(report, null, 2));
     process.exitCode = report.invalid.length > 0 || report.conflicts.length > 0 ? 1 : 0;

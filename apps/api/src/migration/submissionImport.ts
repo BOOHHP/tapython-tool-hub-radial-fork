@@ -47,27 +47,11 @@ function readSources(submissionRoot: string): { sources: SourceRecord[]; invalid
 // Idempotent and non-destructive: existing rows are never overwritten, a differing source is reported instead.
 export function importSubmissions(db: SqliteDatabase, submissionRoot: string, options: { dryRun?: boolean; now?: () => Date } = {}): ImportReport {
   const { sources, invalid } = readSources(submissionRoot);
-  const report: ImportReport = { found: sources.length + invalid.length, inserted: 0, unchanged: 0, conflicts: [], invalid, reviewsImported: 0, dryRun: Boolean(options.dryRun) };
-  const stamp = (options.now ?? (() => new Date()))().toISOString();
+  const report = emptyReport(sources.length, invalid, Boolean(options.dryRun));
 
   db.exec('BEGIN IMMEDIATE');
   try {
-    const existing = db.prepare('SELECT source_sha256 FROM submissions WHERE id = ?');
-    for (const { record, sha256 } of sources) {
-      const row = existing.get(record.id);
-      if (!row) {
-        storeSubmission(db, record, sha256);
-        report.inserted += 1;
-        report.reviewsImported += record.reviews.length;
-      } else if (row.source_sha256 === sha256) {
-        report.unchanged += 1;
-      } else {
-        report.conflicts.push(record.id);
-      }
-    }
-    for (const alias of teamAliases) {
-      db.prepare("INSERT INTO author_aliases (alias, kind, created_by, created_at) VALUES (?, 'team', 'migration', ?) ON CONFLICT(alias) DO NOTHING").run(alias, stamp);
-    }
+    applyImport(db, sources, report, (options.now ?? (() => new Date()))().toISOString());
     db.exec(options.dryRun || invalid.length > 0 ? 'ROLLBACK' : 'COMMIT');
   } catch (error) {
     db.exec('ROLLBACK');
@@ -77,6 +61,63 @@ export function importSubmissions(db: SqliteDatabase, submissionRoot: string, op
     report.dryRun = true;
   }
   return report;
+}
+
+function emptyReport(valid: number, invalid: ImportReport['invalid'], dryRun: boolean): ImportReport {
+  return { found: valid + invalid.length, inserted: 0, unchanged: 0, conflicts: [], invalid, reviewsImported: 0, dryRun };
+}
+
+function applyImport(db: SqliteDatabase, sources: SourceRecord[], report: ImportReport, stamp: string): void {
+  const existing = db.prepare('SELECT source_sha256 FROM submissions WHERE id = ?');
+  for (const { record, sha256 } of sources) {
+    const row = existing.get(record.id);
+    if (!row) {
+      storeSubmission(db, record, sha256);
+      report.inserted += 1;
+      report.reviewsImported += record.reviews.length;
+    } else if (row.source_sha256 === sha256) {
+      report.unchanged += 1;
+    } else {
+      report.conflicts.push(record.id);
+    }
+  }
+  for (const alias of teamAliases) {
+    db.prepare("INSERT INTO author_aliases (alias, kind, created_by, created_at) VALUES (?, 'team', 'migration', ?) ON CONFLICT(alias) DO NOTHING").run(alias, stamp);
+  }
+}
+
+const migrationMarker = 'migration.submissions';
+
+export type MigrationOutcome =
+  | { status: 'already_migrated' }
+  | { status: 'failed'; report: ImportReport; verify?: VerifyReport }
+  | { status: 'migrated'; report: ImportReport; verify: VerifyReport };
+
+// One-time cutover: import and verify in a single transaction, then leave a marker so later runs never
+// re-import stale files over records that have since been edited or deleted in the database.
+export function migrateSubmissions(db: SqliteDatabase, submissionRoot: string, options: { now?: () => Date } = {}): MigrationOutcome {
+  if (db.prepare('SELECT 1 FROM audit_log WHERE action = ?').get(migrationMarker)) {
+    return { status: 'already_migrated' };
+  }
+  const { sources, invalid } = readSources(submissionRoot);
+  const report = emptyReport(sources.length, invalid, false);
+  const stamp = (options.now ?? (() => new Date()))().toISOString();
+
+  db.exec('BEGIN IMMEDIATE');
+  try {
+    applyImport(db, sources, report, stamp);
+    const verify = verifySubmissions(db, submissionRoot);
+    if (invalid.length > 0 || report.conflicts.length > 0 || !verify.ok) {
+      db.exec('ROLLBACK');
+      return { status: 'failed', report, verify };
+    }
+    db.prepare('INSERT INTO audit_log (at, actor, action, after) VALUES (?, ?, ?, ?)').run(stamp, 'migration', migrationMarker, JSON.stringify({ submissions: verify.submissions, reviews: verify.reviews }));
+    db.exec('COMMIT');
+    return { status: 'migrated', report, verify };
+  } catch (error) {
+    db.exec('ROLLBACK');
+    throw error;
+  }
 }
 
 export interface VerifyReport {

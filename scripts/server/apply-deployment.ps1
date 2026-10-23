@@ -175,6 +175,40 @@ if ($killed -eq 0) {
     Start-Sleep -Seconds 2
 }
 
+# ── 3b. One-time submissions migration (only when .env opts in with STORE_BACKEND=sqlite) ──
+# The service is stopped here, so no submission can change between import and start.
+# Any failure falls back to the file store for this run instead of leaving the service down.
+function Get-EnvValue([string]$Key) {
+    if ($envText -match "(?m)^\s*$Key\s*=\s*(.*?)\s*$") { return $Matches[1].Trim('"', "'") }
+    return $null
+}
+$storeOverride = ''
+if ((Get-EnvValue 'STORE_BACKEND') -eq 'sqlite') {
+    $sqlitePath = Get-EnvValue 'SQLITE_PATH'
+    $submissionRoot = Get-EnvValue 'SUBMISSION_ROOT'
+    if (-not $submissionRoot) { $submissionRoot = Join-Path $repoRoot '.tapython-tool-hub\submissions' }
+    $nodeExe = (Get-Command node.exe -ErrorAction SilentlyContinue).Source
+    if (-not $nodeExe) { $nodeExe = 'node.exe' }
+    $migrationCli = Join-Path $repoRoot 'apps\api\dist\migration\cli.js'
+    if (-not $sqlitePath -or -not (Test-Path $migrationCli)) {
+        Write-Log "ERROR: STORE_BACKEND=sqlite needs SQLITE_PATH and a built migration CLI; falling back to file storage for this run."
+        $storeOverride = 'set STORE_BACKEND=files&& '
+    } else {
+        $previousPreference = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
+        $migrationOutput = & $nodeExe --no-warnings $migrationCli migrate --sqlite $sqlitePath --submissions $submissionRoot 2>&1
+        $migrationExit = $LASTEXITCODE
+        $ErrorActionPreference = $previousPreference
+        $migrationOutput | ForEach-Object { Write-Log "  migrate: $_" }
+        if ($migrationExit -ne 0) {
+            Write-Log "ERROR: submissions migration failed (exit $migrationExit); starting with file storage. Nothing was written to the database."
+            $storeOverride = 'set STORE_BACKEND=files&& '
+        } else {
+            Write-Log "Submissions migration step finished."
+        }
+    }
+}
+
 # ── 4. Start production services ──
 # Use SINGLE mode: the API process (node/Fastify) serves both the static web
 # build and the API on one port. vite preview is NOT used because it exits
@@ -182,7 +216,7 @@ if ($killed -eq 0) {
 Write-Log "Starting production service (single mode: API serves static web)..."
 $apiLogPath = Join-Path $logDir 'api.log'
 
-$apiCmd = "cmd.exe /c `"set SERVE_STATIC=true&& set API_HOST=0.0.0.0&& set API_PORT=$ApiPort&& npm run start -w @tapython-tool-hub/api >> `"$apiLogPath`" 2>&1`""
+$apiCmd = "cmd.exe /c `"${storeOverride}set SERVE_STATIC=true&& set API_HOST=0.0.0.0&& set API_PORT=$ApiPort&& npm run start -w @tapython-tool-hub/api >> `"$apiLogPath`" 2>&1`""
 $apiResult = Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{ CommandLine = $apiCmd; CurrentDirectory = $repoRoot }
 Write-Log "  API(static) create result: $($apiResult.ReturnValue) PID=$($apiResult.ProcessId)"
 
