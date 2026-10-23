@@ -1,0 +1,601 @@
+{
+  "categories": [
+    "1_Actor场景",
+    "2_模型对象",
+    "3_材质贴图",
+    "4_植被实例",
+    "5_Spline曲线",
+    "6_导入导出",
+    "7_动画Sequencer",
+    "8_开发测试"
+  ],
+  "collectionId": "ue-python-toolkit",
+  "counts": {
+    "changed": 0,
+    "missing": 0,
+    "new": 0,
+    "unchanged": 64
+  },
+  "errors": [],
+  "modules": [
+    {
+      "currentSha256": "48fdbc7f2aca5448a4cc77ee0fc923f5be1a35019b45e94697ff6463fb0f4463",
+      "moduleId": "actor_drop_to_ground",
+      "registeredSha256": "48fdbc7f2aca5448a4cc77ee0fc923f5be1a35019b45e94697ff6463fb0f4463",
+      "slug": "uept-actor-drop-to-ground",
+      "sourcePath": "1_Actor场景/1_场景检查/Actor落地检测.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "c1b9e1daecac81a7c9992846199da78677f4fcc95bb54475fbe5f84caba70560",
+      "moduleId": "check_placement",
+      "registeredSha256": "c1b9e1daecac81a7c9992846199da78677f4fcc95bb54475fbe5f84caba70560",
+      "slug": "uept-check-placement",
+      "sourcePath": "1_Actor场景/1_场景检查/模型摆放检查.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "ba00eaadbd3bfc77d18a0aeeb745712a304c5aa5f6645f0d74a74650413c496d",
+      "moduleId": "check_collision_visibility",
+      "registeredSha256": "ba00eaadbd3bfc77d18a0aeeb745712a304c5aa5f6645f0d74a74650413c496d",
+      "slug": "uept-check-collision-visibility",
+      "sourcePath": "1_Actor场景/1_场景检查/碰撞可见性检查.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "1ff49196050f18a6bf3ea6035506ab96d070eb41f16dde0435768468e3d074eb",
+      "moduleId": "invalid_actor_cleanup",
+      "registeredSha256": "1ff49196050f18a6bf3ea6035506ab96d070eb41f16dde0435768468e3d074eb",
+      "slug": "uept-invalid-actor-cleanup",
+      "sourcePath": "1_Actor场景/1_场景检查/空壳Actor清理.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "842e89d7e9436b694333a23ba974dde5baf92ea90aa9004c0f24676899eaadf0",
+      "moduleId": "select_actors_in_box",
+      "registeredSha256": "842e89d7e9436b694333a23ba974dde5baf92ea90aa9004c0f24676899eaadf0",
+      "slug": "uept-select-actors-in-box",
+      "sourcePath": "1_Actor场景/2_选择隔离/按Box范围选择Actor.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "10ae14517208dba9c9a7220103fc14d1380d81e42241ce296fe9e498b555a389",
+      "moduleId": "select_actors_by_type",
+      "registeredSha256": "10ae14517208dba9c9a7220103fc14d1380d81e42241ce296fe9e498b555a389",
+      "slug": "uept-select-actors-by-type",
+      "sourcePath": "1_Actor场景/2_选择隔离/按类型选择Actor.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "ac728c822102b7df9eedb15aebe4fe3785bfb67ca62f2cc1886f3425de8a583b",
+      "moduleId": "select_actors_in_viewport",
+      "registeredSha256": "ac728c822102b7df9eedb15aebe4fe3785bfb67ca62f2cc1886f3425de8a583b",
+      "slug": "uept-select-actors-in-viewport",
+      "sourcePath": "1_Actor场景/2_选择隔离/选择当前视口Actor.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "2489935fb41b391a312ddc3f8048919e3a166253fdf8e64e73a9d21cb90ae80e",
+      "moduleId": "isolate_selected_actors",
+      "registeredSha256": "2489935fb41b391a312ddc3f8048919e3a166253fdf8e64e73a9d21cb90ae80e",
+      "slug": "uept-isolate-selected-actors",
+      "sourcePath": "1_Actor场景/2_选择隔离/隔离选中Actor.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "67c438b79300f63f1db83fcee27b07295e923c179a100302a7b0adb97e665987",
+      "moduleId": "batch_rename",
+      "registeredSha256": "67c438b79300f63f1db83fcee27b07295e923c179a100302a7b0adb97e665987",
+      "slug": "uept-batch-rename",
+      "sourcePath": "1_Actor场景/3_命名Tag/批量重命名.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "684ce366b1f8959388bd7edced0a075c888a91fd78bfcb2da56c6423a7ebcc25",
+      "moduleId": "tag_actors_by_name",
+      "registeredSha256": "684ce366b1f8959388bd7edced0a075c888a91fd78bfcb2da56c6423a7ebcc25",
+      "slug": "uept-tag-actors-by-name",
+      "sourcePath": "1_Actor场景/3_命名Tag/按命名设置Tag.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "e26a17cad7c212df3c9c1a42ec9969a97517b2f6290c97f015d91adae54e697a",
+      "moduleId": "rename_actors_by_table",
+      "registeredSha256": "e26a17cad7c212df3c9c1a42ec9969a97517b2f6290c97f015d91adae54e697a",
+      "slug": "uept-rename-actors-by-table",
+      "sourcePath": "1_Actor场景/3_命名Tag/按表格顺序重命名Actor.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "d45579daff11e3af92fdcaa449cdd651c8f814dff636108c011e7cccf7912339",
+      "moduleId": "position_clipboard",
+      "registeredSha256": "d45579daff11e3af92fdcaa449cdd651c8f814dff636108c011e7cccf7912339",
+      "slug": "uept-position-clipboard",
+      "sourcePath": "1_Actor场景/4_位置变换/位置剪贴板.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "5662c1187f7972331141a704ca184e1bbe6d389091ff95e04127bc248e1d7751",
+      "moduleId": "transfer_actor_transforms",
+      "registeredSha256": "5662c1187f7972331141a704ca184e1bbe6d389091ff95e04127bc248e1d7751",
+      "slug": "uept-transfer-actor-transforms",
+      "sourcePath": "1_Actor场景/4_位置变换/复制粘贴变换.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "ad440c4b9f4fea8026a542fefdbf48499b547ed553d0a8645540e32dff1d0daf",
+      "moduleId": "batch_offset_actors",
+      "registeredSha256": "ad440c4b9f4fea8026a542fefdbf48499b547ed553d0a8645540e32dff1d0daf",
+      "slug": "uept-batch-offset-actors",
+      "sourcePath": "1_Actor场景/4_位置变换/批量偏移.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "dfc8c0ca33a1a2eab091b89b828fed65e15c4a1a06956e7e6b5bf1b0bd3e69e0",
+      "moduleId": "batch_set_actor_pivots",
+      "registeredSha256": "dfc8c0ca33a1a2eab091b89b828fed65e15c4a1a06956e7e6b5bf1b0bd3e69e0",
+      "slug": "uept-batch-set-actor-pivots",
+      "sourcePath": "1_Actor场景/4_位置变换/批量设置轴心.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "52fa78325277b0f1f4b0cd8476a0472b3d1d2d88f473cf61a166e49af5b13cb9",
+      "moduleId": "reset_transform",
+      "registeredSha256": "52fa78325277b0f1f4b0cd8476a0472b3d1d2d88f473cf61a166e49af5b13cb9",
+      "slug": "uept-reset-transform",
+      "sourcePath": "1_Actor场景/4_位置变换/重置变换.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "ae92d10ac44eb19c5a2c836eb0236092a997a58821926b5e80a0ba272644084c",
+      "moduleId": "align_distribute_array",
+      "registeredSha256": "ae92d10ac44eb19c5a2c836eb0236092a997a58821926b5e80a0ba272644084c",
+      "slug": "uept-align-distribute-array",
+      "sourcePath": "1_Actor场景/5_对齐阵列/对齐分布阵列.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "d6c26f817050a5b2a81d63f945e70ef929b1dd2056ebb19587181390ff679325",
+      "moduleId": "arrange_and_scatter",
+      "registeredSha256": "d6c26f817050a5b2a81d63f945e70ef929b1dd2056ebb19587181390ff679325",
+      "slug": "uept-arrange-and-scatter",
+      "sourcePath": "1_Actor场景/5_对齐阵列/排列与散布.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "f02c0ad52db5a81b399f22165b785a189c63ac032feb20e6514cb72164468667",
+      "moduleId": "duplicate_actor_array",
+      "registeredSha256": "f02c0ad52db5a81b399f22165b785a189c63ac032feb20e6514cb72164468667",
+      "slug": "uept-duplicate-actor-array",
+      "sourcePath": "1_Actor场景/5_对齐阵列/轴向阵列复制.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "32c704543d9a896474e9cd15a12a6de6a9c145625ed06fba67190d714f4292a6",
+      "moduleId": "viewport_box_creator",
+      "registeredSha256": "32c704543d9a896474e9cd15a12a6de6a9c145625ed06fba67190d714f4292a6",
+      "slug": "uept-viewport-box-creator",
+      "sourcePath": "1_Actor场景/6_创建辅助/视口中心创建Box.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "5c4ef258fca781be772163727d560b868509f69e264c86e51e6adc2c95dbaad3",
+      "moduleId": "static_mesh_to_blueprint",
+      "registeredSha256": "5c4ef258fca781be772163727d560b868509f69e264c86e51e6adc2c95dbaad3",
+      "slug": "uept-static-mesh-to-blueprint",
+      "sourcePath": "2_模型对象/1_SM蓝图转换/SM批量转蓝图Actor.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "2d86555c044b3399612a1b10ca264c188a66be23c4021c0080e2db60903934df",
+      "moduleId": "blueprint_to_static_mesh_actors",
+      "registeredSha256": "2d86555c044b3399612a1b10ca264c188a66be23c4021c0080e2db60903934df",
+      "slug": "uept-blueprint-to-static-mesh-actors",
+      "sourcePath": "2_模型对象/1_SM蓝图转换/蓝图拆分转静态网格体.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "153196ce74d25adcb70c820e94cd23172736de7c0e88bc36c772904ebd12ac29",
+      "moduleId": "merge_actors_by_mesh_or_material",
+      "registeredSha256": "153196ce74d25adcb70c820e94cd23172736de7c0e88bc36c772904ebd12ac29",
+      "slug": "uept-merge-actors-by-mesh-or-material",
+      "sourcePath": "2_模型对象/2_合并拆分/按网格体合并模型.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "792a1b4c0f566454c404c7dd2ab0d92b9a10be24ee6da000bad7735bbb271c73",
+      "moduleId": "batch_toggle_receives_decals",
+      "registeredSha256": "792a1b4c0f566454c404c7dd2ab0d92b9a10be24ee6da000bad7735bbb271c73",
+      "slug": "uept-batch-toggle-receives-decals",
+      "sourcePath": "2_模型对象/3_贴花平面/批量开关接受贴花.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "666fb90b64f3566ae8a254958f1146b5b413381072dd7c7ee180c6e4c410246d",
+      "moduleId": "decal_plane_converter",
+      "registeredSha256": "666fb90b64f3566ae8a254958f1146b5b413381072dd7c7ee180c6e4c410246d",
+      "slug": "uept-decal-plane-converter",
+      "sourcePath": "2_模型对象/3_贴花平面/贴花与平面互转.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "939f5a7f757762ffe7c7678a8fe14431f9e92f264aeacb035dd9d3d3f9ac739a",
+      "moduleId": "nanite_toolbox",
+      "registeredSha256": "939f5a7f757762ffe7c7678a8fe14431f9e92f264aeacb035dd9d3d3f9ac739a",
+      "slug": "uept-nanite-toolbox",
+      "sourcePath": "2_模型对象/4_渲染Nanite/Nanite工具箱.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "48150bde0e40bfb61266590f93cf5a53d9fb6f6225528d9a8b63cb1321620ed3",
+      "moduleId": "nanite_split_translucent",
+      "registeredSha256": "48150bde0e40bfb61266590f93cf5a53d9fb6f6225528d9a8b63cb1321620ed3",
+      "slug": "uept-nanite-split-translucent",
+      "sourcePath": "2_模型对象/4_渲染Nanite/半透明拆分Nanite.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "4649c62784df092642bd0519b746c48b99446f0039cbfb99cf745f5c79ff7c69",
+      "moduleId": "render_property_batch",
+      "registeredSha256": "4649c62784df092642bd0519b746c48b99446f0039cbfb99cf745f5c79ff7c69",
+      "slug": "uept-render-property-batch",
+      "sourcePath": "2_模型对象/4_渲染Nanite/渲染属性批量设置.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "fbd59f807d081ac77ae58a2788aacc0f89bd51547c6adf451ed92f2688ab974c",
+      "moduleId": "check_material_texture",
+      "registeredSha256": "fbd59f807d081ac77ae58a2788aacc0f89bd51547c6adf451ed92f2688ab974c",
+      "slug": "uept-check-material-texture",
+      "sourcePath": "3_材质贴图/1_材质扫描检查/材质贴图检查.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "6059c44a336f717f6edd5016ed929e3178ac2caec64bb3f99f165f8ced6f1f17",
+      "moduleId": "scan_master_materials",
+      "registeredSha256": "6059c44a336f717f6edd5016ed929e3178ac2caec64bb3f99f165f8ced6f1f17",
+      "slug": "uept-scan-master-materials",
+      "sourcePath": "3_材质贴图/1_材质扫描检查/母材质扫描.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "9fbdb016255fa71fefb0280b4b4fbf31299ea842a2ec303cf0c1e68f950e0ec8",
+      "moduleId": "copy_material_to_mesh_path",
+      "registeredSha256": "9fbdb016255fa71fefb0280b4b4fbf31299ea842a2ec303cf0c1e68f950e0ec8",
+      "slug": "uept-copy-material-to-mesh-path",
+      "sourcePath": "3_材质贴图/2_材质修复映射/复制材质到模型路径.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "432ebcea86638bd20a3038dda58cde2b067bac7c5882123d4f8e44f0a88a2308",
+      "moduleId": "material_strip_ncl_suffix",
+      "registeredSha256": "432ebcea86638bd20a3038dda58cde2b067bac7c5882123d4f8e44f0a88a2308",
+      "slug": "uept-material-strip-ncl-suffix",
+      "sourcePath": "3_材质贴图/2_材质修复映射/材质名去掉自动后缀.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "c9c55d031197a9282f8f74fd953565f1fe90d64444e67c932807d43b6c405a6c",
+      "moduleId": "batch_set_material_instance_params",
+      "registeredSha256": "c9c55d031197a9282f8f74fd953565f1fe90d64444e67c932807d43b6c405a6c",
+      "slug": "uept-batch-set-material-instance-params",
+      "sourcePath": "3_材质贴图/2_材质修复映射/材质实例参数批量设置.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "c8ff25d3d195a7f0485812a0751073eeb20a4c6dcdab6cc4ab1b0308c59cdc6f",
+      "moduleId": "material_toolbox",
+      "registeredSha256": "c8ff25d3d195a7f0485812a0751073eeb20a4c6dcdab6cc4ab1b0308c59cdc6f",
+      "slug": "uept-material-toolbox",
+      "sourcePath": "3_材质贴图/2_材质修复映射/材质工具箱.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "8555335c38ad1eadb6b985ed062435378120904a7a33575817f1aab7c2b50bde",
+      "moduleId": "material_rename_restore",
+      "registeredSha256": "8555335c38ad1eadb6b985ed062435378120904a7a33575817f1aab7c2b50bde",
+      "slug": "uept-material-rename-restore",
+      "sourcePath": "3_材质贴图/2_材质修复映射/材质重命名复原.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "bf207fb97b33e46c9dd32db69e357677749ddaa5295283c0382573e767974433",
+      "moduleId": "texture_deduplicator",
+      "registeredSha256": "bf207fb97b33e46c9dd32db69e357677749ddaa5295283c0382573e767974433",
+      "slug": "uept-texture-deduplicator",
+      "sourcePath": "3_材质贴图/3_纹理处理/纹理去重工具.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "dd83afe2347089cec7ee708d9eb82252bd61003ac92b78c00c56189fd9109e33",
+      "moduleId": "tex_batch_tool",
+      "registeredSha256": "dd83afe2347089cec7ee708d9eb82252bd61003ac92b78c00c56189fd9109e33",
+      "slug": "uept-tex-batch-tool",
+      "sourcePath": "3_材质贴图/3_纹理处理/纹理批量处理.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "ec3d051d6519451d23d213960b562997a8006197cd5e126b3483a78e98075d99",
+      "moduleId": "reload_mesh_textures",
+      "registeredSha256": "ec3d051d6519451d23d213960b562997a8006197cd5e126b3483a78e98075d99",
+      "slug": "uept-reload-mesh-textures",
+      "sourcePath": "3_材质贴图/3_纹理处理/重载模型贴图.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "b618e8742ea982b49bb97c52541c43c1b7a555f1c7fb788e403b4284a38d947b",
+      "moduleId": "material_preview_spheres",
+      "registeredSha256": "b618e8742ea982b49bb97c52541c43c1b7a555f1c7fb788e403b4284a38d947b",
+      "slug": "uept-material-preview-spheres",
+      "sourcePath": "3_材质贴图/4_材质预览/材质预览球生成.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "81fafdb7177121156ee1cd0998331d3ec1344287926a8190c7413ecff9f3b807",
+      "moduleId": "remove_tiny_foliage",
+      "registeredSha256": "81fafdb7177121156ee1cd0998331d3ec1344287926a8190c7413ecff9f3b807",
+      "slug": "uept-remove-tiny-foliage",
+      "sourcePath": "4_植被实例/1_植被清理/清理微小植被.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "795bdace7763850f5c986d9e2aec03695a952568a77675be5ac76fc6bd25326f",
+      "moduleId": "split_instanced_meshes_to_actors",
+      "registeredSha256": "795bdace7763850f5c986d9e2aec03695a952568a77675be5ac76fc6bd25326f",
+      "slug": "uept-split-instanced-meshes-to-actors",
+      "sourcePath": "4_植被实例/2_植被转换/HISM拆分为普通Actor.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "cbba7ed45494093b1d56db437c581ae4fe6c7205c6109475394229e3c09ac439",
+      "moduleId": "foliage_static_mesh_converter",
+      "registeredSha256": "cbba7ed45494093b1d56db437c581ae4fe6c7205c6109475394229e3c09ac439",
+      "slug": "uept-foliage-static-mesh-converter",
+      "sourcePath": "4_植被实例/2_植被转换/植被与SM双向转换.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "f09a7fcfecf6eed283b44f6210286029fe16e56051fbfebea851c19f4e9110a1",
+      "moduleId": "snap_spline_points_to_ground",
+      "registeredSha256": "f09a7fcfecf6eed283b44f6210286029fe16e56051fbfebea851c19f4e9110a1",
+      "slug": "uept-snap-spline-points-to-ground",
+      "sourcePath": "5_Spline曲线/1_Spline编辑/Spline点贴地.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "c1207c02cd2ae1f493e9041e7d87a0120ca9dafc93a19757655a83899746ca4f",
+      "moduleId": "spline_resampler",
+      "registeredSha256": "c1207c02cd2ae1f493e9041e7d87a0120ca9dafc93a19757655a83899746ca4f",
+      "slug": "uept-spline-resampler",
+      "sourcePath": "5_Spline曲线/1_Spline编辑/Spline重采样.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "8bc0acdfca0bbcd781d1e6d8155196a95519e2af06bf9795e4a6382075f0862b",
+      "moduleId": "export_fbx_textures_json",
+      "registeredSha256": "8bc0acdfca0bbcd781d1e6d8155196a95519e2af06bf9795e4a6382075f0862b",
+      "slug": "uept-export-fbx-textures-json",
+      "sourcePath": "6_导入导出/1_模型交换/导出材质贴图与JSON.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "59a7a8902078e8170aa005b2098fbff34601c083d9c0c31f5281c090d3005874",
+      "moduleId": "batch_export_gltf_chunks",
+      "registeredSha256": "59a7a8902078e8170aa005b2098fbff34601c083d9c0c31f5281c090d3005874",
+      "slug": "uept-batch-export-gltf-chunks",
+      "sourcePath": "6_导入导出/1_模型交换/批量分块导出GLTF.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "8a3deee11a7dd71ad18839bec5e1e7ea0bcfee606383c4c6adc6d60e06b73a90",
+      "moduleId": "tagged_actor_exporter",
+      "registeredSha256": "8a3deee11a7dd71ad18839bec5e1e7ea0bcfee606383c4c6adc6d60e06b73a90",
+      "slug": "uept-tagged-actor-exporter",
+      "sourcePath": "6_导入导出/1_模型交换/按Tag导出Actor.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "653e16b40e78cc99f520f3b1165a230f82ad91f3d3a17042cad7ffb79d8619ae",
+      "moduleId": "export_actor_info",
+      "registeredSha256": "653e16b40e78cc99f520f3b1165a230f82ad91f3d3a17042cad7ffb79d8619ae",
+      "slug": "uept-export-actor-info",
+      "sourcePath": "6_导入导出/2_数据坐标/Actor信息导出.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "89b8f6182dc0f4cf981060f04be507f73bd957072b456219c1857a61ca5a6879",
+      "moduleId": "csv_spawn_box",
+      "registeredSha256": "89b8f6182dc0f4cf981060f04be507f73bd957072b456219c1857a61ca5a6879",
+      "slug": "uept-csv-spawn-box",
+      "sourcePath": "6_导入导出/2_数据坐标/CSV批量生成Box.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "2249d012feb6bc371139ee603075a385dd621a5c1ac37f3aad812d4ca0bcb737",
+      "moduleId": "proj_converter",
+      "registeredSha256": "2249d012feb6bc371139ee603075a385dd621a5c1ac37f3aad812d4ca0bcb737",
+      "slug": "uept-proj-converter",
+      "sourcePath": "6_导入导出/2_数据坐标/Proj坐标转换.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "28a741b5d246aeb4cbbc7a31a2aaf41716b5c1361783b42f494a9e9b8ae44ef7",
+      "moduleId": "print_asset_paths",
+      "registeredSha256": "28a741b5d246aeb4cbbc7a31a2aaf41716b5c1361783b42f494a9e9b8ae44ef7",
+      "slug": "uept-print-asset-paths",
+      "sourcePath": "6_导入导出/2_数据坐标/打印资产路径.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "c815f8007fc491524e9b37ccbc77930cd0ad8ed5c11ac4f1413aaf7c17b082d9",
+      "moduleId": "organize_assets_by_static_mesh",
+      "registeredSha256": "c815f8007fc491524e9b37ccbc77930cd0ad8ed5c11ac4f1413aaf7c17b082d9",
+      "slug": "uept-organize-assets-by-static-mesh",
+      "sourcePath": "6_导入导出/4_资产整理/资产自动整理.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "65b3d370720a215ad2e80c2b02640f41da8fb05a94ecb45ec35262f5e89c40a0",
+      "moduleId": "reverse_sequencer_keys",
+      "registeredSha256": "65b3d370720a215ad2e80c2b02640f41da8fb05a94ecb45ec35262f5e89c40a0",
+      "slug": "uept-reverse-sequencer-keys",
+      "sourcePath": "7_动画Sequencer/1_Sequencer/反转关键帧顺序.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "af9f248c8ed9587c0f568f7829eacd2e6e5afe93abd132544c9689ad97ba2093",
+      "moduleId": "bake_animation_from_actor_transform",
+      "registeredSha256": "af9f248c8ed9587c0f568f7829eacd2e6e5afe93abd132544c9689ad97ba2093",
+      "slug": "uept-bake-animation-from-actor-transform",
+      "sourcePath": "7_动画Sequencer/1_Sequencer/按Actor位置烘焙动画.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "1ec451e11f94243bcdfaed426709c1668050c360e97410db341bad9291bb72a0",
+      "moduleId": "rebind_sequencer_actors_by_name",
+      "registeredSha256": "1ec451e11f94243bcdfaed426709c1668050c360e97410db341bad9291bb72a0",
+      "slug": "uept-rebind-sequencer-actors-by-name",
+      "sourcePath": "7_动画Sequencer/1_Sequencer/按名字重新绑定Actor.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "6cb4dc18f3f1e0c826d2d375db8980c95c1d286fa2f7fc72790be8ba2209d2ea",
+      "moduleId": "probe_material_graph_api",
+      "registeredSha256": "6cb4dc18f3f1e0c826d2d375db8980c95c1d286fa2f7fc72790be8ba2209d2ea",
+      "slug": "uept-probe-material-graph-api",
+      "sourcePath": "8_开发测试/1_API探测/材质图API探测.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "0e8aad4282a31b38f9f70385ab206cdb57ce5bbda82c3f5278aaa3e951843edc",
+      "moduleId": "minimal_viewport_ray_test",
+      "registeredSha256": "0e8aad4282a31b38f9f70385ab206cdb57ce5bbda82c3f5278aaa3e951843edc",
+      "slug": "uept-minimal-viewport-ray-test",
+      "sourcePath": "8_开发测试/1_API探测/极简射线测试.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "800b943a816d703079fa956e8d9725d8896474166cb55d73c7fdbd26754aa950",
+      "moduleId": "object_detail_viewer",
+      "registeredSha256": "800b943a816d703079fa956e8d9725d8896474166cb55d73c7fdbd26754aa950",
+      "slug": "uept-object-detail-viewer",
+      "sourcePath": "8_开发测试/2_只读查询/对象属性查看.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "27911921244d0debabd037bc2b63fdcaee0e76d05ea3dd62fb079b2c687831e0",
+      "moduleId": "asset_ref_dep_query",
+      "registeredSha256": "27911921244d0debabd037bc2b63fdcaee0e76d05ea3dd62fb079b2c687831e0",
+      "slug": "uept-asset-ref-dep-query",
+      "sourcePath": "8_开发测试/2_只读查询/资产引用依赖查询.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "d5ab709063b83b4fca4fb88bd5f50687c06802ebb5fa73f93269aefb6f76c65c",
+      "moduleId": "export_level_performance_info",
+      "registeredSha256": "d5ab709063b83b4fca4fb88bd5f50687c06802ebb5fa73f93269aefb6f76c65c",
+      "slug": "uept-export-level-performance-info",
+      "sourcePath": "8_开发测试/3_诊断导出/关卡性能信息导出.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "76bf3dc41bef00129678ab3d8fcb9ae78d5a438705e8bb85503f77060ef0056d",
+      "moduleId": "export_material_instance_params",
+      "registeredSha256": "76bf3dc41bef00129678ab3d8fcb9ae78d5a438705e8bb85503f77060ef0056d",
+      "slug": "uept-export-material-instance-params",
+      "sourcePath": "8_开发测试/3_诊断导出/导出材质实例参数数据.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "d028c227be2f88687db6101ac84dd0127594cc945e8d372228fb4592e8978b9e",
+      "moduleId": "export_selected_object_debug_data",
+      "registeredSha256": "d028c227be2f88687db6101ac84dd0127594cc945e8d372228fb4592e8978b9e",
+      "slug": "uept-export-selected-object-debug-data",
+      "sourcePath": "8_开发测试/3_诊断导出/导出选中对象数据.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "514dabd7abc487ebe0543b4cc156969ac6c1b53b3f81c2ea66343636f18ec86c",
+      "moduleId": "export_blueprint_diagnostics",
+      "registeredSha256": "514dabd7abc487ebe0543b4cc156969ac6c1b53b3f81c2ea66343636f18ec86c",
+      "slug": "uept-export-blueprint-diagnostics",
+      "sourcePath": "8_开发测试/3_诊断导出/蓝图检查数据导出.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    },
+    {
+      "currentSha256": "fd9e261e52531416221be32a1b8d60dea3162a110678436bb2e0b2d54814c92c",
+      "moduleId": "viewport_screenshot",
+      "registeredSha256": "fd9e261e52531416221be32a1b8d60dea3162a110678436bb2e0b2d54814c92c",
+      "slug": "uept-viewport-screenshot",
+      "sourcePath": "8_开发测试/3_诊断导出/视口截图.py",
+      "status": "unchanged",
+      "version": "1.0.0"
+    }
+  ],
+  "schemaVersion": "1.0.0",
+  "sourceSnapshotSha256": "5019c1ac32f14d9728f0fb903fc09ca146b5c79df7150ad48963fef8f29f3ac5",
+  "toolCount": 64
+}

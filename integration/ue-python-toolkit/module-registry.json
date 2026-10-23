@@ -1,0 +1,1651 @@
+{
+  "author": "场景C组",
+  "collectionId": "ue-python-toolkit",
+  "compatibility": {
+    "plugins": [
+      "TAPython"
+    ],
+    "tapython": [
+      "1.2+"
+    ],
+    "unrealEngine": [
+      "5.5"
+    ]
+  },
+  "modules": [
+    {
+      "categoryPath": [
+        "1_Actor场景",
+        "1_场景检查"
+      ],
+      "description": "检测选中 Actor/植被底部是否浮空，自动落地",
+      "destructive": true,
+      "displayName": "Actor 落地检测",
+      "metadataSha256": "c65df7dff393b2832d8623dbf3c2e53514a4c16e25b6a704e669c0b71458e143",
+      "moduleId": "actor_drop_to_ground",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "float"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-actor-drop-to-ground",
+      "sourcePath": "1_Actor场景/1_场景检查/Actor落地检测.py",
+      "sourceSha256": "48fdbc7f2aca5448a4cc77ee0fc923f5be1a35019b45e94697ff6463fb0f4463",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "48fdbc7f2aca5448a4cc77ee0fc923f5be1a35019b45e94697ff6463fb0f4463",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "1_Actor场景",
+        "1_场景检查"
+      ],
+      "description": "悬空/穿插/重复放置/缩放异常 检查",
+      "destructive": false,
+      "displayName": "模型摆放检查",
+      "metadataSha256": "a323c8fa84ca54b4ecdd1eba063ecb1749130d76c382041ba2d5ae8ed778423b",
+      "moduleId": "check_placement",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "choice",
+        "float",
+        "section"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-check-placement",
+      "sourcePath": "1_Actor场景/1_场景检查/模型摆放检查.py",
+      "sourceSha256": "c1b9e1daecac81a7c9992846199da78677f4fcc95bb54475fbe5f84caba70560",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "c1b9e1daecac81a7c9992846199da78677f4fcc95bb54475fbe5f84caba70560",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "1_Actor场景",
+        "1_场景检查"
+      ],
+      "description": "碰撞缺失/隐藏Actor/关卡实例 检查",
+      "destructive": false,
+      "displayName": "碰撞可见性检查",
+      "metadataSha256": "c26a5bd6575c226830a18b9f66111824f54efb615c5cf8000dd2a63a6554e034",
+      "moduleId": "check_collision_visibility",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "choice",
+        "float",
+        "section"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-check-collision-visibility",
+      "sourcePath": "1_Actor场景/1_场景检查/碰撞可见性检查.py",
+      "sourceSha256": "ba00eaadbd3bfc77d18a0aeeb745712a304c5aa5f6645f0d74a74650413c496d",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "ba00eaadbd3bfc77d18a0aeeb745712a304c5aa5f6645f0d74a74650413c496d",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "1_Actor场景",
+        "1_场景检查"
+      ],
+      "description": "扫描无有效组件的 Actor，标记或删除",
+      "destructive": true,
+      "displayName": "空壳 Actor 清理",
+      "metadataSha256": "59da770702028dbce08c9d500bcc6420333dbf6f7caa9537a5b74b48dea3333d",
+      "moduleId": "invalid_actor_cleanup",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-invalid-actor-cleanup",
+      "sourcePath": "1_Actor场景/1_场景检查/空壳Actor清理.py",
+      "sourceSha256": "1ff49196050f18a6bf3ea6035506ab96d070eb41f16dde0435768468e3d074eb",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "1ff49196050f18a6bf3ea6035506ab96d070eb41f16dde0435768468e3d074eb",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "1_Actor场景",
+        "2_选择隔离"
+      ],
+      "description": "用选中Box范围批量选择关卡Actor",
+      "destructive": false,
+      "displayName": "按Box范围选择Actor",
+      "metadataSha256": "16357deca22f8b7b9099af49c70afacd7dbc4976805aa3e06f418785b54fe0df",
+      "moduleId": "select_actors_in_box",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "choice",
+        "section",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-select-actors-in-box",
+      "sourcePath": "1_Actor场景/2_选择隔离/按Box范围选择Actor.py",
+      "sourceSha256": "842e89d7e9436b694333a23ba974dde5baf92ea90aa9004c0f24676899eaadf0",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "842e89d7e9436b694333a23ba974dde5baf92ea90aa9004c0f24676899eaadf0",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "1_Actor场景",
+        "2_选择隔离"
+      ],
+      "description": "勾选常用类型批量选择关卡中的Actor",
+      "destructive": false,
+      "displayName": "按类型选择Actor",
+      "metadataSha256": "ee06bfaa614e4adff3d3437a7e6ba85a699195ac482bc0b7166cbc82f460ccbd",
+      "moduleId": "select_actors_by_type",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-select-actors-by-type",
+      "sourcePath": "1_Actor场景/2_选择隔离/按类型选择Actor.py",
+      "sourceSha256": "10ae14517208dba9c9a7220103fc14d1380d81e42241ce296fe9e498b555a389",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "10ae14517208dba9c9a7220103fc14d1380d81e42241ce296fe9e498b555a389",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "1_Actor场景",
+        "2_选择隔离"
+      ],
+      "description": "按当前编辑器视口方向选择可见范围内Actor",
+      "destructive": false,
+      "displayName": "选择当前视口Actor",
+      "metadataSha256": "f982e28fdd08a8eab4bf63d67279edea8b86b9c73e27599c88ba92c457512550",
+      "moduleId": "select_actors_in_viewport",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "choice",
+        "float",
+        "section",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-select-actors-in-viewport",
+      "sourcePath": "1_Actor场景/2_选择隔离/选择当前视口Actor.py",
+      "sourceSha256": "ac728c822102b7df9eedb15aebe4fe3785bfb67ca62f2cc1886f3425de8a583b",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "ac728c822102b7df9eedb15aebe4fe3785bfb67ca62f2cc1886f3425de8a583b",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "1_Actor场景",
+        "2_选择隔离"
+      ],
+      "description": "只显示选中Actor，隐藏其它Actor",
+      "destructive": true,
+      "displayName": "隔离选中Actor",
+      "metadataSha256": "94cb92366d746be5b6fda8771702d8106b4e55844dcf7effff6d18f9460aaa6d",
+      "moduleId": "isolate_selected_actors",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "choice"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-isolate-selected-actors",
+      "sourcePath": "1_Actor场景/2_选择隔离/隔离选中Actor.py",
+      "sourceSha256": "2489935fb41b391a312ddc3f8048919e3a166253fdf8e64e73a9d21cb90ae80e",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "2489935fb41b391a312ddc3f8048919e3a166253fdf8e64e73a9d21cb90ae80e",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "1_Actor场景",
+        "3_命名Tag"
+      ],
+      "description": "批量重命名选中 Actor/Asset（前后缀/删字符/编号）",
+      "destructive": true,
+      "displayName": "批量重命名",
+      "metadataSha256": "0b1f9506dde7c11410ec8437aedb1dcb97b8f3272f6d933efcc2bd6c918f9f3a",
+      "moduleId": "batch_rename",
+      "parameterTypes": [
+        "action",
+        "choice",
+        "int",
+        "section",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-batch-rename",
+      "sourcePath": "1_Actor场景/3_命名Tag/批量重命名.py",
+      "sourceSha256": "67c438b79300f63f1db83fcee27b07295e923c179a100302a7b0adb97e665987",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "67c438b79300f63f1db83fcee27b07295e923c179a100302a7b0adb97e665987",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "1_Actor场景",
+        "3_命名Tag"
+      ],
+      "description": "根据Actor名称中的关键字批量添加Tag",
+      "destructive": false,
+      "displayName": "按命名设置Tag",
+      "metadataSha256": "04129c48b4fe41a1be45258a750ffbf76957229e3d2b14f3f621e5f67b0739d5",
+      "moduleId": "tag_actors_by_name",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-tag-actors-by-name",
+      "sourcePath": "1_Actor场景/3_命名Tag/按命名设置Tag.py",
+      "sourceSha256": "684ce366b1f8959388bd7edced0a075c888a91fd78bfcb2da56c6423a7ebcc25",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "684ce366b1f8959388bd7edced0a075c888a91fd78bfcb2da56c6423a7ebcc25",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "1_Actor场景",
+        "3_命名Tag"
+      ],
+      "description": "按自定义列映射批量重命名选中Actor",
+      "destructive": true,
+      "displayName": "按表格顺序重命名Actor",
+      "metadataSha256": "4fd757690b1f63787b6f529baad5e1b3707f7956310259effac6c040443a34ca",
+      "moduleId": "rename_actors_by_table",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "choice",
+        "int",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-rename-actors-by-table",
+      "sourcePath": "1_Actor场景/3_命名Tag/按表格顺序重命名Actor.py",
+      "sourceSha256": "e26a17cad7c212df3c9c1a42ec9969a97517b2f6290c97f015d91adae54e697a",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "e26a17cad7c212df3c9c1a42ec9969a97517b2f6290c97f015d91adae54e697a",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "1_Actor场景",
+        "4_位置变换"
+      ],
+      "description": "记录/还原多组 Actor 的位置旋转缩放",
+      "destructive": true,
+      "displayName": "位置剪贴板",
+      "metadataSha256": "339c266baf3a5df46465fa1252e0abe5156d83b109a883f0a4b71fa1daf5566c",
+      "moduleId": "position_clipboard",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-position-clipboard",
+      "sourcePath": "1_Actor场景/4_位置变换/位置剪贴板.py",
+      "sourceSha256": "d45579daff11e3af92fdcaa449cdd651c8f814dff636108c011e7cccf7912339",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "d45579daff11e3af92fdcaa449cdd651c8f814dff636108c011e7cccf7912339",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "1_Actor场景",
+        "4_位置变换"
+      ],
+      "description": "按 Actor 名称匹配，在两组 Actor 间传递位置/旋转/缩放",
+      "destructive": false,
+      "displayName": "复制粘贴变换",
+      "metadataSha256": "7a179edf05afad38e3a213d991cbb950b2d5ca5a92097a70de0e3bb50416be8c",
+      "moduleId": "transfer_actor_transforms",
+      "parameterTypes": [
+        "action",
+        "bool"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-transfer-actor-transforms",
+      "sourcePath": "1_Actor场景/4_位置变换/复制粘贴变换.py",
+      "sourceSha256": "5662c1187f7972331141a704ca184e1bbe6d389091ff95e04127bc248e1d7751",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "5662c1187f7972331141a704ca184e1bbe6d389091ff95e04127bc248e1d7751",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "1_Actor场景",
+        "4_位置变换"
+      ],
+      "description": "给选中 Actor 批量累加 XYZ 位置偏移",
+      "destructive": true,
+      "displayName": "批量偏移",
+      "metadataSha256": "f5455a0af996d894867892a1709fcf681059b1fbb16cdf5390b4391e49494091",
+      "moduleId": "batch_offset_actors",
+      "parameterTypes": [
+        "action",
+        "float"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-batch-offset-actors",
+      "sourcePath": "1_Actor场景/4_位置变换/批量偏移.py",
+      "sourceSha256": "ad440c4b9f4fea8026a542fefdbf48499b547ed553d0a8645540e32dff1d0daf",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "ad440c4b9f4fea8026a542fefdbf48499b547ed553d0a8645540e32dff1d0daf",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "1_Actor场景",
+        "4_位置变换"
+      ],
+      "description": "将选中 Actor 的轴心点移动到模型几何中心（通过添加 Scene Root 或者查改模型）。",
+      "destructive": true,
+      "displayName": "批量设置轴心",
+      "metadataSha256": "6e9f1e56b38c9d356a6bd6a9591f85f12143fb66af1a32ac30ffc232a47c8b5a",
+      "moduleId": "batch_set_actor_pivots",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "choice"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-batch-set-actor-pivots",
+      "sourcePath": "1_Actor场景/4_位置变换/批量设置轴心.py",
+      "sourceSha256": "dfc8c0ca33a1a2eab091b89b828fed65e15c4a1a06956e7e6b5bf1b0bd3e69e0",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "dfc8c0ca33a1a2eab091b89b828fed65e15c4a1a06956e7e6b5bf1b0bd3e69e0",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "1_Actor场景",
+        "4_位置变换"
+      ],
+      "description": "选中 Actor 位置归零/旋转归零/缩放归一",
+      "destructive": true,
+      "displayName": "重置变换",
+      "metadataSha256": "dd5707c61935f6a21c0313751f42275cb07a09e98df775d612153a337f641738",
+      "moduleId": "reset_transform",
+      "parameterTypes": [
+        "action",
+        "choice"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-reset-transform",
+      "sourcePath": "1_Actor场景/4_位置变换/重置变换.py",
+      "sourceSha256": "52fa78325277b0f1f4b0cd8476a0472b3d1d2d88f473cf61a166e49af5b13cb9",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "52fa78325277b0f1f4b0cd8476a0472b3d1d2d88f473cf61a166e49af5b13cb9",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "1_Actor场景",
+        "5_对齐阵列"
+      ],
+      "description": "选中 Actor 轴向对齐/均匀分布/步长阵列",
+      "destructive": true,
+      "displayName": "对齐分布阵列",
+      "metadataSha256": "3c4a249550cd3419a03a831d2223cfbf8cd32dc9acc88609c8f22abd95b5c5de",
+      "moduleId": "align_distribute_array",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "choice",
+        "float"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-align-distribute-array",
+      "sourcePath": "1_Actor场景/5_对齐阵列/对齐分布阵列.py",
+      "sourceSha256": "ae92d10ac44eb19c5a2c836eb0236092a997a58821926b5e80a0ba272644084c",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "ae92d10ac44eb19c5a2c836eb0236092a997a58821926b5e80a0ba272644084c",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "1_Actor场景",
+        "5_对齐阵列"
+      ],
+      "description": "网格排列 / 随机散布副本",
+      "destructive": true,
+      "displayName": "排列与散布",
+      "metadataSha256": "f8e94b9bc8e43e06da53f367dcc2e9c86e6300d187412ba8b37a94bdd5f5a2f5",
+      "moduleId": "arrange_and_scatter",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "choice",
+        "float",
+        "int"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-arrange-and-scatter",
+      "sourcePath": "1_Actor场景/5_对齐阵列/排列与散布.py",
+      "sourceSha256": "d6c26f817050a5b2a81d63f945e70ef929b1dd2056ebb19587181390ff679325",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "d6c26f817050a5b2a81d63f945e70ef929b1dd2056ebb19587181390ff679325",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "1_Actor场景",
+        "5_对齐阵列"
+      ],
+      "description": "沿 X/Y/Z 三轴阵列复制选中的 Actor",
+      "destructive": false,
+      "displayName": "轴向阵列复制",
+      "metadataSha256": "9081343b0161aae13380950a26d5dbdd97888d2c5551b72099bdab74379452b8",
+      "moduleId": "duplicate_actor_array",
+      "parameterTypes": [
+        "action",
+        "float",
+        "int",
+        "section"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-duplicate-actor-array",
+      "sourcePath": "1_Actor场景/5_对齐阵列/轴向阵列复制.py",
+      "sourceSha256": "f02c0ad52db5a81b399f22165b785a189c63ac032feb20e6514cb72164468667",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "f02c0ad52db5a81b399f22165b785a189c63ac032feb20e6514cb72164468667",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "1_Actor场景",
+        "6_创建辅助"
+      ],
+      "description": "视口中心射线命中处生成 Cube",
+      "destructive": true,
+      "displayName": "视口中心创建 Box",
+      "metadataSha256": "e5ca650519a2814b71fee1a4a25e527ad4f3bb49e0ba0e8c4191983d80b16533",
+      "moduleId": "viewport_box_creator",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "float"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-viewport-box-creator",
+      "sourcePath": "1_Actor场景/6_创建辅助/视口中心创建Box.py",
+      "sourceSha256": "32c704543d9a896474e9cd15a12a6de6a9c145625ed06fba67190d714f4292a6",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "32c704543d9a896474e9cd15a12a6de6a9c145625ed06fba67190d714f4292a6",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "2_模型对象",
+        "1_SM蓝图转换"
+      ],
+      "description": "内容浏览器选中 Static Mesh，批量生成 BP_ 前缀蓝图",
+      "destructive": true,
+      "displayName": "SM 批量转蓝图 Actor",
+      "metadataSha256": "6231cbeed008c75abcff958781effc9a0f68336a955cfc9bea2a357081b726d4",
+      "moduleId": "static_mesh_to_blueprint",
+      "parameterTypes": [
+        "action",
+        "section"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-static-mesh-to-blueprint",
+      "sourcePath": "2_模型对象/1_SM蓝图转换/SM批量转蓝图Actor.py",
+      "sourceSha256": "5c4ef258fca781be772163727d560b868509f69e264c86e51e6adc2c95dbaad3",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "5c4ef258fca781be772163727d560b868509f69e264c86e51e6adc2c95dbaad3",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "2_模型对象",
+        "1_SM蓝图转换"
+      ],
+      "description": "关卡选中蓝图 Actor 拆分为多个 StaticMeshActor",
+      "destructive": true,
+      "displayName": "蓝图拆分转静态网格体",
+      "metadataSha256": "7179fd464b4b4b4aa37548c67cecd22a93484e0e73c746632b185e50d5268ea8",
+      "moduleId": "blueprint_to_static_mesh_actors",
+      "parameterTypes": [
+        "action",
+        "section"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-blueprint-to-static-mesh-actors",
+      "sourcePath": "2_模型对象/1_SM蓝图转换/蓝图拆分转静态网格体.py",
+      "sourceSha256": "2d86555c044b3399612a1b10ca264c188a66be23c4021c0080e2db60903934df",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "2d86555c044b3399612a1b10ca264c188a66be23c4021c0080e2db60903934df",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "2_模型对象",
+        "2_合并拆分"
+      ],
+      "description": "将选中的大量散落模型，按相同网格体或相同主材质(且插槽结构一致)分类，并把同组打包合并为一个独立的聚合网格体。",
+      "destructive": true,
+      "displayName": "按网格体合并模型",
+      "metadataSha256": "8b9f8913ccc7ba8d9c8ea314373ecd973771443b6be70bddb0069e9e95d1a542",
+      "moduleId": "merge_actors_by_mesh_or_material",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "choice",
+        "int",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-merge-actors-by-mesh-or-material",
+      "sourcePath": "2_模型对象/2_合并拆分/按网格体合并模型.py",
+      "sourceSha256": "153196ce74d25adcb70c820e94cd23172736de7c0e88bc36c772904ebd12ac29",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "153196ce74d25adcb70c820e94cd23172736de7c0e88bc36c772904ebd12ac29",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "2_模型对象",
+        "3_贴花平面"
+      ],
+      "description": "批量切换 Receives Decals；可同时改源蓝图",
+      "destructive": true,
+      "displayName": "批量开关接受贴花",
+      "metadataSha256": "dda75efb4d80f1b60f3cff75d30f9ba81b5c59cff58b5fb01a69da4de6118990",
+      "moduleId": "batch_toggle_receives_decals",
+      "parameterTypes": [
+        "action",
+        "bool"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-batch-toggle-receives-decals",
+      "sourcePath": "2_模型对象/3_贴花平面/批量开关接受贴花.py",
+      "sourceSha256": "792a1b4c0f566454c404c7dd2ab0d92b9a10be24ee6da000bad7735bbb271c73",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "792a1b4c0f566454c404c7dd2ab0d92b9a10be24ee6da000bad7735bbb271c73",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "2_模型对象",
+        "3_贴花平面"
+      ],
+      "description": "DecalActor ↔ Plane 面片双向转换",
+      "destructive": true,
+      "displayName": "贴花与平面互转",
+      "metadataSha256": "28f780e6bc396079e835f4d5cd4cc53cc2de0041d4cf77df0f655932d6ee1288",
+      "moduleId": "decal_plane_converter",
+      "parameterTypes": [
+        "action",
+        "float"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-decal-plane-converter",
+      "sourcePath": "2_模型对象/3_贴花平面/贴花与平面互转.py",
+      "sourceSha256": "666fb90b64f3566ae8a254958f1146b5b413381072dd7c7ee180c6e4c410246d",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "666fb90b64f3566ae8a254958f1146b5b413381072dd7c7ee180c6e4c410246d",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "2_模型对象",
+        "4_渲染Nanite"
+      ],
+      "description": "批量开关 Nanite / 诊断选中 Actor",
+      "destructive": true,
+      "displayName": "Nanite 工具箱",
+      "metadataSha256": "339c4489aeb28f4602e2fe4a6760d1f0e1f6926e81e6658f7e6349025ddf1496",
+      "moduleId": "nanite_toolbox",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "choice",
+        "int",
+        "section"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-nanite-toolbox",
+      "sourcePath": "2_模型对象/4_渲染Nanite/Nanite工具箱.py",
+      "sourceSha256": "939f5a7f757762ffe7c7678a8fe14431f9e92f264aeacb035dd9d3d3f9ac739a",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "939f5a7f757762ffe7c7678a8fe14431f9e92f264aeacb035dd9d3d3f9ac739a",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "2_模型对象",
+        "4_渲染Nanite"
+      ],
+      "description": "拆出半透明分段，主体开 Nanite",
+      "destructive": true,
+      "displayName": "半透明拆分 Nanite",
+      "metadataSha256": "17d6f01e2e06348bc942b28768718868537c3b07bfe5cf5f0d9180324be6658f",
+      "moduleId": "nanite_split_translucent",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-nanite-split-translucent",
+      "sourcePath": "2_模型对象/4_渲染Nanite/半透明拆分Nanite.py",
+      "sourceSha256": "48150bde0e40bfb61266590f93cf5a53d9fb6f6225528d9a8b63cb1321620ed3",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "48150bde0e40bfb61266590f93cf5a53d9fb6f6225528d9a8b63cb1321620ed3",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "2_模型对象",
+        "4_渲染Nanite"
+      ],
+      "description": "批量改隐藏/可见/投影/最大绘制距离",
+      "destructive": true,
+      "displayName": "渲染属性批量设置",
+      "metadataSha256": "94fc01302b48be6549d8f182d2803ca294b3d5f5f843665bef9c2a01ed425ef2",
+      "moduleId": "render_property_batch",
+      "parameterTypes": [
+        "action"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-render-property-batch",
+      "sourcePath": "2_模型对象/4_渲染Nanite/渲染属性批量设置.py",
+      "sourceSha256": "4649c62784df092642bd0519b746c48b99446f0039cbfb99cf745f5c79ff7c69",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "4649c62784df092642bd0519b746c48b99446f0039cbfb99cf745f5c79ff7c69",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "3_材质贴图",
+        "1_材质扫描检查"
+      ],
+      "description": "材质缺失/非POT贴图/雨雪函数/ISM/MPC 检查",
+      "destructive": false,
+      "displayName": "材质贴图检查",
+      "metadataSha256": "6a3ec1b8bfea63322ef4915c0bf24aa3a4877447279d664252b0a7d77f63147a",
+      "moduleId": "check_material_texture",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "choice",
+        "float",
+        "section"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-check-material-texture",
+      "sourcePath": "3_材质贴图/1_材质扫描检查/材质贴图检查.py",
+      "sourceSha256": "fbd59f807d081ac77ae58a2788aacc0f89bd51547c6adf451ed92f2688ab974c",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "fbd59f807d081ac77ae58a2788aacc0f89bd51547c6adf451ed92f2688ab974c",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "3_材质贴图",
+        "1_材质扫描检查"
+      ],
+      "description": "统计场景实际使用的母材质及其材质实例/Actor引用数",
+      "destructive": false,
+      "displayName": "母材质扫描",
+      "metadataSha256": "3e38c18e010e4399c218919f269bc1c8552b2f8508a9191fc9e69ac5a4239e76",
+      "moduleId": "scan_master_materials",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "choice",
+        "float",
+        "section"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-scan-master-materials",
+      "sourcePath": "3_材质贴图/1_材质扫描检查/母材质扫描.py",
+      "sourceSha256": "6059c44a336f717f6edd5016ed929e3178ac2caec64bb3f99f165f8ced6f1f17",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "6059c44a336f717f6edd5016ed929e3178ac2caec64bb3f99f165f8ced6f1f17",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "3_材质贴图",
+        "2_材质修复映射"
+      ],
+      "description": "复制当前材质到SM同目录并按插槽名写回",
+      "destructive": true,
+      "displayName": "复制材质到模型路径",
+      "metadataSha256": "d0ece69ed09792ba4863c82c7dfff91755c20a7c75fad59eb4dd189ca0dd38f6",
+      "moduleId": "copy_material_to_mesh_path",
+      "parameterTypes": [
+        "action",
+        "bool"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-copy-material-to-mesh-path",
+      "sourcePath": "3_材质贴图/2_材质修复映射/复制材质到模型路径.py",
+      "sourceSha256": "9fbdb016255fa71fefb0280b4b4fbf31299ea842a2ec303cf0c1e68f950e0ec8",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "9fbdb016255fa71fefb0280b4b4fbf31299ea842a2ec303cf0c1e68f950e0ec8",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "3_材质贴图",
+        "2_材质修复映射"
+      ],
+      "description": "清理材质名中的 _ncl1_1 这类自动后缀",
+      "destructive": true,
+      "displayName": "材质名去掉自动后缀",
+      "metadataSha256": "de421823419811af42fc195ad52e987c5d21078c669c6f213171b45a8b171082",
+      "moduleId": "material_strip_ncl_suffix",
+      "parameterTypes": [
+        "action"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-material-strip-ncl-suffix",
+      "sourcePath": "3_材质贴图/2_材质修复映射/材质名去掉自动后缀.py",
+      "sourceSha256": "432ebcea86638bd20a3038dda58cde2b067bac7c5882123d4f8e44f0a88a2308",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "432ebcea86638bd20a3038dda58cde2b067bac7c5882123d4f8e44f0a88a2308",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "3_材质贴图",
+        "2_材质修复映射"
+      ],
+      "description": "批量修改选中材质实例的 Scalar/Vector/Texture/Switch 参数",
+      "destructive": true,
+      "displayName": "材质实例参数批量设置",
+      "metadataSha256": "ada277ea07d6da033257885f2c1b3e3623d4abb78f976b573d8d5d7e9b36d124",
+      "moduleId": "batch_set_material_instance_params",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "float",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-batch-set-material-instance-params",
+      "sourcePath": "3_材质贴图/2_材质修复映射/材质实例参数批量设置.py",
+      "sourceSha256": "c9c55d031197a9282f8f74fd953565f1fe90d64444e67c932807d43b6c405a6c",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "c9c55d031197a9282f8f74fd953565f1fe90d64444e67c932807d43b6c405a6c",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "3_材质贴图",
+        "2_材质修复映射"
+      ],
+      "description": "材质同步/定向材质/插槽名互改/母材质替换/插槽清理",
+      "destructive": true,
+      "displayName": "材质工具箱",
+      "metadataSha256": "23edfb4ca56d145cb9f9d578f3e6245e294d8de83f2e9c6cdae0520c7363a064",
+      "moduleId": "material_toolbox",
+      "parameterTypes": [
+        "action",
+        "bool"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-material-toolbox",
+      "sourcePath": "3_材质贴图/2_材质修复映射/材质工具箱.py",
+      "sourceSha256": "c8ff25d3d195a7f0485812a0751073eeb20a4c6dcdab6cc4ab1b0308c59cdc6f",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "c8ff25d3d195a7f0485812a0751073eeb20a4c6dcdab6cc4ab1b0308c59cdc6f",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "3_材质贴图",
+        "2_材质修复映射"
+      ],
+      "description": "记录/恢复材质按插槽名重命名的回滚",
+      "destructive": true,
+      "displayName": "材质重命名复原",
+      "metadataSha256": "69c66eb6349f022fb2e9e1741c2ebc684df002ee4749a298b2d2f427c51393aa",
+      "moduleId": "material_rename_restore",
+      "parameterTypes": [
+        "action",
+        "bool"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-material-rename-restore",
+      "sourcePath": "3_材质贴图/2_材质修复映射/材质重命名复原.py",
+      "sourceSha256": "8555335c38ad1eadb6b985ed062435378120904a7a33575817f1aab7c2b50bde",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "8555335c38ad1eadb6b985ed062435378120904a7a33575817f1aab7c2b50bde",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "3_材质贴图",
+        "3_纹理处理"
+      ],
+      "description": "扫描同名重复纹理，可定位或 Consolidate 合并",
+      "destructive": true,
+      "displayName": "纹理去重工具",
+      "metadataSha256": "e63ca8b4c53c6f5e66c3ea2b9d6d0901e8518b12568bfd6e54e04b7106118530",
+      "moduleId": "texture_deduplicator",
+      "parameterTypes": [
+        "action",
+        "int",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-texture-deduplicator",
+      "sourcePath": "3_材质贴图/3_纹理处理/纹理去重工具.py",
+      "sourceSha256": "bf207fb97b33e46c9dd32db69e357677749ddaa5295283c0382573e767974433",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "bf207fb97b33e46c9dd32db69e357677749ddaa5295283c0382573e767974433",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "3_材质贴图",
+        "3_纹理处理"
+      ],
+      "description": "按条件筛选纹理，修改尺寸/修复POT",
+      "destructive": true,
+      "displayName": "纹理批量处理",
+      "metadataSha256": "29adfed7e8b6ca97d6d048231b6f7fee375c0f2848fda3fe809f3226a924a899",
+      "moduleId": "tex_batch_tool",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "int",
+        "section"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-tex-batch-tool",
+      "sourcePath": "3_材质贴图/3_纹理处理/纹理批量处理.py",
+      "sourceSha256": "dd83afe2347089cec7ee708d9eb82252bd61003ac92b78c00c56189fd9109e33",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "dd83afe2347089cec7ee708d9eb82252bd61003ac92b78c00c56189fd9109e33",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "3_材质贴图",
+        "3_纹理处理"
+      ],
+      "description": "重载选中模型的贴图(材质实例+母材质)",
+      "destructive": false,
+      "displayName": "重载模型贴图",
+      "metadataSha256": "713916bd7c6e86eee64083c3116f081ecaacf977d46e35b6f6d431075a4c329e",
+      "moduleId": "reload_mesh_textures",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "section"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-reload-mesh-textures",
+      "sourcePath": "3_材质贴图/3_纹理处理/重载模型贴图.py",
+      "sourceSha256": "ec3d051d6519451d23d213960b562997a8006197cd5e126b3483a78e98075d99",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "ec3d051d6519451d23d213960b562997a8006197cd5e126b3483a78e98075d99",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "3_材质贴图",
+        "4_材质预览"
+      ],
+      "description": "选中材质批量生成球体预览 Actor",
+      "destructive": true,
+      "displayName": "材质预览球生成",
+      "metadataSha256": "62b75cf0ab7ddecc46130e1c1746dacaa13c4b29ac93ac02bf7fae0c1fac98c0",
+      "moduleId": "material_preview_spheres",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "float",
+        "int",
+        "section",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-material-preview-spheres",
+      "sourcePath": "3_材质贴图/4_材质预览/材质预览球生成.py",
+      "sourceSha256": "b618e8742ea982b49bb97c52541c43c1b7a555f1c7fb788e403b4284a38d947b",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "b618e8742ea982b49bb97c52541c43c1b7a555f1c7fb788e403b4284a38d947b",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "4_植被实例",
+        "1_植被清理"
+      ],
+      "description": "清理选中植被系统中尺寸过小的实例（如小草、碎石），大幅降低性能开销。",
+      "destructive": true,
+      "displayName": "清理微小植被",
+      "metadataSha256": "0773653e29a6c95e30e2b84917f2138afb3f0cf47580e0c4b619fe74677176ec",
+      "moduleId": "remove_tiny_foliage",
+      "parameterTypes": [
+        "action",
+        "float"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-remove-tiny-foliage",
+      "sourcePath": "4_植被实例/1_植被清理/清理微小植被.py",
+      "sourceSha256": "81fafdb7177121156ee1cd0998331d3ec1344287926a8190c7413ecff9f3b807",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "81fafdb7177121156ee1cd0998331d3ec1344287926a8190c7413ecff9f3b807",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "4_植被实例",
+        "2_植被转换"
+      ],
+      "description": "将选中的HISM/ISM实例拆分为独立的StaticMeshActor。",
+      "destructive": false,
+      "displayName": "HISM拆分为普通Actor",
+      "metadataSha256": "909fde767a1361fb6b949e4e219071f47aa93dc7210164230462ce82edd6f1d4",
+      "moduleId": "split_instanced_meshes_to_actors",
+      "parameterTypes": [
+        "action",
+        "bool"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-split-instanced-meshes-to-actors",
+      "sourcePath": "4_植被实例/2_植被转换/HISM拆分为普通Actor.py",
+      "sourceSha256": "795bdace7763850f5c986d9e2aec03695a952568a77675be5ac76fc6bd25326f",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "795bdace7763850f5c986d9e2aec03695a952568a77675be5ac76fc6bd25326f",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "4_植被实例",
+        "2_植被转换"
+      ],
+      "description": "植被与静态网格体双向转换；可选合并同类型网格",
+      "destructive": true,
+      "displayName": "植被与SM双向转换",
+      "metadataSha256": "a1d0cecb0aafd45d719886d0b02fe70653b0e6e6aa3b4fadcc963a1e6c088777",
+      "moduleId": "foliage_static_mesh_converter",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-foliage-static-mesh-converter",
+      "sourcePath": "4_植被实例/2_植被转换/植被与SM双向转换.py",
+      "sourceSha256": "cbba7ed45494093b1d56db437c581ae4fe6c7205c6109475394229e3c09ac439",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "cbba7ed45494093b1d56db437c581ae4fe6c7205c6109475394229e3c09ac439",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "5_Spline曲线",
+        "1_Spline编辑"
+      ],
+      "description": "选中 Actor 的所有 Spline 控制点向下贴地",
+      "destructive": true,
+      "displayName": "Spline 点贴地",
+      "metadataSha256": "f4c3373e97d972bfaaa54c03b1693ccba9f6bb5472c99559144d4815fd603cc7",
+      "moduleId": "snap_spline_points_to_ground",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "choice",
+        "float",
+        "section",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-snap-spline-points-to-ground",
+      "sourcePath": "5_Spline曲线/1_Spline编辑/Spline点贴地.py",
+      "sourceSha256": "f09a7fcfecf6eed283b44f6210286029fe16e56051fbfebea851c19f4e9110a1",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "f09a7fcfecf6eed283b44f6210286029fe16e56051fbfebea851c19f4e9110a1",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "5_Spline曲线",
+        "1_Spline编辑"
+      ],
+      "description": "按间距采样 Spline，生成标记点或导出 JSON/CSV",
+      "destructive": true,
+      "displayName": "Spline 重采样",
+      "metadataSha256": "94ad68d42cb26e12c862451924d322fd8d97a1e22ea042610db4aa46bb48eb91",
+      "moduleId": "spline_resampler",
+      "parameterTypes": [
+        "action",
+        "float",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-spline-resampler",
+      "sourcePath": "5_Spline曲线/1_Spline编辑/Spline重采样.py",
+      "sourceSha256": "c1207c02cd2ae1f493e9041e7d87a0120ca9dafc93a19757655a83899746ca4f",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "c1207c02cd2ae1f493e9041e7d87a0120ca9dafc93a19757655a83899746ca4f",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "6_导入导出",
+        "1_模型交换"
+      ],
+      "description": "选中模型一键导出FBX+材质贴图+JSON映射，供3ds Max读取贴图",
+      "destructive": false,
+      "displayName": "一键导出模型FBX+贴图+JSON",
+      "metadataSha256": "14a62845601a7675660eb889bf7fbd88a553653a94c7f3d632734bc39bef8f23",
+      "moduleId": "export_fbx_textures_json",
+      "parameterTypes": [
+        "action",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-export-fbx-textures-json",
+      "sourcePath": "6_导入导出/1_模型交换/导出材质贴图与JSON.py",
+      "sourceSha256": "8bc0acdfca0bbcd781d1e6d8155196a95519e2af06bf9795e4a6382075f0862b",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "8bc0acdfca0bbcd781d1e6d8155196a95519e2af06bf9795e4a6382075f0862b",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "6_导入导出",
+        "1_模型交换"
+      ],
+      "description": "将选中的Actor分成指定大小的批次，分别导出为独立的GLTF/GLB文件，避免文件过大导致内存溢出。",
+      "destructive": false,
+      "displayName": "批量分块导出GLTF",
+      "metadataSha256": "5da3927070f5e27aabd7d580d796507eb39bd6af49f0789c1d432fdb95cdedff",
+      "moduleId": "batch_export_gltf_chunks",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "int",
+        "section",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-batch-export-gltf-chunks",
+      "sourcePath": "6_导入导出/1_模型交换/批量分块导出GLTF.py",
+      "sourceSha256": "59a7a8902078e8170aa005b2098fbff34601c083d9c0c31f5281c090d3005874",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "59a7a8902078e8170aa005b2098fbff34601c083d9c0c31f5281c090d3005874",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "6_导入导出",
+        "1_模型交换"
+      ],
+      "description": "按 Tag 选中并导出 Actor 为 FBX/OBJ",
+      "destructive": false,
+      "displayName": "按 Tag 导出 Actor",
+      "metadataSha256": "b7acb72563555804edfabe19e363c7f1c5de5c9e79f6e423701fc1c5a4552e82",
+      "moduleId": "tagged_actor_exporter",
+      "parameterTypes": [
+        "action",
+        "choice",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-tagged-actor-exporter",
+      "sourcePath": "6_导入导出/1_模型交换/按Tag导出Actor.py",
+      "sourceSha256": "8a3deee11a7dd71ad18839bec5e1e7ea0bcfee606383c4c6adc6d60e06b73a90",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "8a3deee11a7dd71ad18839bec5e1e7ea0bcfee606383c4c6adc6d60e06b73a90",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "6_导入导出",
+        "2_数据坐标"
+      ],
+      "description": "导出选中Actor的名称、Tag、坐标到文件",
+      "destructive": false,
+      "displayName": "Actor信息导出",
+      "metadataSha256": "b7ad3fa445e5bba52ec1be1e23d9e95ee883452e355904b0dc8249122566d520",
+      "moduleId": "export_actor_info",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "section",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-export-actor-info",
+      "sourcePath": "6_导入导出/2_数据坐标/Actor信息导出.py",
+      "sourceSha256": "653e16b40e78cc99f520f3b1165a230f82ad91f3d3a17042cad7ffb79d8619ae",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "653e16b40e78cc99f520f3b1165a230f82ad91f3d3a17042cad7ffb79d8619ae",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "6_导入导出",
+        "2_数据坐标"
+      ],
+      "description": "读取CSV坐标表，在关卡中生成Box Actor",
+      "destructive": true,
+      "displayName": "CSV 批量生成 Box",
+      "metadataSha256": "06035c9e9de8ec696087e8dade01cb9e56b2ce9ce0faa7786889a1cd1063f237",
+      "moduleId": "csv_spawn_box",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "float",
+        "section",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-csv-spawn-box",
+      "sourcePath": "6_导入导出/2_数据坐标/CSV批量生成Box.py",
+      "sourceSha256": "89b8f6182dc0f4cf981060f04be507f73bd957072b456219c1857a61ca5a6879",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "89b8f6182dc0f4cf981060f04be507f73bd957072b456219c1857a61ca5a6879",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "6_导入导出",
+        "2_数据坐标"
+      ],
+      "description": "经纬度与自定义 Proj 投影坐标互转",
+      "destructive": false,
+      "displayName": "Proj 坐标转换",
+      "metadataSha256": "5e2b31ae50c0ad971b7124e4ddc05cce07caec92c459fe4bafb6389ee4bc4224",
+      "moduleId": "proj_converter",
+      "parameterTypes": [
+        "action",
+        "choice",
+        "float",
+        "section",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-proj-converter",
+      "sourcePath": "6_导入导出/2_数据坐标/Proj坐标转换.py",
+      "sourceSha256": "2249d012feb6bc371139ee603075a385dd621a5c1ac37f3aad812d4ca0bcb737",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "2249d012feb6bc371139ee603075a385dd621a5c1ac37f3aad812d4ca0bcb737",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "6_导入导出",
+        "2_数据坐标"
+      ],
+      "description": "打印选中资产或Actor的资产路径",
+      "destructive": false,
+      "displayName": "打印资产路径",
+      "metadataSha256": "57b3a34a689f2815f675df521d4663bbf51080f3079070bf71fea15471e120c5",
+      "moduleId": "print_asset_paths",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "section"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-print-asset-paths",
+      "sourcePath": "6_导入导出/2_数据坐标/打印资产路径.py",
+      "sourceSha256": "28a741b5d246aeb4cbbc7a31a2aaf41716b5c1361783b42f494a9e9b8ae44ef7",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "28a741b5d246aeb4cbbc7a31a2aaf41716b5c1361783b42f494a9e9b8ae44ef7",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "6_导入导出",
+        "4_资产整理"
+      ],
+      "description": "按 SM 名称建子目录并归类材质/纹理",
+      "destructive": true,
+      "displayName": "资产自动整理",
+      "metadataSha256": "f6b9b6e8a826c21192c73f6143e9552053b067e8e241e62fde4272e335d6c787",
+      "moduleId": "organize_assets_by_static_mesh",
+      "parameterTypes": [
+        "action",
+        "bool"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-organize-assets-by-static-mesh",
+      "sourcePath": "6_导入导出/4_资产整理/资产自动整理.py",
+      "sourceSha256": "c815f8007fc491524e9b37ccbc77930cd0ad8ed5c11ac4f1413aaf7c17b082d9",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "c815f8007fc491524e9b37ccbc77930cd0ad8ed5c11ac4f1413aaf7c17b082d9",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "7_动画Sequencer",
+        "1_Sequencer"
+      ],
+      "description": "反转 Sequencer 里框选的关键帧时间顺序",
+      "destructive": false,
+      "displayName": "反转关键帧顺序",
+      "metadataSha256": "4e804c149395047e9dd03cafe9b19bbdc738c56173edb7f854cbfade19b43f4a",
+      "moduleId": "reverse_sequencer_keys",
+      "parameterTypes": [
+        "action"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-reverse-sequencer-keys",
+      "sourcePath": "7_动画Sequencer/1_Sequencer/反转关键帧顺序.py",
+      "sourceSha256": "65b3d370720a215ad2e80c2b02640f41da8fb05a94ecb45ec35262f5e89c40a0",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "65b3d370720a215ad2e80c2b02640f41da8fb05a94ecb45ec35262f5e89c40a0",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "7_动画Sequencer",
+        "1_Sequencer"
+      ],
+      "description": "批量按选中 Actor 当前 transform 作为新起点，整段动画跟随偏移",
+      "destructive": true,
+      "displayName": "按 Actor 位置烘焙动画",
+      "metadataSha256": "7e9d659c3682319045c54002f052d79fcb94ff33aaa37f79e49cbc70b37e3686",
+      "moduleId": "bake_animation_from_actor_transform",
+      "parameterTypes": [
+        "action",
+        "bool"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "medium",
+      "slug": "uept-bake-animation-from-actor-transform",
+      "sourcePath": "7_动画Sequencer/1_Sequencer/按Actor位置烘焙动画.py",
+      "sourceSha256": "af9f248c8ed9587c0f568f7829eacd2e6e5afe93abd132544c9689ad97ba2093",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "af9f248c8ed9587c0f568f7829eacd2e6e5afe93abd132544c9689ad97ba2093",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "7_动画Sequencer",
+        "1_Sequencer"
+      ],
+      "description": "遍历 Sequence bindings, 按 display_name 找关卡同名 Actor, 一键重新绑定",
+      "destructive": false,
+      "displayName": "按名字重新绑定 Actor",
+      "metadataSha256": "ba4b8a7f488603270a64973f4e77353fb285928805ed23c4fc5c58d185454c34",
+      "moduleId": "rebind_sequencer_actors_by_name",
+      "parameterTypes": [
+        "action",
+        "bool"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-rebind-sequencer-actors-by-name",
+      "sourcePath": "7_动画Sequencer/1_Sequencer/按名字重新绑定Actor.py",
+      "sourceSha256": "1ec451e11f94243bcdfaed426709c1668050c360e97410db341bad9291bb72a0",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "1ec451e11f94243bcdfaed426709c1668050c360e97410db341bad9291bb72a0",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "8_开发测试",
+        "1_API探测"
+      ],
+      "description": "穷举母材质在当前UE Python下可读的图数据，定位追踪失败根因",
+      "destructive": false,
+      "displayName": "材质图API探测",
+      "metadataSha256": "f46d6647612b0532b1c36df8d14f2d9b21b9d82147c0921248665e10e271309d",
+      "moduleId": "probe_material_graph_api",
+      "parameterTypes": [
+        "action",
+        "section",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-probe-material-graph-api",
+      "sourcePath": "8_开发测试/1_API探测/材质图API探测.py",
+      "sourceSha256": "6cb4dc18f3f1e0c826d2d375db8980c95c1d286fa2f7fc72790be8ba2209d2ea",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "6cb4dc18f3f1e0c826d2d375db8980c95c1d286fa2f7fc72790be8ba2209d2ea",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "8_开发测试",
+        "1_API探测"
+      ],
+      "description": "极简测试：视口发射线并打印 Actor",
+      "destructive": false,
+      "displayName": "极简射线测试",
+      "metadataSha256": "9e26009d23c5d9678e862105c6ab6e7401065544c348c5435b2240309ceaaa0d",
+      "moduleId": "minimal_viewport_ray_test",
+      "parameterTypes": [
+        "action",
+        "section"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-minimal-viewport-ray-test",
+      "sourcePath": "8_开发测试/1_API探测/极简射线测试.py",
+      "sourceSha256": "0e8aad4282a31b38f9f70385ab206cdb57ce5bbda82c3f5278aaa3e951843edc",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "0e8aad4282a31b38f9f70385ab206cdb57ce5bbda82c3f5278aaa3e951843edc",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "8_开发测试",
+        "2_只读查询"
+      ],
+      "description": "打印选中对象的属性/方法/组件",
+      "destructive": false,
+      "displayName": "对象属性查看",
+      "metadataSha256": "920e9af59399f0cb0af73e1b6d44c8e53b626aecbfa8aa9029355c41c4ee2764",
+      "moduleId": "object_detail_viewer",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "int",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-object-detail-viewer",
+      "sourcePath": "8_开发测试/2_只读查询/对象属性查看.py",
+      "sourceSha256": "800b943a816d703079fa956e8d9725d8896474166cb55d73c7fdbd26754aa950",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "800b943a816d703079fa956e8d9725d8896474166cb55d73c7fdbd26754aa950",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "8_开发测试",
+        "2_只读查询"
+      ],
+      "description": "打印选中资产的引用者与依赖项",
+      "destructive": false,
+      "displayName": "资产引用依赖查询",
+      "metadataSha256": "4cff6eb457d22a3c3e02d66d73fb05c6c3d91c541afa011a8cd39327781aea35",
+      "moduleId": "asset_ref_dep_query",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "int"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-asset-ref-dep-query",
+      "sourcePath": "8_开发测试/2_只读查询/资产引用依赖查询.py",
+      "sourceSha256": "27911921244d0debabd037bc2b63fdcaee0e76d05ea3dd62fb079b2c687831e0",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "27911921244d0debabd037bc2b63fdcaee0e76d05ea3dd62fb079b2c687831e0",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "8_开发测试",
+        "3_诊断导出"
+      ],
+      "description": "只读导出当前关卡的样条与模型规模",
+      "destructive": false,
+      "displayName": "关卡性能信息导出",
+      "metadataSha256": "806f78c2f812f1ab87edd3b000e397501ce4ae342356eeb72dfa2e9ec72ac33e",
+      "moduleId": "export_level_performance_info",
+      "parameterTypes": [
+        "action",
+        "float",
+        "int"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-export-level-performance-info",
+      "sourcePath": "8_开发测试/3_诊断导出/关卡性能信息导出.py",
+      "sourceSha256": "d5ab709063b83b4fca4fb88bd5f50687c06802ebb5fa73f93269aefb6f76c65c",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "d5ab709063b83b4fca4fb88bd5f50687c06802ebb5fa73f93269aefb6f76c65c",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "8_开发测试",
+        "3_诊断导出"
+      ],
+      "description": "导出选中材质实例的参数/StaticSwitch诊断数据",
+      "destructive": false,
+      "displayName": "导出材质实例参数数据",
+      "metadataSha256": "660e8d3f027683f659d49d41ac631a74df7809ad29bc8145c40aca33c5debb7e",
+      "moduleId": "export_material_instance_params",
+      "parameterTypes": [
+        "action",
+        "section"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-export-material-instance-params",
+      "sourcePath": "8_开发测试/3_诊断导出/导出材质实例参数数据.py",
+      "sourceSha256": "76bf3dc41bef00129678ab3d8fcb9ae78d5a438705e8bb85503f77060ef0056d",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "76bf3dc41bef00129678ab3d8fcb9ae78d5a438705e8bb85503f77060ef0056d",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "8_开发测试",
+        "3_诊断导出"
+      ],
+      "description": "导出选中 Actor/Asset 的完整调试数据",
+      "destructive": false,
+      "displayName": "导出选中对象数据",
+      "metadataSha256": "c7829f6c1256a731e18d910ecb120ca506adefb1ad99658af4d1daa693f7c744",
+      "moduleId": "export_selected_object_debug_data",
+      "parameterTypes": [
+        "action",
+        "section"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-export-selected-object-debug-data",
+      "sourcePath": "8_开发测试/3_诊断导出/导出选中对象数据.py",
+      "sourceSha256": "d028c227be2f88687db6101ac84dd0127594cc945e8d372228fb4592e8978b9e",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "d028c227be2f88687db6101ac84dd0127594cc945e8d372228fb4592e8978b9e",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "8_开发测试",
+        "3_诊断导出"
+      ],
+      "description": "只读导出蓝图参数、组件及可用图表证据",
+      "destructive": false,
+      "displayName": "蓝图检查数据导出",
+      "metadataSha256": "881ad1eebc762b4fa3685e151ea94d5c859aef9d0fddcd9d85d81c6874b6d11b",
+      "moduleId": "export_blueprint_diagnostics",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "choice",
+        "section",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-export-blueprint-diagnostics",
+      "sourcePath": "8_开发测试/3_诊断导出/蓝图检查数据导出.py",
+      "sourceSha256": "514dabd7abc487ebe0543b4cc156969ac6c1b53b3f81c2ea66343636f18ec86c",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "514dabd7abc487ebe0543b4cc156969ac6c1b53b3f81c2ea66343636f18ec86c",
+      "versionSourceVersion": "1.0.0"
+    },
+    {
+      "categoryPath": [
+        "8_开发测试",
+        "3_诊断导出"
+      ],
+      "description": "按预设分辨率截取编辑器视口并保存",
+      "destructive": false,
+      "displayName": "视口截图",
+      "metadataSha256": "7bc94d87eea3418e8e21063a72a76f4153c4bfbdb2f5b87e55aa601d5970fe9a",
+      "moduleId": "viewport_screenshot",
+      "parameterTypes": [
+        "action",
+        "bool",
+        "choice",
+        "int",
+        "section",
+        "str"
+      ],
+      "publicationStatus": "approved",
+      "riskLevel": "low",
+      "slug": "uept-viewport-screenshot",
+      "sourcePath": "8_开发测试/3_诊断导出/视口截图.py",
+      "sourceSha256": "fd9e261e52531416221be32a1b8d60dea3162a110678436bb2e0b2d54814c92c",
+      "status": "active",
+      "version": "1.0.0",
+      "versionSourceSha256": "fd9e261e52531416221be32a1b8d60dea3162a110678436bb2e0b2d54814c92c",
+      "versionSourceVersion": "1.0.0"
+    }
+  ],
+  "ownerTeam": "场景C组",
+  "releasedAt": "2026-10-08",
+  "schemaVersion": "1.0.0",
+  "shell": {
+    "displayName": "UE Python 工具集",
+    "name": "UEPythonToolkit",
+    "slug": "ue-python-toolkit",
+    "sourcePath": "00_Python_Main.py",
+    "sourceSha256": "d720d7a6b03acfcca5432ece1832228fd5cc7b0413908ae7fdcc57daf5ab0cc7",
+    "version": "1.0.0",
+    "versionSourceSha256": "d720d7a6b03acfcca5432ece1832228fd5cc7b0413908ae7fdcc57daf5ab0cc7",
+    "versionSourceVersion": "1.0.0"
+  }
+}

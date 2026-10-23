@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0.0",
+  "collectionId": "ue-python-toolkit",
+  "sourceRoot": "\\\\10.2.13.252\\Public2\\2-项目交付\\3-项目场景C\\C\\常用工具\\UE_Python",
+  "author": "场景C组",
+  "ownerTeam": "场景C组",
+  "releasedAt": "2026-10-08",
+  "overridesPath": "module-id-overrides.json",
+  "registryPath": "module-registry.json",
+  "reportPath": "reports/latest-sync-report.json",
+  "outputRoot": "generated"
+}
