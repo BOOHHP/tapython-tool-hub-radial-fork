@@ -15,13 +15,13 @@ set "SERVER_HOST=%~3"
 if "%SERVER_HOST%"=="" set "SERVER_HOST=10.2.13.8"
 
 set "WEB_PORT=%~4"
-if "%WEB_PORT%"=="" set "WEB_PORT=5174"
+if "%WEB_PORT%"=="" set "WEB_PORT=8787"
 
 set "API_PORT=%~5"
 if "%API_PORT%"=="" set "API_PORT=8787"
 
 set "MODE=%~6"
-if "%MODE%"=="" set "MODE=dual"
+if "%MODE%"=="" set "MODE=single"
 
 set "ENV_FILE=%REPO_ROOT%\.env"
 

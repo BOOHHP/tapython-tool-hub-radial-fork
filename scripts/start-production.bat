@@ -9,13 +9,13 @@ set "SERVER_HOST=%~1"
 if "%SERVER_HOST%"=="" set "SERVER_HOST=127.0.0.1"
 
 set "WEB_PORT=%~2"
-if "%WEB_PORT%"=="" set "WEB_PORT=5174"
+if "%WEB_PORT%"=="" set "WEB_PORT=8787"
 
 set "API_PORT=%~3"
 if "%API_PORT%"=="" set "API_PORT=8787"
 
 set "MODE=%~4"
-if "%MODE%"=="" set "MODE=dual"
+if "%MODE%"=="" set "MODE=single"
 
 set "LOG_DIR=%REPO_ROOT%\logs"
 if not exist "%LOG_DIR%" mkdir "%LOG_DIR%"
@@ -38,7 +38,7 @@ if "%REPO_ROOT:~0,2%"=="\\" (
 
 if /i "%MODE%"=="single" goto :single_mode
 
-REM === Dual-process mode (default) ===
+REM === Dual-process compatibility mode ===
 set "VITE_API_BASE_URL=auto"
 set "API_HOST=0.0.0.0"
 

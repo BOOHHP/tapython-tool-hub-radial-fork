@@ -11,3 +11,49 @@ public/downloads/
 apps/web/public/downloads/
 graphify-out/cache/
 .github/prompts/ui-ux-pro-max
+integration/ue-python-toolkit/generated/
+
+# Server-authored tool sources pulled by deploy-local.bat before mirroring.
+# They are published via the submission/review flow on the server and are not
+# part of the local dev repo; keep them untracked to avoid noisy diffs.
+data/tool-docs/assetdependencyrenamer/
+data/tool-docs/batchtagtool/
+data/tool-docs/materialparentreplacer/
+data/tool-docs/nanitesplittranslucent/
+data/tool-docs/opaquemeshnanite/
+data/tool-docs/position-clipboard-tool/
+data/tool-docs/proj-coordinate-converter/
+data/tool-docs/python-version-info/
+data/tool-docs/removeactortags/
+data/tool-docs/removeunusedmaterialslots/
+data/tool-docs/spline-resampler/
+data/tool-docs/splinemeshbuilder/
+data/tool-docs/staticmeshbatchtool/
+data/tool-docs/tagged-actor-exporter/
+data/tool-docs/texturecompressionbatch/
+data/tool-docs/texturepow2resizer/
+data/tool-docs/viewport-box-creator/
+data/tool-docs/viewport-screenshot/
+data/tool-docs/texture-duplicate-sorter/manifest.json
+
+# Generated API records for server-authored tools pulled only to protect the
+# deployment mirror. Canonical local tools and selection-audit-script remain tracked.
+apps/web/public/api/tools/assetdependencyrenamer.json
+apps/web/public/api/tools/batchtagtool.json
+apps/web/public/api/tools/materialparentreplacer.json
+apps/web/public/api/tools/nanitesplittranslucent.json
+apps/web/public/api/tools/opaquemeshnanite.json
+apps/web/public/api/tools/position-clipboard-tool.json
+apps/web/public/api/tools/proj-coordinate-converter.json
+apps/web/public/api/tools/python-version-info.json
+apps/web/public/api/tools/removeactortags.json
+apps/web/public/api/tools/removeunusedmaterialslots.json
+apps/web/public/api/tools/spline-resampler.json
+apps/web/public/api/tools/splinemeshbuilder.json
+apps/web/public/api/tools/staticmeshbatchtool.json
+apps/web/public/api/tools/tagged-actor-exporter.json
+apps/web/public/api/tools/texturecompressionbatch.json
+apps/web/public/api/tools/texturepow2resizer.json
+apps/web/public/api/tools/viewport-box-creator.json
+apps/web/public/api/tools/viewport-screenshot.json
+__pycache__/

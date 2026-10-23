@@ -61,6 +61,7 @@ tapython-tool-hub uninstall <slug> --project <path>
 
 - 工具库首页：展示工具数量、审核状态、版本快照和部署模式。
 - 搜索与筛选：支持按工具名称、标签、作者、Unreal API、控件 Aka、分类、风险等级和审核状态过滤。
+- 工具类型：支持 Chameleon Slate 工具与纯 Python 脚本；网页和 CLI 可按类型筛选。
 - 工具详情：展示功能摘要、兼容版本、安装路径、挂载点、依赖、风险说明和安装步骤。
 - 三通道安装指南：AI 提示词、CLI 命令（自动检测平台）、ZIP 包（含 sha256/size）。
 - CLI 包（`packages/cli`）：search、show、plan、download、verify、install、uninstall 命令。
@@ -170,7 +171,7 @@ tag 会触发 CLI CI/CD workflow，并把可下载 CLI 产物和 `SHA256SUMS.txt
 | `npm run generate:data` | 从 `data/` 重新生成兼容 API/downloads 产物。 |
 | `npm run build` | 重新生成数据并构建前端到 `dist/`。 |
 | `npm run build:api` | 构建 `packages/shared`、`packages/tooling` 和 `apps/api`。 |
-| `npm run build-cli` | 构建 `packages/shared` 和 `packages/cli`。 |
+| `npm run build-cli` | 构建 `packages/shared` 和 `packages/cli`。CLI search 支持 `--type chameleon|python-script`。 |
 | `npm test -w @tapython-tool-hub/api` | 运行 API/workflow focused tests。 |
 | `npm test -w @tapython-tool-hub/cli` | 运行 CLI 单元测试（hash、zip、paths、menuConfig、ledger）。 |
 | `npm run start:api` | 构建 API 依赖后启动编译产物。 |
@@ -417,6 +418,26 @@ scripts\deploy-server.bat radial-fork master 10.2.13.8 5174 8787 dual
 ```
 
 `deploy-server.bat` 只建议在 10.2.13.8 这类部署服务器使用，不建议在本地开发仓库运行；它会执行 `git reset --hard` 和 `git clean -fd`，但会保留 `.env`、`logs/` 和 `.tapython-tool-hub/`。
+
+### 本地直推部署（推荐，跳过 GitHub）
+
+开发机可以直接把本地构建产物推送到服务器共享，无需经过 GitHub 中转：
+
+```bat
+REM 默认：10.2.13.8 tapython-tool-hub-radial-fork D:\Server\... 5174 8787 dual
+scripts\deploy-local.bat
+```
+
+流程：本地构建 → robocopy 同步源码与 `dist/` 产物到 `\\10.2.13.8\Server\tapython-tool-hub-radial-fork`（保留服务器端 `.env`、`logs/`、`.tapython-tool-hub/`、`node_modules`）→ 触发服务器端 `apply-deployment.ps1`（npm ci 按需执行 + 重启服务 + 健康检查）。
+
+服务器端触发方式二选一：
+
+1. **触发文件 + 计划任务（默认，零配置）**：首次在服务器上以管理员 PowerShell 执行一次
+   `powershell -NoProfile -ExecutionPolicy Bypass -File scripts\server\install-deploy-listener.ps1`，
+   之后每次部署写入 `.deploy-trigger`，服务器计划任务每分钟轮询并自动应用。
+2. **WinRM（可选加速）**：若开发机已配置 TrustedHosts 与凭据，脚本会自动改用 `Invoke-Command` 远程执行，部署结果实时回显。
+
+部署进度查看：`type \\10.2.13.8\Server\tapython-tool-hub-radial-fork\logs\apply-deployment.log`。
 
 Windows 下有一个重要限制：不要直接从 UNC 网络共享路径启动工作区，例如 `\\server\share\tapython-tool-hub`。这个仓库使用 npm workspace，`node_modules/@tapython-tool-hub/*` 在 Windows 上会被安装成 junction，并解析到服务器本机的绝对路径；如果客户端直接从 UNC 路径运行，Node.js 无法解析这些内部包，API 会在健康检查成功前提前退出。正确做法是在宿主机本地磁盘路径运行，或者先把仓库拷贝/克隆到本机，再执行 `npm install` 后启动。
 
