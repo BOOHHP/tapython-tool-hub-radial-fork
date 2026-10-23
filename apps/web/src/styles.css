@@ -2023,3 +2023,7 @@ li,
     width: 100%;
   }
 }
+
+.admin-session-tag {
+  margin-inline-start: 8px;
+}

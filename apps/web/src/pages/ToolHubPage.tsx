@@ -47,6 +47,7 @@ import type { ColumnsType } from 'antd/es/table';
 import { useEffect, useMemo, useState } from 'react';
 import type { FileDiffRow, ManifestDiffRow, ToolFileManifest, ToolManifest, ToolRecord, ToolVersion } from '@tapython-tool-hub/shared';
 import { AdminConsole } from '../features/admin/AdminConsole';
+import { HeaderAccount } from '../features/account/HeaderAccount';
 import { CollectionDetail } from '../features/collections/CollectionDetail';
 import { getCatalogTools, getCollectionModules } from '../features/collections/model';
 import { SubmissionWorkbench } from '../features/submissions/SubmissionWorkbench';
@@ -224,6 +225,7 @@ export function ToolHubPage() {
               <Text type="secondary" className="header-subtitle">面向 TAPython / Unreal Editor 的工具发布与安装审计</Text>
             </Space>
           </Flex>
+          <HeaderAccount />
         </Flex>
       </Header>
       <Content className="app-content">

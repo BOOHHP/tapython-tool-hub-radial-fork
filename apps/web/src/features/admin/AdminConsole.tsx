@@ -2,19 +2,39 @@ import {
   CheckCircleOutlined,
   CloseCircleOutlined,
   DeleteOutlined,
+  LoginOutlined,
   ReloadOutlined,
   SaveOutlined,
   ToolOutlined
 } from '@ant-design/icons';
-import { Alert, Button, Card, Col, Empty, Flex, Form, Input, Popconfirm, Row, Select, Space, Table, Tag, Typography, message } from 'antd';
+import { Alert, Button, Card, Col, Divider, Empty, Flex, Form, Input, Popconfirm, Row, Select, Space, Table, Tag, Typography, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { AdminUpdateToolRequest, SubmissionRecord, ToolRecord, ToolStatus } from '@tapython-tool-hub/shared';
 import { deleteAdminSubmission, deleteAdminTool, listAdminSubmissions, reviewAdminSubmission, updateAdminTool } from '../../services/adminConsole';
-import { getCurrentAdmin, loginAdmin, logoutAdmin, type AuthUser } from '../../services/auth';
+import {
+  canReview,
+  feishuLoginUrl,
+  getCurrentAdmin,
+  getHubSession,
+  isFeishuLoginEnabled,
+  isHubAdmin,
+  loginAdmin,
+  logoutAdmin,
+  logoutHub,
+  type HubUser
+} from '../../services/auth';
+import { roleLabels } from '../account/HeaderAccount';
 import { riskColor, statusColor } from '../tools/display';
 
 const { Paragraph, Text, Title } = Typography;
+
+// "local" is the emergency password admin; "feishu" users get access from their assigned roles.
+interface ConsoleUser {
+  name: string;
+  source: 'local' | 'feishu';
+  hub?: HubUser;
+}
 
 type SubmissionFilter = 'all' | 'pending' | 'approved' | 'rejected' | 'validation_failed';
 
@@ -33,9 +53,12 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
   const [savingTool, setSavingTool] = useState(false);
   const [deletingTool, setDeletingTool] = useState(false);
   const [authChecking, setAuthChecking] = useState(true);
-  const [authUser, setAuthUser] = useState<AuthUser>();
+  const [authUser, setAuthUser] = useState<ConsoleUser>();
+  const [feishuEnabled, setFeishuEnabled] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const [submissionFilter, setSubmissionFilter] = useState<SubmissionFilter>('pending');
+  const mayReview = authUser?.source === 'local' || canReview(authUser?.hub);
+  const mayAdminister = authUser?.source === 'local' || isHubAdmin(authUser?.hub);
   const selectedSlug = Form.useWatch('slug', form);
   const selectedTool = useMemo(() => tools.find((tool) => tool.slug === selectedSlug), [selectedSlug, tools]);
 
@@ -49,7 +72,14 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
     setAuthChecking(true);
     try {
       const state = await getCurrentAdmin();
-      setAuthUser(state.authenticated ? state.user : undefined);
+      if (state.authenticated && state.user) {
+        setAuthUser({ name: state.user.username, source: 'local' });
+        return;
+      }
+      const enabled = await isFeishuLoginEnabled();
+      setFeishuEnabled(enabled);
+      const session = enabled ? await getHubSession() : undefined;
+      setAuthUser(session?.authenticated && session.user ? { name: session.user.name, source: 'feishu', hub: session.user } : undefined);
     } catch (error) {
       messageApi.error(error instanceof Error ? error.message : String(error));
     } finally {
@@ -58,7 +88,7 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
   }, [messageApi]);
 
   const refreshSubmissions = useCallback(async () => {
-    if (!authUser) return;
+    if (!authUser || !mayReview) return;
     setLoadingSubmissions(true);
     try {
       setSubmissions(await listAdminSubmissions());
@@ -67,13 +97,13 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
     } finally {
       setLoadingSubmissions(false);
     }
-  }, [authUser, messageApi]);
+  }, [authUser, mayReview, messageApi]);
 
   const login = async (values: { username: string; password: string }) => {
     setLoginLoading(true);
     try {
       const state = await loginAdmin(values.username, values.password);
-      setAuthUser(state.user);
+      setAuthUser(state.user ? { name: state.user.username, source: 'local' } : undefined);
       messageApi.success('已进入后台管理');
     } catch (error) {
       messageApi.error(error instanceof Error ? error.message : String(error));
@@ -83,7 +113,7 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
   };
 
   const logout = async () => {
-    await logoutAdmin();
+    await (authUser?.source === 'feishu' ? logoutHub() : logoutAdmin());
     setAuthUser(undefined);
     setSubmissions([]);
   };
@@ -93,13 +123,13 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
   }, [checkSession]);
 
   useEffect(() => {
-    if (!authUser) return;
+    if (!authUser || !mayReview) return;
     void refreshSubmissions();
     const intervalId = window.setInterval(() => {
       void refreshSubmissions();
     }, 10000);
     return () => window.clearInterval(intervalId);
-  }, [authUser, refreshSubmissions]);
+  }, [authUser, mayReview, refreshSubmissions]);
 
   useEffect(() => {
     if (!selectedTool) return;
@@ -118,7 +148,7 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
   const review = async (submission: SubmissionRecord, decision: 'approved' | 'rejected' | 'changes_requested') => {
     setSubmittingReview(submission.id);
     try {
-      const updated = await reviewAdminSubmission(submission.id, { reviewer: authUser?.username ?? 'admin', decision });
+      const updated = await reviewAdminSubmission(submission.id, { reviewer: authUser?.name ?? 'admin', decision });
       setSubmissions((current) => current.map((item) => item.id === updated.id ? updated : item));
       if (decision === 'approved') {
         onToolsChanged();
@@ -259,7 +289,7 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
             cancelText="取消"
             onConfirm={() => void deleteSubmission(submission)}
           >
-            <Button danger className="review-action-button review-action-delete" icon={<DeleteOutlined />} loading={submittingReview === submission.id}>删除</Button>
+            <Button danger className="review-action-button review-action-delete" icon={<DeleteOutlined />} disabled={!mayAdminister} loading={submittingReview === submission.id}>删除</Button>
           </Popconfirm>
         </Space>
       )
@@ -270,15 +300,27 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
     <Space direction="vertical" size={18} className="full-width admin-console">
       {contextHolder}
       {!authUser ? (
-        <AdminLoginPanel loading={authChecking || loginLoading} onLogin={login} />
+        <AdminLoginPanel loading={authChecking || loginLoading} onLogin={login} feishuEnabled={feishuEnabled} />
       ) : null}
       {authUser ? (
         <Flex align="center" justify="space-between" gap={12} wrap="wrap" className="admin-session-bar">
-          <Text type="secondary">当前管理员：<Text strong>{authUser.username}</Text></Text>
+          <Text type="secondary">
+            当前账号：<Text strong>{authUser.name}</Text>
+            {authUser.source === 'local' ? <Tag className="admin-session-tag">应急管理员</Tag> : null}
+            {authUser.hub?.roles.map((role) => <Tag key={role} color={role === 'admin' ? 'gold' : 'blue'} className="admin-session-tag">{roleLabels[role]}</Tag>)}
+          </Text>
           <Button onClick={() => void logout()}>退出登录</Button>
         </Flex>
       ) : null}
-      {authUser ? (
+      {authUser && !mayReview ? (
+        <Alert
+          type="warning"
+          showIcon
+          message="当前账号没有后台权限"
+          description="请联系管理员在后台为你授予评审员或管理员角色，授权后刷新本页即可。"
+        />
+      ) : null}
+      {authUser && mayReview ? (
       <Row gutter={[18, 18]}>
         <Col xs={24} xl={15}>
           <Card
@@ -287,7 +329,7 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
           >
             <Space direction="vertical" size={12} className="full-width">
               <Flex align="center" justify="space-between" gap={12} wrap="wrap">
-                <Text type="secondary" className="admin-reviewer-input">审核人：{authUser.username}</Text>
+                <Text type="secondary" className="admin-reviewer-input">审核人：{authUser.name}</Text>
                 <Select<SubmissionFilter>
                   value={submissionFilter}
                   onChange={setSubmissionFilter}
@@ -404,9 +446,9 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
                         okButtonProps={{ danger: true }}
                         onConfirm={() => void deleteTool()}
                       >
-                        <Button danger className="review-action-button review-action-delete" icon={<DeleteOutlined />} loading={deletingTool}>删除工具</Button>
+                        <Button danger className="review-action-button review-action-delete" icon={<DeleteOutlined />} disabled={!mayAdminister} loading={deletingTool}>删除工具</Button>
                       </Popconfirm>
-                      <Button type="primary" htmlType="submit" icon={<SaveOutlined />} loading={savingTool}>保存并刷新</Button>
+                      <Button type="primary" htmlType="submit" icon={<SaveOutlined />} disabled={!mayAdminister} loading={savingTool}>保存并刷新</Button>
                     </Space>
                   </Flex>
                 </>
@@ -422,9 +464,15 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
   );
 }
 
-function AdminLoginPanel({ loading, onLogin }: { loading: boolean; onLogin: (values: { username: string; password: string }) => void }) {
+function AdminLoginPanel({ loading, onLogin, feishuEnabled }: { loading: boolean; onLogin: (values: { username: string; password: string }) => void; feishuEnabled: boolean }) {
   return (
-    <Card title="管理员登录" className="admin-login-panel">
+    <Card title="后台登录" className="admin-login-panel">
+      {feishuEnabled ? (
+        <>
+          <Button type="primary" size="large" block icon={<LoginOutlined />} href={feishuLoginUrl('/#admin')}>使用飞书登录</Button>
+          <Divider plain>应急管理员登录</Divider>
+        </>
+      ) : null}
       <Form layout="vertical" onFinish={onLogin} autoComplete="off">
         <Form.Item name="username" label="用户名" rules={[{ required: true, message: '请输入用户名' }]}>
           <Input autoFocus />
