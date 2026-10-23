@@ -1,29 +1,14 @@
-import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { IdcardOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Dropdown, Space, Tag, Tooltip, Typography } from 'antd';
-import { useEffect, useState } from 'react';
-import { feishuLoginUrl, getHubSession, isFeishuLoginEnabled, logoutHub, type HubUser } from '../../services/auth';
+import { feishuLoginUrl, logoutHub } from '../../services/auth';
+import { useHubSession } from './useHubSession';
 
 const { Text } = Typography;
 
 export const roleLabels: Record<string, string> = { admin: '管理员', reviewer: '评审员' };
 
 export function HeaderAccount() {
-  const [enabled, setEnabled] = useState(false);
-  const [user, setUser] = useState<HubUser>();
-
-  useEffect(() => {
-    let cancelled = false;
-    void isFeishuLoginEnabled().then(async (on) => {
-      if (cancelled || !on) return;
-      const session = await getHubSession();
-      if (cancelled) return;
-      setEnabled(true);
-      setUser(session.authenticated ? session.user : undefined);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const { enabled, user, clear } = useHubSession();
 
   if (!enabled) return null;
 
@@ -63,10 +48,18 @@ export function HeaderAccount() {
           },
           { type: 'divider' },
           {
+            key: 'me',
+            icon: <IdcardOutlined />,
+            label: '个人中心',
+            onClick: () => {
+              window.location.hash = 'me';
+            }
+          },
+          {
             key: 'logout',
             icon: <LogoutOutlined />,
             label: '退出登录',
-            onClick: () => void logoutHub().then(() => setUser(undefined))
+            onClick: () => void logoutHub().then(clear)
           }
         ]
       }}

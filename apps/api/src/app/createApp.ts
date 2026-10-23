@@ -17,6 +17,9 @@ import { registerHealthRoutes } from '../routes/health.js';
 import { registerIdentityRoutes } from '../routes/identity.js';
 import { registerEventRoutes } from '../routes/events.js';
 import { registerStatsRoutes } from '../routes/stats.js';
+import { registerMeRoutes } from '../routes/me.js';
+import { FavoriteStore } from '../identity/favorites.js';
+import { ProfileService } from '../identity/profile.js';
 import { StatsService } from '../stats/statsService.js';
 import { syncToolIndex } from '../catalog/toolIndex.js';
 import { EventStore } from '../identity/events.js';
@@ -91,7 +94,9 @@ export async function createApp(config: ApiConfig) {
   app.register(registerIdentityRoutes(identity?.routeDeps));
   app.register(registerAdminRoutes(submissionRepository, submissionWorkflow, adminWorkflow, authService, identity?.hubAuth, identity?.audit, hubDatabase ? linkReviewer(hubDatabase.db) : undefined));
   if (identity && hubDatabase) {
+    const aliases = new AuthorAliases(hubDatabase.db);
     app.register(registerStatsRoutes(new StatsService(hubDatabase.db), identity.hubAuth, authService));
+    app.register(registerMeRoutes(identity.hubAuth, new FavoriteStore(hubDatabase.db), new ProfileService(hubDatabase.db, aliases)));
   }
   if (identity) {
     app.register(registerAdminUserRoutes(identity.users, createAdminGuard(authService, identity.hubAuth), new AuthorAliases(hubDatabase!.db)));

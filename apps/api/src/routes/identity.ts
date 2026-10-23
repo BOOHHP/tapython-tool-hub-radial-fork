@@ -21,7 +21,7 @@ const loopbackHosts = new Set(['127.0.0.1', 'localhost', '[::1]']);
 const verifierPattern = /^[A-Za-z0-9\-._~]{43,128}$/;
 
 export function publicUser(user: UserRecord) {
-  return { openId: user.openId, name: user.name, email: user.email, department: user.department, roles: user.roles };
+  return { openId: user.openId, name: user.name, email: user.email, department: user.department, team: user.team, roles: user.roles };
 }
 
 // Native clients receive the code on a loopback listener, so only loopback redirect URIs are acceptable.
@@ -37,7 +37,7 @@ export function isLoopbackRedirect(value: unknown): value is string {
   }
 }
 
-function sameOrigin(request: FastifyRequest): boolean {
+export function sameOrigin(request: FastifyRequest): boolean {
   const origin = request.headers.origin;
   if (!origin) {
     return true;

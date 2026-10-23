@@ -2116,3 +2116,16 @@ li,
 .stat-column-slot:hover .stat-column {
   opacity: 1;
 }
+.personal-claim-select {
+  width: min(100%, 420px);
+}
+
+.personal-review-list {
+  margin-top: 12px;
+}
+
+.personal-favorite {
+  padding-inline: 0;
+  height: auto;
+  text-align: left;
+}

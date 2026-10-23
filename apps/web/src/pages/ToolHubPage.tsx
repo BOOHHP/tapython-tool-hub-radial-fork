@@ -45,10 +45,13 @@ import {
   message
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { FileDiffRow, ManifestDiffRow, ToolFileManifest, ToolManifest, ToolRecord, ToolVersion } from '@tapython-tool-hub/shared';
 import { AdminConsole } from '../features/admin/AdminConsole';
 import { StatsDashboard, StatsPageHeader } from '../features/stats/StatsDashboard';
+import { PersonalCenter, PersonalPageHeader } from '../features/account/PersonalCenter';
+import { useHubSession } from '../features/account/useHubSession';
+import { addFavorite, mergeFavorites, removeFavorite } from '../services/me';
 import { HeaderAccount } from '../features/account/HeaderAccount';
 import { CollectionDetail } from '../features/collections/CollectionDetail';
 import { getCatalogTools, getCollectionModules } from '../features/collections/model';
@@ -61,7 +64,7 @@ import { getApiBaseUrl, getApiUrl, getCategories, getRiskLevels, getStatuses, ge
 const { Header, Content } = Layout;
 const { Paragraph, Text, Title } = Typography;
 
-type ViewMode = 'tools' | 'tool' | 'submit' | 'admin' | 'stats';
+type ViewMode = 'tools' | 'tool' | 'submit' | 'admin' | 'stats' | 'me';
 type ToolViewMode = 'detail' | 'compare';
 type InstallMode = 'ai' | 'cli' | 'zip';
 type CliPlatform = 'posix' | 'windows' | 'download';
@@ -80,12 +83,13 @@ function viewModeFromHash(hash: string): ViewMode | undefined {
   if (normalized === 'submit') return 'submit';
   if (normalized === 'admin') return 'admin';
   if (normalized === 'stats') return 'stats';
+  if (normalized === 'me') return 'me';
   return undefined;
 }
 
 function writeViewModeHash(viewMode: ViewMode) {
   if (typeof window === 'undefined') return;
-  const nextHash = viewMode === 'submit' || viewMode === 'admin' || viewMode === 'stats' ? `#${viewMode}` : '';
+  const nextHash = viewMode === 'submit' || viewMode === 'admin' || viewMode === 'stats' || viewMode === 'me' ? `#${viewMode}` : '';
   const nextUrl = `${window.location.pathname}${window.location.search}${nextHash}`;
   window.history.replaceState(null, '', nextUrl);
 }
@@ -115,6 +119,22 @@ export function ToolHubPage() {
   const [tools, setTools] = useState<ToolRecord[]>([]);
   const [favoriteSlugs, setFavoriteSlugs] = useState<Set<string>>(() => readFavoriteSlugs());
   const [favoriteOnly, setFavoriteOnly] = useState(false);
+  const session = useHubSession();
+  const favoritesSyncedFor = useRef<string>();
+
+  // First sign-in on a device unions the local favorites into the account; later sessions just pull them.
+  useEffect(() => {
+    const openId = session.user?.openId;
+    if (!openId || favoritesSyncedFor.current === openId) return;
+    favoritesSyncedFor.current = openId;
+    mergeFavorites([...readFavoriteSlugs()])
+      .then((slugs) => {
+        const next = new Set(slugs);
+        writeFavoriteSlugs(next);
+        setFavoriteSlugs(next);
+      })
+      .catch(() => undefined);
+  }, [session.user?.openId]);
   const [loadingTools, setLoadingTools] = useState(true);
   const [toolError, setToolError] = useState<string>();
   const catalogTools = useMemo(() => getCatalogTools(tools), [tools]);
@@ -141,6 +161,13 @@ export function ToolHubPage() {
   const navigateToView = (nextViewMode: ViewMode) => {
     setViewMode(nextViewMode);
     writeViewModeHash(nextViewMode);
+  };
+
+  const openToolBySlug = (slug: string) => {
+    setSelectedSlug(slug);
+    setToolViewMode('detail');
+    setViewMode('tool');
+    writeViewModeHash('tool');
   };
 
   const goHome = () => {
@@ -185,6 +212,10 @@ export function ToolHubPage() {
   }, []);
 
   const toggleFavorite = (tool: ToolRecord) => {
+    if (session.user) {
+      const adding = !favoriteSlugs.has(tool.slug);
+      void (adding ? addFavorite(tool.slug) : removeFavorite(tool.slug)).catch(() => message.warning('收藏已保存在本机，同步到服务器失败'));
+    }
     setFavoriteSlugs((currentSlugs) => {
       const nextSlugs = new Set(currentSlugs);
       const isFavorite = nextSlugs.has(tool.slug);
@@ -245,6 +276,7 @@ export function ToolHubPage() {
         {viewMode === 'submit' ? <SubmitPageHeader onBack={goHome} /> : null}
         {viewMode === 'admin' ? <AdminPageHeader onBack={goHome} /> : null}
         {viewMode === 'stats' ? <StatsPageHeader onBack={goHome} /> : null}
+        {viewMode === 'me' ? <PersonalPageHeader onBack={goHome} /> : null}
         {viewMode === 'tools' ? <OverviewStats tools={catalogTools} loading={loadingTools} /> : null}
         {toolError ? <Alert className="tool-load-alert" type="error" showIcon message="工具数据加载失败" description={toolError} /> : null}
         {viewMode === 'tools' && (
@@ -310,6 +342,7 @@ export function ToolHubPage() {
         {viewMode === 'submit' && <SubmissionWorkbench />}
         {viewMode === 'admin' && <AdminConsole tools={tools} loadingTools={loadingTools} onToolsChanged={refreshTools} />}
       {viewMode === 'stats' && <StatsDashboard />}
+      {viewMode === 'me' && <PersonalCenter tools={tools} favoriteSlugs={favoriteSlugs} onOpenTool={openToolBySlug} />}
       </Content>
     </Layout>
   );

@@ -277,3 +277,57 @@ test('stats are for signed-in members; process detail needs a reviewer; reviews 
     assert.equal(contribution.people.find((p: { reviews: number }) => p.reviews === 1)?.name, 'dev');
   });
 });
+test('favorites follow the signed-in user and merge without losing anything', async () => {
+  await withApp({}, async ({ app }) => {
+    const alice = await bearerFor(app, 'alice@example.com');
+    const bob = await bearerFor(app, 'bob@example.com');
+    assert.equal((await app.inject({ url: '/api/v1/me/favorites' })).statusCode, 401);
+
+    const merged = await app.inject({ method: 'POST', url: '/api/v1/me/favorites/merge', headers: alice, payload: { slugs: ['tool-a', 'tool-b', 'tool-a'] } });
+    assert.deepEqual(merged.json().slugs.sort(), ['tool-a', 'tool-b']);
+    assert.equal((await app.inject({ method: 'PUT', url: '/api/v1/me/favorites/tool-c', headers: alice })).statusCode, 204);
+    assert.equal((await app.inject({ method: 'DELETE', url: '/api/v1/me/favorites/tool-a', headers: alice })).statusCode, 204);
+    const again = await app.inject({ method: 'POST', url: '/api/v1/me/favorites/merge', headers: alice, payload: { slugs: ['tool-d'] } });
+    assert.deepEqual(again.json().slugs.sort(), ['tool-b', 'tool-c', 'tool-d']);
+
+    assert.deepEqual((await app.inject({ url: '/api/v1/me/favorites', headers: bob })).json().slugs, []);
+    assert.equal((await app.inject({ method: 'PUT', url: '/api/v1/me/favorites/Bad_Slug', headers: alice })).statusCode, 400);
+    assert.equal((await app.inject({ method: 'POST', url: '/api/v1/me/favorites/merge', headers: alice, payload: { slugs: ['ok', 5] } })).statusCode, 400);
+    const many = Array.from({ length: 501 }, (_, i) => `tool-${i}`);
+    assert.equal((await app.inject({ method: 'POST', url: '/api/v1/me/favorites/merge', headers: bob, payload: { slugs: many } })).statusCode, 409);
+    assert.equal((await app.inject({ method: 'POST', url: '/api/v1/me/favorites/merge', headers: { ...bob, origin: 'https://evil.example', host: '127.0.0.1:8787' }, payload: { slugs: ['x'] } })).statusCode, 403);
+  });
+});
+
+test('profile lists what is mine through bound aliases; members can only claim unbound names', async () => {
+  await withApp({}, async ({ app, config }) => {
+    const alice = await bearerFor(app, 'alice@example.com');
+    const bob = await bearerFor(app, 'bob@example.com');
+    const db = openSqlite(config.sqlitePath!);
+    try {
+      db.prepare("INSERT INTO tools (slug, name, display_name, author, latest_version, synced_at) VALUES ('t1', 'T1', 'Tool One', 'alice-nick', '1.1.0', 'now')").run();
+      db.prepare("INSERT INTO tool_versions (slug, version, released_at, author) VALUES ('t1', '1.0.0', 'x', 'alice-nick'), ('t1', '1.1.0', 'x', 'alice-nick')").run();
+      db.prepare("INSERT INTO events (event_id, type, at, slug, version, source) VALUES ('d1', 'download.package', 'x', 't1', '1.1.0', 'server')").run();
+      db.prepare("INSERT INTO submissions (id, slug, submitter, status, record, created_at, updated_at) VALUES ('s-1', 't1', 'Alice-Nick', 'approved', '{}', 'x', '2026-01-01')").run();
+    } finally {
+      db.close();
+    }
+
+    const before = (await app.inject({ url: '/api/v1/me/profile', headers: alice })).json();
+    assert.deepEqual({ aliases: before.aliases, tools: before.tools.length, claimable: before.claimable.map((c: { name: string }) => c.name).sort() }, { aliases: [], tools: 0, claimable: ['Alice-Nick', 'alice-nick'] });
+
+    assert.equal((await app.inject({ method: 'POST', url: '/api/v1/me/aliases', headers: alice, payload: { alias: 'alice-nick' } })).statusCode, 204);
+    assert.equal((await app.inject({ method: 'POST', url: '/api/v1/me/aliases', headers: bob, payload: { alias: 'ALICE-NICK' } })).statusCode, 409);
+    assert.equal((await app.inject({ method: 'POST', url: '/api/v1/me/aliases', headers: bob, payload: { alias: 'nobody' } })).statusCode, 409);
+
+    const mine = (await app.inject({ url: '/api/v1/me/profile', headers: alice })).json();
+    assert.deepEqual(mine.aliases, ['alice-nick']);
+    assert.deepEqual(mine.tools, [{ slug: 't1', name: 'Tool One', latestVersion: '1.1.0', versions: 2, downloads: 1 }]);
+    assert.deepEqual(mine.submissions.map((s: { id: string }) => s.id), ['s-1'], 'case-insensitive alias match');
+    assert.equal((await app.inject({ url: '/api/v1/me/profile', headers: bob })).json().tools.length, 0);
+
+    assert.equal((await app.inject({ method: 'DELETE', url: '/api/v1/me/aliases?alias=alice-nick', headers: bob })).statusCode, 404);
+    assert.equal((await app.inject({ method: 'DELETE', url: '/api/v1/me/aliases?alias=alice-nick', headers: alice })).statusCode, 204);
+    assert.deepEqual((await app.inject({ url: '/api/v1/me/profile', headers: alice })).json().aliases, []);
+  });
+});

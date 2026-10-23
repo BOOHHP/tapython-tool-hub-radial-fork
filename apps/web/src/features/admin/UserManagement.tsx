@@ -104,7 +104,7 @@ export function UserManagement() {
       width: 110,
       render: (_, user) => user.status === 'active' ? (
         <Popconfirm title="标记为离职" description="该用户将无法再登录，已有会话立即失效。" okText="确认" cancelText="取消" okButtonProps={{ danger: true }} onConfirm={() => void run(() => markUserLeft(user.openId), '已标记离职')}>
-          <Button danger size="small">标记离职</Button>
+          <Button danger ghost size="small">标记离职</Button>
         </Popconfirm>
       ) : null
     }
