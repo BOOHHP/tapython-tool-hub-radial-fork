@@ -1,0 +1,172 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-10-23T15:50:06.362Z",
+  "tool": {
+    "slug": "selection-audit-script",
+    "name": "SelectionAuditScript",
+    "displayName": "Selection Audit Script",
+    "description": "无界面的纯 Python 示例工具，用于验证 OnToolbar command 类型工具的发布、安装和卸载链路。",
+    "category": "validation",
+    "author": "Tool Hub QA",
+    "ownerTeam": "Pipeline QA",
+    "status": "approved",
+    "riskLevel": "low",
+    "toolType": "python-script",
+    "tags": [
+      "python",
+      "script",
+      "selection",
+      "audit"
+    ],
+    "compatibility": {
+      "unrealEngine": [
+        "5.5"
+      ],
+      "tapython": [
+        "1.2+"
+      ],
+      "plugins": [
+        "TAPython"
+      ]
+    },
+    "mountPoint": "OnToolbar",
+    "installPath": "<Project>/TA/TAPython/Python/SelectionAuditScript/",
+    "sourceDocument": "data/tool-docs/selection-audit-script/selection-audit-script.md",
+    "sourceMode": "markdown-with-external-files",
+    "updatedAt": "2026-08-31",
+    "downloads": {
+      "latestManifest": "/downloads/selection-audit-script/1.0.0/manifest.json",
+      "latestReadme": "/downloads/selection-audit-script/1.0.0/README.md",
+      "latestMarkdown": "/downloads/selection-audit-script/1.0.0/tool.md",
+      "latestPackage": "/downloads/selection-audit-script/1.0.0/selection-audit-script-1.0.0.tapython-tool.zip",
+      "latestPackageSha256": "db5fef670a9850ceb2a89e1b34102b7e5a148098e0981f8da3abbd5f22aaec89",
+      "latestPackageSize": 3043,
+      "latestPackageAvailable": true
+    },
+    "summary": {
+      "features": [
+        "从 TAPython Python 工具栏执行纯 Python 命令",
+        "输出当前选中 Actor 数量到 Unreal Output Log"
+      ],
+      "unrealApis": [
+        "unreal.EditorLevelLibrary.get_selected_level_actors"
+      ],
+      "widgetAkas": [],
+      "installSteps": [
+        "安装 Python 包并合并 OnToolbar command 菜单项。",
+        "Reload TAPython 或重启 UE 编辑器。"
+      ],
+      "riskNotes": [
+        "仅读取当前选择并输出日志，不修改场景或资产。"
+      ]
+    },
+    "documentationMarkdown": "# Selection Audit Script\r\n\r\n这是一个无 Slate 界面的纯 Python 脚本示例，用于验证 Tool Hub 对 `python-script` 类型的完整支持。\r\n\r\n## 快速开始\r\n\r\n1. 安装工具包。\r\n2. Reload TAPython 或重启 UE 编辑器。\r\n3. 在 Python 工具栏中执行 **Selection Audit Script**。\r\n\r\n## Script\r\n\r\n```python controller path=SelectionAuditScript/selection_audit.py\r\n@file:SelectionAuditScript/selection_audit.py\r\n```\r\n\r\n```python controller path=SelectionAuditScript/__init__.py\r\n@file:SelectionAuditScript/__init__.py\r\n```\r\n\r\n## MenuConfig\r\n\r\n```json menuconfig path=MenuConfig.snippet.json\r\n@file:MenuConfig.snippet.json\r\n```\r\n\r\n## 注意事项\r\n\r\n- 工具只读取当前编辑器选择并写入 Output Log。\r\n- 不包含 Chameleon JSON，也不会创建 Slate 界面。",
+    "codeAssets": [
+      {
+        "path": "SelectionAuditScript/selection_audit.py",
+        "sha256": "4aef106eaeb5c4dba8306e9cdd67026d1ab94f92e7e54d8ad3a68e9b0f8c41ba",
+        "size": 225
+      },
+      {
+        "path": "SelectionAuditScript/__init__.py",
+        "sha256": "9b3d652344c75493d8921db0c21b2a18221adb48f9f963240c0702fd05cf82b8",
+        "size": 32
+      },
+      {
+        "path": "MenuConfig.snippet.json",
+        "sha256": "500bff8838d80661568cf6c4de62500ae894f66a5df6d02b1292699baaa27245",
+        "size": 113
+      }
+    ],
+    "versions": [
+      {
+        "version": "1.0.0",
+        "releasedAt": "2026-08-31",
+        "author": "Tool Hub QA",
+        "changeSummary": "首个纯 Python 脚本协议示例。",
+        "breaking": false,
+        "downloads": {
+          "manifest": "/downloads/selection-audit-script/1.0.0/manifest.json",
+          "readme": "/downloads/selection-audit-script/1.0.0/README.md",
+          "markdown": "/downloads/selection-audit-script/1.0.0/tool.md",
+          "package": "/downloads/selection-audit-script/1.0.0/selection-audit-script-1.0.0.tapython-tool.zip",
+          "packageSha256": "db5fef670a9850ceb2a89e1b34102b7e5a148098e0981f8da3abbd5f22aaec89",
+          "packageSize": 3043,
+          "packageAvailable": true
+        },
+        "manifest": {
+          "schemaVersion": "1.0.0",
+          "name": "SelectionAuditScript",
+          "displayName": "Selection Audit Script",
+          "version": "1.0.0",
+          "author": "Tool Hub QA",
+          "description": "Pure Python selection audit example for Tool Hub protocol validation.",
+          "category": "validation",
+          "toolType": "python-script",
+          "tags": [
+            "python",
+            "script",
+            "selection",
+            "audit"
+          ],
+          "compatibility": {
+            "unrealEngine": [
+              "5.5"
+            ],
+            "tapython": [
+              "1.2+"
+            ],
+            "plugins": [
+              "TAPython"
+            ]
+          },
+          "dependencies": [],
+          "mountPoint": "OnToolbar",
+          "installPath": "<Project>/TA/TAPython/Python/SelectionAuditScript/",
+          "riskLevel": "low",
+          "files": [
+            {
+              "path": "SelectionAuditScript/selection_audit.py",
+              "sha256": "4aef106eaeb5c4dba8306e9cdd67026d1ab94f92e7e54d8ad3a68e9b0f8c41ba",
+              "size": 225
+            },
+            {
+              "path": "SelectionAuditScript/__init__.py",
+              "sha256": "9b3d652344c75493d8921db0c21b2a18221adb48f9f963240c0702fd05cf82b8",
+              "size": 32
+            },
+            {
+              "path": "MenuConfig.snippet.json",
+              "sha256": "500bff8838d80661568cf6c4de62500ae894f66a5df6d02b1292699baaa27245",
+              "size": 113
+            }
+          ],
+          "menuConfigMerge": {
+            "target": "<Project>/TA/TAPython/UI/MenuConfig.json",
+            "mountPoint": "OnToolbar",
+            "itemsToAdd": [
+              {
+                "name": "Selection Audit Script",
+                "command": "import SelectionAuditScript; SelectionAuditScript.run()"
+              }
+            ]
+          },
+          "preInstallChecks": [
+            "确认项目已安装 TAPython",
+            "确认 MenuConfig.json 可写"
+          ],
+          "postInstallSteps": [
+            "Reload TAPython 或重启 UE 编辑器",
+            "在 Python 工具栏中执行 Selection Audit Script"
+          ],
+          "uninstallSteps": [
+            "删除 <Project>/TA/TAPython/Python/SelectionAuditScript/",
+            "从 MenuConfig.json 的 OnToolbar.items 移除对应 command"
+          ],
+          "createdAt": "2026-08-31",
+          "updatedAt": "2026-08-31"
+        }
+      }
+    ]
+  }
+}

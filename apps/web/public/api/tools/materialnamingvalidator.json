@@ -1,0 +1,216 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-10-23T15:50:06.223Z",
+  "tool": {
+    "slug": "materialnamingvalidator",
+    "name": "MaterialNamingValidator",
+    "displayName": "材质命名校验",
+    "description": "扫描当前已加载关卡中的 Static Mesh 材质槽与材质实例贴图命名，并在确认后修复所选资产。",
+    "category": "asset-management",
+    "author": "吴俊枫",
+    "ownerTeam": "场景B组",
+    "status": "approved",
+    "riskLevel": "medium",
+    "toolType": "chameleon",
+    "tags": [
+      "material",
+      "texture",
+      "naming",
+      "static-mesh",
+      "validation"
+    ],
+    "compatibility": {
+      "unrealEngine": [
+        "5.1"
+      ],
+      "tapython": [
+        "1.2+"
+      ],
+      "plugins": [
+        "TAPython"
+      ]
+    },
+    "mountPoint": "OnToolBarChameleon",
+    "installPath": "<Project>/TA/TAPython/Python/MaterialNamingValidator",
+    "entryJson": "MaterialNamingValidator/MaterialNamingValidator.json",
+    "sourceDocument": "data/tool-docs/materialnamingvalidator/materialnamingvalidator.md",
+    "sourceMode": "v2-package-upload",
+    "updatedAt": "2026-09-21T19:30:23+08:00",
+    "downloads": {
+      "latestManifest": "/downloads/materialnamingvalidator/1.0.0/manifest.json",
+      "latestReadme": "/downloads/materialnamingvalidator/1.0.0/README.md",
+      "latestMarkdown": "/downloads/materialnamingvalidator/1.0.0/tool.md",
+      "latestPackage": "/downloads/materialnamingvalidator/1.0.0/materialnamingvalidator-1.0.0.tapython-tool.zip",
+      "latestPackageSha256": "e870ac47b645774bbd9a038e8b1fc40310f8b1a0c8f287178c0d20481e5f5d61",
+      "latestPackageSize": 42343,
+      "latestPackageAvailable": true
+    },
+    "summary": {
+      "features": [
+        "扫描当前已加载世界中的 Static Mesh 材质槽命名问题。",
+        "校验材质实例自身贴图覆盖项的命名。",
+        "支持定位、确认后修复与自动复扫。"
+      ],
+      "unrealApis": [
+        "unreal.EditorAssetLibrary.rename_asset",
+        "unreal.EditorAssetLibrary.save_loaded_assets",
+        "unreal.ScopedEditorTransaction",
+        "unreal.ScopedSlowTask"
+      ],
+      "widgetAkas": [
+        "MnvConfirmCheck",
+        "MnvMeshCount",
+        "MnvMeshList",
+        "MnvScanButton",
+        "MnvScrollBox",
+        "MnvStatusText",
+        "MnvTextureCount",
+        "MnvTextureList"
+      ],
+      "installSteps": [
+        "在 Unreal Editor 中重新加载 TAPython 菜单或重启编辑器。",
+        "在 Chameleon 工具栏中确认材质命名校验入口可见。"
+      ],
+      "riskNotes": [
+        "修复会重命名资产并保存 Static Mesh 材质槽。",
+        "批量修复前应确认资产版本控制状态。"
+      ]
+    },
+    "documentationMarkdown": "# 材质命名校验\n\n> 扫描当前已加载关卡中的 Static Mesh 材质槽与材质实例贴图命名，并在确认后修复所选资产。\n\n## 快速开始\n1. 在 Unreal Editor 中重新加载 TAPython 菜单或重启编辑器。\n2. 在 Chameleon 工具栏中确认材质命名校验入口可见。\n\n## 文件清单\n\n| 文件 | 用途 | 存放路径 |\n|------|------|----------|\n| `MaterialNamingValidator.json` | chameleon-ui | `Python/MaterialNamingValidator/MaterialNamingValidator.json` |\n| `MaterialNamingValidator.MenuConfig.snippet.json` | chameleon-ui | `Python/MaterialNamingValidator/MaterialNamingValidator.MenuConfig.snippet.json` |\n| `MaterialNamingValidator.py` | python | `Python/MaterialNamingValidator/MaterialNamingValidator.py` |\n| `__init__.py` | python | `Python/MaterialNamingValidator/__init__.py` |\n\n## 架构简述\n\n- 工具名称：`MaterialNamingValidator`\n- 挂载点：`OnToolBarChameleon`\n- 核心 API：`unreal.EditorAssetLibrary.rename_asset`、`unreal.EditorAssetLibrary.save_loaded_assets`、`unreal.ScopedEditorTransaction`、`unreal.ScopedSlowTask`\n- 核心控件 Aka：`MnvConfirmCheck`、`MnvMeshCount`、`MnvMeshList`、`MnvScanButton`、`MnvScrollBox`、`MnvStatusText`、`MnvTextureCount`、`MnvTextureList`\n\n## MenuConfig\n\n```json menuconfig path=MenuConfig.snippet.json\n@file:assets/MenuConfig.snippet.json\n```\n\n## View\n\n```json chameleon-ui path=MaterialNamingValidator/MaterialNamingValidator.json\n@file:MaterialNamingValidator/MaterialNamingValidator.json\n```\n\n## View\n\n```json chameleon-ui path=MaterialNamingValidator/MaterialNamingValidator.MenuConfig.snippet.json\n@file:MaterialNamingValidator/MaterialNamingValidator.MenuConfig.snippet.json\n```\n\n## Controller\n\n```python controller path=MaterialNamingValidator/MaterialNamingValidator.py\n@file:MaterialNamingValidator/MaterialNamingValidator.py\n```\n\n## Controller\n\n```python controller path=MaterialNamingValidator/__init__.py\n@file:MaterialNamingValidator/__init__.py\n```\n\n## 使用说明\n\n1. 扫描当前已加载世界中的 Static Mesh 材质槽命名问题。\n2. 校验材质实例自身贴图覆盖项的命名。\n3. 支持定位、确认后修复与自动复扫。\n\n## 注意事项\n\n- 修复会重命名资产并保存 Static Mesh 材质槽。\n- 批量修复前应确认资产版本控制状态。\n\n## Agent 安装指令\n\nAgent 应以 v2 package manifest 为安装事实源，先验证 ZIP SHA256、manifest、文件 hash 和 MenuConfig 合并预览，再执行写入。",
+    "codeAssets": [
+      {
+        "path": "MenuConfig.snippet.json",
+        "sha256": "61652e2206c4abf294fd6cf9d10311bf0e7b089a15c181ed2ddb3f1dfab1201e",
+        "size": 276
+      },
+      {
+        "path": "MaterialNamingValidator/MaterialNamingValidator.json",
+        "sha256": "6f075d02671e3248c2b9435ae9f8afb054f6950c87287be675e3fa607ae5d635",
+        "size": 17657
+      },
+      {
+        "path": "MaterialNamingValidator/MaterialNamingValidator.MenuConfig.snippet.json",
+        "sha256": "85f70473e3218a0f6630a39e305b8339d73eca6bbedc4dac6c3dc47a00ba11f9",
+        "size": 232
+      },
+      {
+        "path": "MaterialNamingValidator/MaterialNamingValidator.py",
+        "sha256": "1a0c2f7dceb1f4c470894f2567fc1f390b1337a45ebc3f6a4fdccc482ca1161a",
+        "size": 20544
+      },
+      {
+        "path": "MaterialNamingValidator/__init__.py",
+        "sha256": "7a8edc2bb39ce1d468defcbdf32564c5d1974cb8f6e4f5086e03a7ac3815f565",
+        "size": 38
+      }
+    ],
+    "versions": [
+      {
+        "version": "1.0.0",
+        "releasedAt": "2026-09-21",
+        "author": "吴俊枫",
+        "changeSummary": "v2 package upload.",
+        "breaking": false,
+        "downloads": {
+          "manifest": "/downloads/materialnamingvalidator/1.0.0/manifest.json",
+          "readme": "/downloads/materialnamingvalidator/1.0.0/README.md",
+          "markdown": "/downloads/materialnamingvalidator/1.0.0/tool.md",
+          "package": "/downloads/materialnamingvalidator/1.0.0/materialnamingvalidator-1.0.0.tapython-tool.zip",
+          "packageSha256": "e870ac47b645774bbd9a038e8b1fc40310f8b1a0c8f287178c0d20481e5f5d61",
+          "packageSize": 42343,
+          "packageAvailable": true
+        },
+        "manifest": {
+          "schemaVersion": "1.0.0",
+          "name": "MaterialNamingValidator",
+          "displayName": "材质命名校验",
+          "version": "1.0.0",
+          "author": "吴俊枫",
+          "description": "扫描当前已加载关卡中的 Static Mesh 材质槽与材质实例贴图命名，并在确认后修复所选资产。",
+          "category": "asset-management",
+          "toolType": "chameleon",
+          "tags": [
+            "material",
+            "texture",
+            "naming",
+            "static-mesh",
+            "validation"
+          ],
+          "compatibility": {
+            "unrealEngine": [
+              "5.1"
+            ],
+            "tapython": [
+              "1.2+"
+            ],
+            "plugins": [
+              "TAPython"
+            ]
+          },
+          "dependencies": [],
+          "mountPoint": "OnToolBarChameleon",
+          "installPath": "<Project>/TA/TAPython/Python/MaterialNamingValidator",
+          "entryJson": "MaterialNamingValidator/MaterialNamingValidator.json",
+          "riskLevel": "medium",
+          "files": [
+            {
+              "path": "MenuConfig.snippet.json",
+              "sha256": "61652e2206c4abf294fd6cf9d10311bf0e7b089a15c181ed2ddb3f1dfab1201e",
+              "size": 276
+            },
+            {
+              "path": "MaterialNamingValidator/MaterialNamingValidator.json",
+              "sha256": "6f075d02671e3248c2b9435ae9f8afb054f6950c87287be675e3fa607ae5d635",
+              "size": 17657
+            },
+            {
+              "path": "MaterialNamingValidator/MaterialNamingValidator.MenuConfig.snippet.json",
+              "sha256": "85f70473e3218a0f6630a39e305b8339d73eca6bbedc4dac6c3dc47a00ba11f9",
+              "size": 232
+            },
+            {
+              "path": "MaterialNamingValidator/MaterialNamingValidator.py",
+              "sha256": "1a0c2f7dceb1f4c470894f2567fc1f390b1337a45ebc3f6a4fdccc482ca1161a",
+              "size": 20544
+            },
+            {
+              "path": "MaterialNamingValidator/__init__.py",
+              "sha256": "7a8edc2bb39ce1d468defcbdf32564c5d1974cb8f6e4f5086e03a7ac3815f565",
+              "size": 38
+            }
+          ],
+          "menuConfigMerge": {
+            "target": "<Project>/TA/TAPython/UI/MenuConfig.json",
+            "mountPoint": "OnToolBarChameleon",
+            "itemsToAdd": [
+              {
+                "name": "材质命名校验",
+                "ChameleonTools": "../Python/MaterialNamingValidator/MaterialNamingValidator.json",
+                "enabled": true,
+                "icon": {
+                  "style": "ChameleonStyle",
+                  "name": "List"
+                },
+                "ExtensionHookName": "OnToolBarChameleon"
+              }
+            ]
+          },
+          "preInstallChecks": [
+            "确认当前项目已安装 TAPython 1.2+。",
+            "确认目标目录和 MenuConfig.json 可写。"
+          ],
+          "postInstallSteps": [
+            "在 Unreal Editor 中重新加载 TAPython 菜单或重启编辑器。",
+            "在 Chameleon 工具栏中确认材质命名校验入口可见。"
+          ],
+          "uninstallSteps": [
+            "删除 <Project>/TA/TAPython/Python/MaterialNamingValidator/。",
+            "从 MenuConfig.json 移除对应菜单项。"
+          ],
+          "createdAt": "2026-09-21T19:30:23+08:00",
+          "updatedAt": "2026-09-21T19:30:23+08:00"
+        }
+      }
+    ]
+  }
+}

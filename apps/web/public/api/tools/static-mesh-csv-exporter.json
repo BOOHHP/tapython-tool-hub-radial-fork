@@ -1,0 +1,211 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-10-23T15:50:06.400Z",
+  "tool": {
+    "slug": "static-mesh-csv-exporter",
+    "name": "StaticMeshCsvExporter",
+    "displayName": "Static Mesh CSV Exporter",
+    "description": "批量扫描 UE 模型目录，按目录识别蓝图或静态网格，导出固定31列资产登记表及模型缩略图。支持六项统一填写、日期和工时格式规范，以及制作人员本机记忆。",
+    "category": "pipeline",
+    "author": "李露洁",
+    "ownerTeam": "DTA组",
+    "status": "approved",
+    "riskLevel": "medium",
+    "toolType": "chameleon",
+    "tags": [
+      "static-mesh",
+      "blueprint",
+      "xlsx",
+      "thumbnail",
+      "dta"
+    ],
+    "compatibility": {
+      "unrealEngine": [
+        "5.5"
+      ],
+      "tapython": [
+        "1.2+"
+      ],
+      "plugins": [
+        "TAPython"
+      ]
+    },
+    "mountPoint": "OnToolBarChameleon",
+    "installPath": "<Project>/TA/TAPython/Python/StaticMeshCsvExporter/",
+    "entryJson": "StaticMeshCsvExporter/StaticMeshCsvExporter.json",
+    "sourceDocument": "data/tool-docs/static-mesh-csv-exporter/static-mesh-csv-exporter.md",
+    "sourceMode": "markdown-with-external-files",
+    "updatedAt": "2026-10-15",
+    "downloads": {
+      "latestManifest": "/downloads/static-mesh-csv-exporter/1.1.0/manifest.json",
+      "latestReadme": "/downloads/static-mesh-csv-exporter/1.1.0/README.md",
+      "latestMarkdown": "/downloads/static-mesh-csv-exporter/1.1.0/tool.md",
+      "latestPackage": "/downloads/static-mesh-csv-exporter/1.1.0/static-mesh-csv-exporter-1.1.0.tapython-tool.zip",
+      "latestPackageSha256": "4e13acf569774cfb659a8bf0ce394137ba0f7ccfcaf4d648c840af92065120ee",
+      "latestPackageSize": 132271,
+      "latestPackageAvailable": true
+    },
+    "summary": {
+      "features": [
+        "多文件夹递归扫描，按资产直接父目录决定导出蓝图或Static Mesh",
+        "固定31列XLSX，支持模型缩略图嵌入",
+        "资产上传路径输出至资产所在文件夹，不含对象后缀和重复资产名",
+        "创建任务时间、制作人员、整理工时、外包工时、商机号、项目名称统一填写",
+        "日期使用年/月/日，工时使用5H格式，空白输入保持空白",
+        "制作人员在当前Windows用户本机保存并自动回填"
+      ],
+      "unrealApis": [
+        "unreal.PythonBPLib.get_chameleon_data",
+        "unreal.PythonBPLib.get_selected_folder",
+        "unreal.EditorAssetLibrary.list_assets",
+        "unreal.ImageWriteBlueprintLibrary.export_to_disk"
+      ],
+      "widgetAkas": [
+        "txt_status",
+        "input_folder",
+        "input_task_created_at",
+        "input_creator",
+        "input_organizing_hours",
+        "input_outsourcing_hours",
+        "input_opportunity_number",
+        "input_project_name",
+        "txt_preview"
+      ],
+      "installSteps": [
+        "安装三个工具资源到Python/StaticMeshCsvExporter目录",
+        "按ChameleonTools路径合并菜单条目，已有入口不要重复添加",
+        "关闭旧面板后重新打开，必要时重启UE"
+      ],
+      "riskNotes": [
+        "蓝图统计可能临时生成Actor并执行构造脚本，请先保存关卡",
+        "缩略图生成可能打开和关闭资产编辑器、调整纹理驻留和流送设置；不能保证完全恢复此前设置",
+        "请在目标工程验收缩略图质量，缺少可选插件API时会尝试后备路径",
+        "制作人员写入本机用户配置，不随投稿包分发"
+      ]
+    },
+    "documentationMarkdown": "# Static Mesh CSV Exporter\r\n\r\n> 将 UE 模型资产整理为包含缩略图的 DTA 资产登记表。\r\n\r\n## 快速开始\r\n\r\n1. 在 Tool Hub 网站提交页导入本 Markdown，并上传下方四个 `@file:` 引用资源。新版本沿用 `static-mesh-csv-exporter`，版本为 `1.1.0`。\r\n2. 安装时把三个工具文件放入 `<Project>/TA/TAPython/Python/StaticMeshCsvExporter/`，将菜单片段合并到现有菜单，勿覆盖整个 MenuConfig。\r\n3. 关闭旧工具面板后重新打开，选择目录，填写统一字段，导出 XLSX。\r\n\r\n## 文件清单\r\n\r\n| 文件名 | 用途 | 安装位置 |\r\n| --- | --- | --- |\r\n| StaticMeshCsvExporter.json | Chameleon界面 | Python/StaticMeshCsvExporter/ |\r\n| StaticMeshCsvExporter.py | 扫描、统计、缩略图、XLSX和本机设置逻辑 | Python/StaticMeshCsvExporter/ |\r\n| __init__.py | 模块导入及重载 | Python/StaticMeshCsvExporter/ |\r\n| MenuConfig.snippet.json | 菜单合并片段 | 合并到UI/MenuConfig.json |\r\n\r\n## 架构简述\r\n\r\n- 工具身份和菜单名称保持不变，控制器为 `StaticMeshCsvExporterController`，挂载点为 `OnToolBarChameleon`。\r\n- JSON负责界面和回调，Python负责扫描、表格行构建、标准库XLSX写入和本机配置。\r\n- 当前界面仅保留XLSX导出。CSV、完整展示图及展示关卡设置已移除界面入口；历史Python方法仍保留，未做代码清理。\r\n- 六个输入控件与表格列一一对应，扫描预览和导出前读取最新值。扫描后修改或清空输入，会在再次导出时覆盖行中的旧值。\r\n- 主脚本使用Python标准库和`unreal`，无需另装openpyxl。缩略图会尝试项目扩展API与后备实现，基础统计仍需UE编辑器环境。\r\n\r\n## MenuConfig\r\n\r\n```json menuconfig path=MenuConfig.snippet.json\r\n@file:MenuConfig.snippet.json\r\n```\r\n\r\n## View\r\n\r\n```json chameleon-ui path=StaticMeshCsvExporter/StaticMeshCsvExporter.json\r\n@file:StaticMeshCsvExporter.json\r\n```\r\n\r\n## Controller\r\n\r\n```python controller path=StaticMeshCsvExporter/StaticMeshCsvExporter.py\r\n@file:StaticMeshCsvExporter.py\r\n```\r\n\r\n```python module path=StaticMeshCsvExporter/__init__.py\r\n@file:__init__.py\r\n```\r\n\r\n## 使用说明\r\n\r\n1. 在内容浏览器选择一个或多个文件夹，点击“读取当前选中文件夹（可多选）”；也可填写 `/Game` 路径，多个目录用分号隔开。\r\n2. 按需填写“创建任务时间、制作人员、整理工时H、外包工时H、商机号、项目名称”。填写值统一作用于所有导出行，不填写则为空。\r\n3. 创建任务时间输入例如 `2026/10/15`；也接受 `2026-10-15` 和 `2026.10.15`，输出统一为年/月/日。月份和日期不补零。无效日期会阻止导出。完成时间在扫描时生成；跨日期导出请重新扫描。\r\n4. 整理工时、外包工时输入 `5` 或 `5H` 均输出 `5H`；`1.5` 输出 `1.5H`，`0` 输出 `0H`；未填写则为空。\r\n5. 制作人员按回车或离开输入框时保存。下次打开同一Windows用户下的工具自动回填，修改后更新，清空后清除记忆。扫描和导出也会尝试保存。\r\n6. 点击“扫描”检查预览；切换扫描目录后应重新扫描，再点击“导出 XLSX(含缩略图)”选择文件位置。\r\n7. 检查导出状态中的缩略图数量，并在Excel或WPS中核对数据及图片；不要仅凭导出成功就假定所有缩略图完整。\r\n\r\n### 扫描与表格规则\r\n\r\n- 以资产的直接父目录判断：含蓝图的目录仅导出蓝图；其他目录导出静态网格。混合选择两类目录时均可处理，不使用全局蓝图模式。\r\n- 静态网格统计LOD0三角面；蓝图统计通过临时Actor的StaticMeshComponent进行，不承诺覆盖ChildActor递归。贴图精度为找到的材质纹理最大边长。\r\n- 分类来自内嵌DTA分类映射与资产名称，标签来自名称关键词，不是图像识别。\r\n- 表格固定31列，保留模板要求的重复“入库时间（统计用）”列。未提供值的入库时间和上架时间等字段保持空白。\r\n- 资产上传路径示例：`//depot/51CD_2023/DTA51/Content/51DTA/3DAsset/Building/Public/SM_Building_Public_211`，不再追加资产对象名称。\r\n- 本机配置：`%LOCALAPPDATA%/TAPython/StaticMeshCsvExporter/settings.json`；仅存制作人员，不保存其他输入。若LOCALAPPDATA不存在则回退到当前用户主目录。\r\n\r\n### 1.1.0 更新\r\n\r\n- 修复混合目录扫描时全局蓝图判断导致静态网格漏导出。\r\n- 修复资产上传路径含对象后缀及重复资产名。\r\n- 移除CSV、完整展示图、展示关卡设置的界面入口。\r\n- 新增六项统一输入，导出采用最新输入，留空清除旧值。\r\n- 工时统一为H后缀，创建任务日期规范为年/月/日。\r\n- 制作人员新增当前Windows用户的本机持久化。\r\n\r\n## 注意事项\r\n\r\n- 建议在已保存的测试关卡先导出少量资产。蓝图临时生成可执行构造脚本，缩略图后备渲染可能操作当前关卡中的临时Actor。\r\n- 缩略图生成可能打开或关闭资产编辑器，改变流送和纹理驻留状态；现有逻辑不保证恢复原设置，纹理属性变更也可能使资产变脏。不要直接批量保存意外的资产更改。\r\n- 缩略图中间文件会保留在项目Saved目录，导出旁也可能生成调试图片；注意磁盘空间。\r\n- depot前缀和NAS根路径是团队固定配置，非通用项目地址；其他团队使用前应核对。\r\n- 工具显示名和历史菜单tooltip沿用旧版，名称中的CSV不表示当前界面仍提供CSV按钮。\r\n- 本次材料基于当前工程源码。Python语法、JSON和本地模拟逻辑已检查；UE内布局、完整缩略图质量、目标平台Schema和安装流程仍需验收。`tapython: [\"1.2+\"]`沿用投稿兼容声明，并非覆盖所有版本的实测结论。\r\n- `ownerTeam`沿用用户此前指定的“DTA组”；本地旧版投稿规范未列出此值，如平台拒绝，请在平台选择实际允许的所属团队，不要随意改写作者归属。\r\n- 版本`1.1.0`用于替代旧投稿；上传前核对平台没有占用同版本。旧版本的发布记录和文件哈希未能从平台核实，因此不伪造`previousVersions`条目。\r\n\r\n## Agent 安装指令\r\n\r\n1. 解析front matter及所有`@file:`资源；安装前核对资源校验清单，禁止从不存在的资源构造代码。\r\n2. 备份旧工具，复制三个运行文件到指定目录，不复制校验报告和个人本机设置。\r\n3. 按`ChameleonTools`路径定位已有菜单并合并，保持项目其他菜单不变。此投稿材料ZIP仅为传递文件用，不是Installer v2安装包。\r\n4. 关闭旧面板并重新加载，验证读取目录、扫描、六项输入、XLSX导出及制作人员重开回填。\r\n5. 未经用户授权，不自动提交平台、不改变审核状态、不保存关卡或资产修改。",
+    "codeAssets": [
+      {
+        "path": "MenuConfig.snippet.json",
+        "sha256": "e6ad0853bba5fa3f7f216638824a51ac59250e7ef7a9d6457159d7c07f4dfaad",
+        "size": 271
+      },
+      {
+        "path": "StaticMeshCsvExporter/StaticMeshCsvExporter.json",
+        "sha256": "690de76bd0e910c9a849264daff2a605c923ad8db26bc3a0470486b33724804e",
+        "size": 12491
+      },
+      {
+        "path": "StaticMeshCsvExporter/StaticMeshCsvExporter.py",
+        "sha256": "8c8b9dd9ab7fb626421313cd13e12f509610e6afdfcf5bc7f5be3b0d8f83be51",
+        "size": 114839
+      },
+      {
+        "path": "StaticMeshCsvExporter/__init__.py",
+        "sha256": "794b5028f58a198cb72a147c36ac4ccf1fa3509fe8a728e6766e426992d30638",
+        "size": 121
+      }
+    ],
+    "versions": [
+      {
+        "version": "1.1.0",
+        "releasedAt": "2026-10-15",
+        "author": "李露洁",
+        "changeSummary": "修复混合目录扫描和上传路径；精简导出界面；新增六项统一填写、日期与工时格式规范、制作人员本机记忆。",
+        "breaking": false,
+        "downloads": {
+          "manifest": "/downloads/static-mesh-csv-exporter/1.1.0/manifest.json",
+          "readme": "/downloads/static-mesh-csv-exporter/1.1.0/README.md",
+          "markdown": "/downloads/static-mesh-csv-exporter/1.1.0/tool.md",
+          "package": "/downloads/static-mesh-csv-exporter/1.1.0/static-mesh-csv-exporter-1.1.0.tapython-tool.zip",
+          "packageSha256": "4e13acf569774cfb659a8bf0ce394137ba0f7ccfcaf4d648c840af92065120ee",
+          "packageSize": 132271,
+          "packageAvailable": true
+        },
+        "manifest": {
+          "schemaVersion": "1.0.0",
+          "name": "StaticMeshCsvExporter",
+          "displayName": "Static Mesh CSV Exporter",
+          "version": "1.1.0",
+          "author": "李露洁",
+          "description": "模型资产登记表导出",
+          "category": "pipeline",
+          "toolType": "chameleon",
+          "tags": [
+            "static-mesh",
+            "blueprint",
+            "xlsx",
+            "thumbnail",
+            "dta"
+          ],
+          "compatibility": {
+            "unrealEngine": [
+              "5.5"
+            ],
+            "tapython": [
+              "1.2+"
+            ],
+            "plugins": [
+              "TAPython"
+            ]
+          },
+          "dependencies": [],
+          "mountPoint": "OnToolBarChameleon",
+          "installPath": "<Project>/TA/TAPython/Python/StaticMeshCsvExporter/",
+          "entryJson": "StaticMeshCsvExporter/StaticMeshCsvExporter.json",
+          "riskLevel": "medium",
+          "files": [
+            {
+              "path": "MenuConfig.snippet.json",
+              "sha256": "e6ad0853bba5fa3f7f216638824a51ac59250e7ef7a9d6457159d7c07f4dfaad",
+              "size": 271
+            },
+            {
+              "path": "StaticMeshCsvExporter/StaticMeshCsvExporter.json",
+              "sha256": "690de76bd0e910c9a849264daff2a605c923ad8db26bc3a0470486b33724804e",
+              "size": 12491
+            },
+            {
+              "path": "StaticMeshCsvExporter/StaticMeshCsvExporter.py",
+              "sha256": "8c8b9dd9ab7fb626421313cd13e12f509610e6afdfcf5bc7f5be3b0d8f83be51",
+              "size": 114839
+            },
+            {
+              "path": "StaticMeshCsvExporter/__init__.py",
+              "sha256": "794b5028f58a198cb72a147c36ac4ccf1fa3509fe8a728e6766e426992d30638",
+              "size": 121
+            }
+          ],
+          "menuConfigMerge": {
+            "target": "<Project>/TA/TAPython/UI/MenuConfig.json",
+            "mountPoint": "OnToolBarChameleon",
+            "itemsToAdd": [
+              {
+                "name": "Static Mesh CSV Exporter",
+                "ExtensionHookName": "OnToolBarChameleon",
+                "ChameleonTools": "../Python/StaticMeshCsvExporter/StaticMeshCsvExporter.json",
+                "tooltip": "递归导出 Static Mesh 名称、LOD0 三角面数和所在文件夹名称到 CSV"
+              }
+            ]
+          },
+          "preInstallChecks": [
+            "目标工程使用UE5.5，已启用TAPython及Python编辑器支持",
+            "确认TAPython菜单配置和工具目录可写，备份旧版工具",
+            "检查项目缩略图相关API是否可用，并在目标环境验证兼容性"
+          ],
+          "postInstallSteps": [
+            "关闭旧工具面板后重新打开，必要时重启UE",
+            "使用少量测试资产验证导出、缩略图和本机制作人员回填"
+          ],
+          "uninstallSteps": [
+            "删除Python/StaticMeshCsvExporter工具目录",
+            "从MenuConfig.json中移除对应ChameleonTools条目",
+            "如需清除制作人员记忆，删除本机LOCALAPPDATA下TAPython/StaticMeshCsvExporter/settings.json"
+          ],
+          "createdAt": "2026-10-15",
+          "updatedAt": "2026-10-15"
+        }
+      }
+    ]
+  }
+}

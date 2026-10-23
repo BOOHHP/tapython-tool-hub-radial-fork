@@ -213,3 +213,40 @@ test('role based access: member, reviewer, admin and the emergency admin', async
     }
   });
 });
+
+test('admin sets a team override and binds author aliases to people or teams', async () => {
+  await withApp({}, async ({ app, config }) => {
+    const admin = await bearerFor(app, 'dev@example.com');
+    const member = await bearerFor(app, 'member@example.com');
+    const users = (await app.inject({ url: '/api/admin/users', headers: admin })).json().users as Array<{ openId: string; email: string }>;
+    const memberId = users.find((u) => u.email === 'member@example.com')!.openId;
+
+    const db = openSqlite(config.sqlitePath!);
+    try {
+      db.prepare("INSERT INTO tools (slug, name, display_name, author, synced_at) VALUES ('t1', 'T1', 'T1', 'WuJunFeng', 'now')").run();
+      db.prepare("INSERT INTO submissions (id, slug, submitter, status, record, created_at, updated_at) VALUES ('a-1', 't1', 'junfeng', 'approved', '{}', 'now', 'now')").run();
+    } finally {
+      db.close();
+    }
+
+    assert.equal((await app.inject({ method: 'PUT', url: `/api/admin/users/${memberId}/team`, headers: member, payload: { team: 'X' } })).statusCode, 403);
+    const team = await app.inject({ method: 'PUT', url: `/api/admin/users/${memberId}/team`, headers: admin, payload: { team: '  Scene B  ' } });
+    assert.equal(team.json().team, 'Scene B');
+    assert.equal((await app.inject({ method: 'PUT', url: `/api/admin/users/${memberId}/team`, headers: admin, payload: { team: null } })).json().team, undefined);
+    assert.equal((await app.inject({ method: 'PUT', url: `/api/admin/users/${memberId}/team`, headers: admin, payload: { team: 5 } })).statusCode, 400);
+
+    const before = (await app.inject({ url: '/api/admin/author-aliases', headers: admin })).json();
+    assert.deepEqual(before.candidates.map((c: { name: string }) => c.name).sort(), ['WuJunFeng', 'junfeng']);
+
+    const bound = await app.inject({ method: 'PUT', url: '/api/admin/author-aliases', headers: admin, payload: { alias: 'junfeng', kind: 'person', openId: memberId } });
+    assert.equal(bound.json().userName, 'member');
+    assert.equal((await app.inject({ method: 'PUT', url: '/api/admin/author-aliases', headers: admin, payload: { alias: 'WuJunFeng', kind: 'person' } })).statusCode, 400);
+    assert.equal((await app.inject({ method: 'PUT', url: '/api/admin/author-aliases', headers: admin, payload: { alias: 'Scene B', kind: 'team' } })).statusCode, 200);
+
+    const after = (await app.inject({ url: '/api/admin/author-aliases', headers: admin })).json();
+    assert.equal(after.candidates.find((c: { name: string }) => c.name === 'junfeng').openId, memberId);
+    assert.equal((await app.inject({ method: 'DELETE', url: '/api/admin/author-aliases?alias=junfeng', headers: admin })).statusCode, 204);
+    assert.equal((await app.inject({ method: 'DELETE', url: '/api/admin/author-aliases?alias=junfeng', headers: admin })).statusCode, 404);
+    assert.equal((await app.inject({ url: '/api/admin/author-aliases', headers: member })).statusCode, 403);
+  });
+});

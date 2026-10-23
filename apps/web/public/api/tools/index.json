@@ -1,8 +1,4633 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-06-26T03:44:07.855Z",
-  "total": 5,
+  "generatedAt": "2026-10-23T15:50:07.302Z",
+  "total": 92,
   "tools": [
+    {
+      "slug": "static-mesh-csv-exporter",
+      "name": "StaticMeshCsvExporter",
+      "displayName": "Static Mesh CSV Exporter",
+      "description": "批量扫描 UE 模型目录，按目录识别蓝图或静态网格，导出固定31列资产登记表及模型缩略图。支持六项统一填写、日期和工时格式规范，以及制作人员本机记忆。",
+      "category": "pipeline",
+      "author": "李露洁",
+      "ownerTeam": "DTA组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "chameleon",
+      "tags": [
+        "static-mesh",
+        "blueprint",
+        "xlsx",
+        "thumbnail",
+        "dta"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/StaticMeshCsvExporter/",
+      "latestVersion": "1.1.0",
+      "updatedAt": "2026-10-15",
+      "apiUrl": "/api/tools/static-mesh-csv-exporter.json",
+      "sourceDocument": "data/tool-docs/static-mesh-csv-exporter/static-mesh-csv-exporter.md",
+      "sourceMode": "markdown-with-external-files",
+      "downloads": {
+        "latestManifest": "/downloads/static-mesh-csv-exporter/1.1.0/manifest.json",
+        "latestReadme": "/downloads/static-mesh-csv-exporter/1.1.0/README.md",
+        "latestMarkdown": "/downloads/static-mesh-csv-exporter/1.1.0/tool.md",
+        "latestPackage": "/downloads/static-mesh-csv-exporter/1.1.0/static-mesh-csv-exporter-1.1.0.tapython-tool.zip",
+        "latestPackageSha256": "4e13acf569774cfb659a8bf0ce394137ba0f7ccfcaf4d648c840af92065120ee",
+        "latestPackageSize": 132271,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "ue-python-toolkit",
+      "name": "UEPythonToolkit",
+      "displayName": "UE Python 工具集",
+      "description": "统一管理场景C组分类 UE Python 工具的 Tkinter Shell。",
+      "category": "pipeline",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "shell",
+        "uiKind": "tkinter-shell"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "tool-shell",
+        "tkinter"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/ue-python-toolkit.json",
+      "sourceDocument": "data/tool-docs/ue-python-toolkit/ue-python-toolkit.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/ue-python-toolkit/1.0.0/manifest.json",
+        "latestReadme": "/downloads/ue-python-toolkit/1.0.0/README.md",
+        "latestMarkdown": "/downloads/ue-python-toolkit/1.0.0/tool.md",
+        "latestPackage": "/downloads/ue-python-toolkit/1.0.0/ue-python-toolkit-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "70e80fb9705fe3706bb3c8590a233ad9dea2582a387c1125a754963066bef877",
+        "latestPackageSize": 87379,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-actor-drop-to-ground",
+      "name": "UEPTModule3f13169c",
+      "displayName": "Actor 落地检测",
+      "description": "检测选中 Actor/植被底部是否浮空，自动落地",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "actor_drop_to_ground",
+        "categoryPath": [
+          "1_Actor场景",
+          "1_场景检查"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "48fdbc7f2aca5448a4cc77ee0fc923f5be1a35019b45e94697ff6463fb0f4463"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "1_actor场景",
+        "1_场景检查"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/actor_drop_to_ground",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-actor-drop-to-ground.json",
+      "sourceDocument": "data/tool-docs/uept-actor-drop-to-ground/uept-actor-drop-to-ground.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-actor-drop-to-ground/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-actor-drop-to-ground/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-actor-drop-to-ground/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-actor-drop-to-ground/1.0.0/uept-actor-drop-to-ground-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "1f8f2512d62ee709a4834493aeeca3ff70ba7d6529d5faeb30b6f0ffda73bb3e",
+        "latestPackageSize": 30019,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-align-distribute-array",
+      "name": "UEPTModuled55aab9b",
+      "displayName": "对齐分布阵列",
+      "description": "选中 Actor 轴向对齐/均匀分布/步长阵列",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "align_distribute_array",
+        "categoryPath": [
+          "1_Actor场景",
+          "5_对齐阵列"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "ae92d10ac44eb19c5a2c836eb0236092a997a58821926b5e80a0ba272644084c"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "1_actor场景",
+        "5_对齐阵列"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/align_distribute_array",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-align-distribute-array.json",
+      "sourceDocument": "data/tool-docs/uept-align-distribute-array/uept-align-distribute-array.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-align-distribute-array/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-align-distribute-array/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-align-distribute-array/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-align-distribute-array/1.0.0/uept-align-distribute-array-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "c928849a0db31df641ed3348b2444e63ab0c3cbe369b81b22bde98fbfb640068",
+        "latestPackageSize": 14649,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-arrange-and-scatter",
+      "name": "UEPTModuleb35c4754",
+      "displayName": "排列与散布",
+      "description": "网格排列 / 随机散布副本",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "arrange_and_scatter",
+        "categoryPath": [
+          "1_Actor场景",
+          "5_对齐阵列"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "d6c26f817050a5b2a81d63f945e70ef929b1dd2056ebb19587181390ff679325"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "1_actor场景",
+        "5_对齐阵列"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/arrange_and_scatter",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-arrange-and-scatter.json",
+      "sourceDocument": "data/tool-docs/uept-arrange-and-scatter/uept-arrange-and-scatter.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-arrange-and-scatter/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-arrange-and-scatter/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-arrange-and-scatter/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-arrange-and-scatter/1.0.0/uept-arrange-and-scatter-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "617079c9a0b88fa41769916a876f3038a6e73d672267e60fe40bc93adfd36d68",
+        "latestPackageSize": 19409,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-asset-ref-dep-query",
+      "name": "UEPTModulede509cc3",
+      "displayName": "资产引用依赖查询",
+      "description": "打印选中资产的引用者与依赖项",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "asset_ref_dep_query",
+        "categoryPath": [
+          "8_开发测试",
+          "2_只读查询"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "27911921244d0debabd037bc2b63fdcaee0e76d05ea3dd62fb079b2c687831e0"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "8_开发测试",
+        "2_只读查询"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/asset_ref_dep_query",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-asset-ref-dep-query.json",
+      "sourceDocument": "data/tool-docs/uept-asset-ref-dep-query/uept-asset-ref-dep-query.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-asset-ref-dep-query/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-asset-ref-dep-query/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-asset-ref-dep-query/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-asset-ref-dep-query/1.0.0/uept-asset-ref-dep-query-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "ef9fe13a35226f9f83fcf2c7c53c1b3aabf6e98c587c3cef8f33c14794bcc0a2",
+        "latestPackageSize": 11983,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-bake-animation-from-actor-transform",
+      "name": "UEPTModule162dc070",
+      "displayName": "按 Actor 位置烘焙动画",
+      "description": "批量按选中 Actor 当前 transform 作为新起点，整段动画跟随偏移",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "bake_animation_from_actor_transform",
+        "categoryPath": [
+          "7_动画Sequencer",
+          "1_Sequencer"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "af9f248c8ed9587c0f568f7829eacd2e6e5afe93abd132544c9689ad97ba2093"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "7_动画sequencer",
+        "1_sequencer"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/bake_animation_from_actor_transform",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-bake-animation-from-actor-transform.json",
+      "sourceDocument": "data/tool-docs/uept-bake-animation-from-actor-transform/uept-bake-animation-from-actor-transform.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-bake-animation-from-actor-transform/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-bake-animation-from-actor-transform/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-bake-animation-from-actor-transform/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-bake-animation-from-actor-transform/1.0.0/uept-bake-animation-from-actor-transform-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "fb038059c5557113438a0f382b7360fed45cfdeebbc20469227efc3395ac3869",
+        "latestPackageSize": 35187,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-batch-export-gltf-chunks",
+      "name": "UEPTModule676b350a",
+      "displayName": "批量分块导出GLTF",
+      "description": "将选中的Actor分成指定大小的批次，分别导出为独立的GLTF/GLB文件，避免文件过大导致内存溢出。",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "batch_export_gltf_chunks",
+        "categoryPath": [
+          "6_导入导出",
+          "1_模型交换"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "59a7a8902078e8170aa005b2098fbff34601c083d9c0c31f5281c090d3005874"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "6_导入导出",
+        "1_模型交换"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/batch_export_gltf_chunks",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-batch-export-gltf-chunks.json",
+      "sourceDocument": "data/tool-docs/uept-batch-export-gltf-chunks/uept-batch-export-gltf-chunks.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-batch-export-gltf-chunks/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-batch-export-gltf-chunks/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-batch-export-gltf-chunks/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-batch-export-gltf-chunks/1.0.0/uept-batch-export-gltf-chunks-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "8787b862a55a6e3dcb17fb85dfb52c65f5da8da924ff5f730af0783dec6e6e39",
+        "latestPackageSize": 11424,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-batch-offset-actors",
+      "name": "UEPTModule885b908d",
+      "displayName": "批量偏移",
+      "description": "给选中 Actor 批量累加 XYZ 位置偏移",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "batch_offset_actors",
+        "categoryPath": [
+          "1_Actor场景",
+          "4_位置变换"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "ad440c4b9f4fea8026a542fefdbf48499b547ed553d0a8645540e32dff1d0daf"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "1_actor场景",
+        "4_位置变换"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/batch_offset_actors",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-batch-offset-actors.json",
+      "sourceDocument": "data/tool-docs/uept-batch-offset-actors/uept-batch-offset-actors.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-batch-offset-actors/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-batch-offset-actors/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-batch-offset-actors/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-batch-offset-actors/1.0.0/uept-batch-offset-actors-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "694ff0e858bfd55067f01ebda54a136ee478aff583952f9284069b719b386518",
+        "latestPackageSize": 9250,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-batch-rename",
+      "name": "UEPTModule847ae11d",
+      "displayName": "批量重命名",
+      "description": "批量重命名选中 Actor/Asset（前后缀/删字符/编号）",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "batch_rename",
+        "categoryPath": [
+          "1_Actor场景",
+          "3_命名Tag"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "67c438b79300f63f1db83fcee27b07295e923c179a100302a7b0adb97e665987"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "1_actor场景",
+        "3_命名tag"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/batch_rename",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-batch-rename.json",
+      "sourceDocument": "data/tool-docs/uept-batch-rename/uept-batch-rename.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-batch-rename/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-batch-rename/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-batch-rename/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-batch-rename/1.0.0/uept-batch-rename-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "e894162c8f20fd92c3f289d8a9c3ff06adae0492386b665f9a9bd87b998adcbf",
+        "latestPackageSize": 14774,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-batch-set-actor-pivots",
+      "name": "UEPTModule6a2cb72e",
+      "displayName": "批量设置轴心",
+      "description": "将选中 Actor 的轴心点移动到模型几何中心（通过添加 Scene Root 或者查改模型）。",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "batch_set_actor_pivots",
+        "categoryPath": [
+          "1_Actor场景",
+          "4_位置变换"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "dfc8c0ca33a1a2eab091b89b828fed65e15c4a1a06956e7e6b5bf1b0bd3e69e0"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "1_actor场景",
+        "4_位置变换"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/batch_set_actor_pivots",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-batch-set-actor-pivots.json",
+      "sourceDocument": "data/tool-docs/uept-batch-set-actor-pivots/uept-batch-set-actor-pivots.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-batch-set-actor-pivots/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-batch-set-actor-pivots/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-batch-set-actor-pivots/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-batch-set-actor-pivots/1.0.0/uept-batch-set-actor-pivots-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "53a71e7109c53dab3afeb9f52394e1f5fe97911998836ad671e9a32b50fd4d41",
+        "latestPackageSize": 11913,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-batch-set-material-instance-params",
+      "name": "UEPTModule66fdfd32",
+      "displayName": "材质实例参数批量设置",
+      "description": "批量修改选中材质实例的 Scalar/Vector/Texture/Switch 参数",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "batch_set_material_instance_params",
+        "categoryPath": [
+          "3_材质贴图",
+          "2_材质修复映射"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "c9c55d031197a9282f8f74fd953565f1fe90d64444e67c932807d43b6c405a6c"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "3_材质贴图",
+        "2_材质修复映射"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/batch_set_material_instance_params",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-batch-set-material-instance-params.json",
+      "sourceDocument": "data/tool-docs/uept-batch-set-material-instance-params/uept-batch-set-material-instance-params.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-batch-set-material-instance-params/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-batch-set-material-instance-params/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-batch-set-material-instance-params/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-batch-set-material-instance-params/1.0.0/uept-batch-set-material-instance-params-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "3f9b72dc3956fa53c8d911d7ee687995d7cf502ce3881d6130ea0e992336118f",
+        "latestPackageSize": 35585,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-batch-toggle-receives-decals",
+      "name": "UEPTModulea7e3c3d7",
+      "displayName": "批量开关接受贴花",
+      "description": "批量切换 Receives Decals；可同时改源蓝图",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "batch_toggle_receives_decals",
+        "categoryPath": [
+          "2_模型对象",
+          "3_贴花平面"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "792a1b4c0f566454c404c7dd2ab0d92b9a10be24ee6da000bad7735bbb271c73"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "2_模型对象",
+        "3_贴花平面"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/batch_toggle_receives_decals",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-batch-toggle-receives-decals.json",
+      "sourceDocument": "data/tool-docs/uept-batch-toggle-receives-decals/uept-batch-toggle-receives-decals.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-batch-toggle-receives-decals/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-batch-toggle-receives-decals/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-batch-toggle-receives-decals/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-batch-toggle-receives-decals/1.0.0/uept-batch-toggle-receives-decals-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "83cb9f8067b977bfdda5d76dc9826db06e63a3685c70f6b84ace8fe7f8f4a15d",
+        "latestPackageSize": 11509,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-blueprint-to-static-mesh-actors",
+      "name": "UEPTModulec273c7ce",
+      "displayName": "蓝图拆分转静态网格体",
+      "description": "关卡选中蓝图 Actor 拆分为多个 StaticMeshActor",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "blueprint_to_static_mesh_actors",
+        "categoryPath": [
+          "2_模型对象",
+          "1_SM蓝图转换"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "2d86555c044b3399612a1b10ca264c188a66be23c4021c0080e2db60903934df"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "2_模型对象",
+        "1_sm蓝图转换"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/blueprint_to_static_mesh_actors",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-blueprint-to-static-mesh-actors.json",
+      "sourceDocument": "data/tool-docs/uept-blueprint-to-static-mesh-actors/uept-blueprint-to-static-mesh-actors.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-blueprint-to-static-mesh-actors/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-blueprint-to-static-mesh-actors/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-blueprint-to-static-mesh-actors/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-blueprint-to-static-mesh-actors/1.0.0/uept-blueprint-to-static-mesh-actors-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "2070b564f2136050959cdc5c3a2838ad37b1c1ffe828d0b4632aff8e33a8b722",
+        "latestPackageSize": 11193,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-check-collision-visibility",
+      "name": "UEPTModule49e332e0",
+      "displayName": "碰撞可见性检查",
+      "description": "碰撞缺失/隐藏Actor/关卡实例 检查",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "check_collision_visibility",
+        "categoryPath": [
+          "1_Actor场景",
+          "1_场景检查"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "ba00eaadbd3bfc77d18a0aeeb745712a304c5aa5f6645f0d74a74650413c496d"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "1_actor场景",
+        "1_场景检查"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/check_collision_visibility",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-check-collision-visibility.json",
+      "sourceDocument": "data/tool-docs/uept-check-collision-visibility/uept-check-collision-visibility.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-check-collision-visibility/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-check-collision-visibility/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-check-collision-visibility/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-check-collision-visibility/1.0.0/uept-check-collision-visibility-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "75921754060024cbc9e422cd4eac3f5a31dbf90ce7eab44f6fcf53463fc3c3e4",
+        "latestPackageSize": 20875,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-check-material-texture",
+      "name": "UEPTModule889e50c1",
+      "displayName": "材质贴图检查",
+      "description": "材质缺失/非POT贴图/雨雪函数/ISM/MPC 检查",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "check_material_texture",
+        "categoryPath": [
+          "3_材质贴图",
+          "1_材质扫描检查"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "fbd59f807d081ac77ae58a2788aacc0f89bd51547c6adf451ed92f2688ab974c"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "3_材质贴图",
+        "1_材质扫描检查"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/check_material_texture",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-check-material-texture.json",
+      "sourceDocument": "data/tool-docs/uept-check-material-texture/uept-check-material-texture.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-check-material-texture/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-check-material-texture/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-check-material-texture/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-check-material-texture/1.0.0/uept-check-material-texture-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "0bfd98ebbffa4af2709fd5c43acf29f47c78119def324bde6e99317734bcb091",
+        "latestPackageSize": 27692,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-check-placement",
+      "name": "UEPTModule01541072",
+      "displayName": "模型摆放检查",
+      "description": "悬空/穿插/重复放置/缩放异常 检查",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "check_placement",
+        "categoryPath": [
+          "1_Actor场景",
+          "1_场景检查"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "c1b9e1daecac81a7c9992846199da78677f4fcc95bb54475fbe5f84caba70560"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "1_actor场景",
+        "1_场景检查"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/check_placement",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-check-placement.json",
+      "sourceDocument": "data/tool-docs/uept-check-placement/uept-check-placement.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-check-placement/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-check-placement/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-check-placement/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-check-placement/1.0.0/uept-check-placement-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "bb36d8b34cb18de5bf5f041c0342850182461d8fa1f57751f06bcd2fe323eb66",
+        "latestPackageSize": 25295,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-copy-material-to-mesh-path",
+      "name": "UEPTModule14983542",
+      "displayName": "复制材质到模型路径",
+      "description": "复制当前材质到SM同目录并按插槽名写回",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "copy_material_to_mesh_path",
+        "categoryPath": [
+          "3_材质贴图",
+          "2_材质修复映射"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "9fbdb016255fa71fefb0280b4b4fbf31299ea842a2ec303cf0c1e68f950e0ec8"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "3_材质贴图",
+        "2_材质修复映射"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/copy_material_to_mesh_path",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-copy-material-to-mesh-path.json",
+      "sourceDocument": "data/tool-docs/uept-copy-material-to-mesh-path/uept-copy-material-to-mesh-path.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-copy-material-to-mesh-path/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-copy-material-to-mesh-path/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-copy-material-to-mesh-path/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-copy-material-to-mesh-path/1.0.0/uept-copy-material-to-mesh-path-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "e4559c9d24c51b17a079cca7252849a9d767305abc6723c5437b0052143bbf12",
+        "latestPackageSize": 33671,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-csv-spawn-box",
+      "name": "UEPTModulee3b899e3",
+      "displayName": "CSV 批量生成 Box",
+      "description": "读取CSV坐标表，在关卡中生成Box Actor",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "csv_spawn_box",
+        "categoryPath": [
+          "6_导入导出",
+          "2_数据坐标"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "89b8f6182dc0f4cf981060f04be507f73bd957072b456219c1857a61ca5a6879"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "6_导入导出",
+        "2_数据坐标"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/csv_spawn_box",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-csv-spawn-box.json",
+      "sourceDocument": "data/tool-docs/uept-csv-spawn-box/uept-csv-spawn-box.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-csv-spawn-box/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-csv-spawn-box/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-csv-spawn-box/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-csv-spawn-box/1.0.0/uept-csv-spawn-box-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "a9a77f1ef32f6bf103cadcd3dbdd0c77d5fec553e67be22ad41a19536b5c2f08",
+        "latestPackageSize": 12243,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-decal-plane-converter",
+      "name": "UEPTModule2ac445e5",
+      "displayName": "贴花与平面互转",
+      "description": "DecalActor ↔ Plane 面片双向转换",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "decal_plane_converter",
+        "categoryPath": [
+          "2_模型对象",
+          "3_贴花平面"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "666fb90b64f3566ae8a254958f1146b5b413381072dd7c7ee180c6e4c410246d"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "2_模型对象",
+        "3_贴花平面"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/decal_plane_converter",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-decal-plane-converter.json",
+      "sourceDocument": "data/tool-docs/uept-decal-plane-converter/uept-decal-plane-converter.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-decal-plane-converter/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-decal-plane-converter/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-decal-plane-converter/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-decal-plane-converter/1.0.0/uept-decal-plane-converter-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "27b201518462d89007380e8e2e65279a17c6a94dabb2d24b9eee2d8209407fc6",
+        "latestPackageSize": 16797,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-duplicate-actor-array",
+      "name": "UEPTModulea6504147",
+      "displayName": "轴向阵列复制",
+      "description": "沿 X/Y/Z 三轴阵列复制选中的 Actor",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "duplicate_actor_array",
+        "categoryPath": [
+          "1_Actor场景",
+          "5_对齐阵列"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "f02c0ad52db5a81b399f22165b785a189c63ac032feb20e6514cb72164468667"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "1_actor场景",
+        "5_对齐阵列"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/duplicate_actor_array",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-duplicate-actor-array.json",
+      "sourceDocument": "data/tool-docs/uept-duplicate-actor-array/uept-duplicate-actor-array.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-duplicate-actor-array/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-duplicate-actor-array/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-duplicate-actor-array/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-duplicate-actor-array/1.0.0/uept-duplicate-actor-array-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "cffa84543a41c659d3d0b3bed4213d0703859a6b27f4bf8d9c0d8cd7ba493205",
+        "latestPackageSize": 11667,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-export-actor-info",
+      "name": "UEPTModulea83d295d",
+      "displayName": "Actor信息导出",
+      "description": "导出选中Actor的名称、Tag、坐标到文件",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "export_actor_info",
+        "categoryPath": [
+          "6_导入导出",
+          "2_数据坐标"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "653e16b40e78cc99f520f3b1165a230f82ad91f3d3a17042cad7ffb79d8619ae"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "6_导入导出",
+        "2_数据坐标"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/export_actor_info",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-export-actor-info.json",
+      "sourceDocument": "data/tool-docs/uept-export-actor-info/uept-export-actor-info.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-export-actor-info/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-export-actor-info/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-export-actor-info/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-export-actor-info/1.0.0/uept-export-actor-info-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "438360d474d8338c93ee352ea64188ef97f72efe02b0c10dfeff6b01b7601254",
+        "latestPackageSize": 17697,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-export-blueprint-diagnostics",
+      "name": "UEPTModule5bce9163",
+      "displayName": "蓝图检查数据导出",
+      "description": "只读导出蓝图参数、组件及可用图表证据",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "export_blueprint_diagnostics",
+        "categoryPath": [
+          "8_开发测试",
+          "3_诊断导出"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "514dabd7abc487ebe0543b4cc156969ac6c1b53b3f81c2ea66343636f18ec86c"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "8_开发测试",
+        "3_诊断导出"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/export_blueprint_diagnostics",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-export-blueprint-diagnostics.json",
+      "sourceDocument": "data/tool-docs/uept-export-blueprint-diagnostics/uept-export-blueprint-diagnostics.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-export-blueprint-diagnostics/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-export-blueprint-diagnostics/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-export-blueprint-diagnostics/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-export-blueprint-diagnostics/1.0.0/uept-export-blueprint-diagnostics-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "af144b5d6886379fd743082108c3c8c8c64aa6a01554154600b6b47a583d7acf",
+        "latestPackageSize": 30228,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-export-fbx-textures-json",
+      "name": "UEPTModulebbb144a9",
+      "displayName": "一键导出模型FBX+贴图+JSON",
+      "description": "选中模型一键导出FBX+材质贴图+JSON映射，供3ds Max读取贴图",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "export_fbx_textures_json",
+        "categoryPath": [
+          "6_导入导出",
+          "1_模型交换"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "8bc0acdfca0bbcd781d1e6d8155196a95519e2af06bf9795e4a6382075f0862b"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "6_导入导出",
+        "1_模型交换"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/export_fbx_textures_json",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-export-fbx-textures-json.json",
+      "sourceDocument": "data/tool-docs/uept-export-fbx-textures-json/uept-export-fbx-textures-json.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-export-fbx-textures-json/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-export-fbx-textures-json/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-export-fbx-textures-json/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-export-fbx-textures-json/1.0.0/uept-export-fbx-textures-json-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "b833dd2ae9226054a7d7039e98a5dce7b6d724ce3d443196edd74109a1587e1b",
+        "latestPackageSize": 109450,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-export-level-performance-info",
+      "name": "UEPTModulea60cd2db",
+      "displayName": "关卡性能信息导出",
+      "description": "只读导出当前关卡的样条与模型规模",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "export_level_performance_info",
+        "categoryPath": [
+          "8_开发测试",
+          "3_诊断导出"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "d5ab709063b83b4fca4fb88bd5f50687c06802ebb5fa73f93269aefb6f76c65c"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "8_开发测试",
+        "3_诊断导出"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/export_level_performance_info",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-export-level-performance-info.json",
+      "sourceDocument": "data/tool-docs/uept-export-level-performance-info/uept-export-level-performance-info.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-export-level-performance-info/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-export-level-performance-info/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-export-level-performance-info/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-export-level-performance-info/1.0.0/uept-export-level-performance-info-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "926dc59a0d4e7e5b094480660b49826cf46b3e333a4275445d9b326189d67843",
+        "latestPackageSize": 28281,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-export-material-instance-params",
+      "name": "UEPTModuledeea2960",
+      "displayName": "导出材质实例参数数据",
+      "description": "导出选中材质实例的参数/StaticSwitch诊断数据",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "export_material_instance_params",
+        "categoryPath": [
+          "8_开发测试",
+          "3_诊断导出"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "76bf3dc41bef00129678ab3d8fcb9ae78d5a438705e8bb85503f77060ef0056d"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "8_开发测试",
+        "3_诊断导出"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/export_material_instance_params",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-export-material-instance-params.json",
+      "sourceDocument": "data/tool-docs/uept-export-material-instance-params/uept-export-material-instance-params.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-export-material-instance-params/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-export-material-instance-params/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-export-material-instance-params/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-export-material-instance-params/1.0.0/uept-export-material-instance-params-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "e4250dd4fe966f14e7c6c2020af6418ce5b4b7776828530ce146d512ede0656d",
+        "latestPackageSize": 26784,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-export-selected-object-debug-data",
+      "name": "UEPTModule8e0b6923",
+      "displayName": "导出选中对象数据",
+      "description": "导出选中 Actor/Asset 的完整调试数据",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "export_selected_object_debug_data",
+        "categoryPath": [
+          "8_开发测试",
+          "3_诊断导出"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "d028c227be2f88687db6101ac84dd0127594cc945e8d372228fb4592e8978b9e"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "8_开发测试",
+        "3_诊断导出"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/export_selected_object_debug_data",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-export-selected-object-debug-data.json",
+      "sourceDocument": "data/tool-docs/uept-export-selected-object-debug-data/uept-export-selected-object-debug-data.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-export-selected-object-debug-data/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-export-selected-object-debug-data/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-export-selected-object-debug-data/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-export-selected-object-debug-data/1.0.0/uept-export-selected-object-debug-data-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "661886162bafc675085cf7a6a2c1c641d1c1e9d152c2ea8075d3f77b7de2a568",
+        "latestPackageSize": 36018,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-foliage-static-mesh-converter",
+      "name": "UEPTModule16d6ca60",
+      "displayName": "植被与SM双向转换",
+      "description": "植被与静态网格体双向转换；可选合并同类型网格",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "foliage_static_mesh_converter",
+        "categoryPath": [
+          "4_植被实例",
+          "2_植被转换"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "cbba7ed45494093b1d56db437c581ae4fe6c7205c6109475394229e3c09ac439"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "4_植被实例",
+        "2_植被转换"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/foliage_static_mesh_converter",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-foliage-static-mesh-converter.json",
+      "sourceDocument": "data/tool-docs/uept-foliage-static-mesh-converter/uept-foliage-static-mesh-converter.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-foliage-static-mesh-converter/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-foliage-static-mesh-converter/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-foliage-static-mesh-converter/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-foliage-static-mesh-converter/1.0.0/uept-foliage-static-mesh-converter-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "6052d683ef4671a651cf9d8fd7f7bd6821f18955335d33a21688f5ae9853f147",
+        "latestPackageSize": 18384,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-invalid-actor-cleanup",
+      "name": "UEPTModule9cc02caf",
+      "displayName": "空壳 Actor 清理",
+      "description": "扫描无有效组件的 Actor，标记或删除",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "invalid_actor_cleanup",
+        "categoryPath": [
+          "1_Actor场景",
+          "1_场景检查"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "1ff49196050f18a6bf3ea6035506ab96d070eb41f16dde0435768468e3d074eb"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "1_actor场景",
+        "1_场景检查"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/invalid_actor_cleanup",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-invalid-actor-cleanup.json",
+      "sourceDocument": "data/tool-docs/uept-invalid-actor-cleanup/uept-invalid-actor-cleanup.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-invalid-actor-cleanup/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-invalid-actor-cleanup/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-invalid-actor-cleanup/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-invalid-actor-cleanup/1.0.0/uept-invalid-actor-cleanup-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "4d31105535ee06c3eaf7d77b347c5fa5188fc81a03f574d19ca61229087a0c03",
+        "latestPackageSize": 18814,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-isolate-selected-actors",
+      "name": "UEPTModule7d190a5f",
+      "displayName": "隔离选中Actor",
+      "description": "只显示选中Actor，隐藏其它Actor",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "isolate_selected_actors",
+        "categoryPath": [
+          "1_Actor场景",
+          "2_选择隔离"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "2489935fb41b391a312ddc3f8048919e3a166253fdf8e64e73a9d21cb90ae80e"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "1_actor场景",
+        "2_选择隔离"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/isolate_selected_actors",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-isolate-selected-actors.json",
+      "sourceDocument": "data/tool-docs/uept-isolate-selected-actors/uept-isolate-selected-actors.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-isolate-selected-actors/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-isolate-selected-actors/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-isolate-selected-actors/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-isolate-selected-actors/1.0.0/uept-isolate-selected-actors-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "2b4afcdede1662caee12a8c22345b882ae20c891af43f15b9fcdf4eeed9af70e",
+        "latestPackageSize": 13275,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-material-preview-spheres",
+      "name": "UEPTModuleec158b90",
+      "displayName": "材质预览球生成",
+      "description": "选中材质批量生成球体预览 Actor",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "material_preview_spheres",
+        "categoryPath": [
+          "3_材质贴图",
+          "4_材质预览"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "b618e8742ea982b49bb97c52541c43c1b7a555f1c7fb788e403b4284a38d947b"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "3_材质贴图",
+        "4_材质预览"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/material_preview_spheres",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-material-preview-spheres.json",
+      "sourceDocument": "data/tool-docs/uept-material-preview-spheres/uept-material-preview-spheres.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-material-preview-spheres/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-material-preview-spheres/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-material-preview-spheres/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-material-preview-spheres/1.0.0/uept-material-preview-spheres-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "210169d466662637e16fc45beae55765bd81bc994d737e869a3dd3e81056ffb9",
+        "latestPackageSize": 13981,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-material-rename-restore",
+      "name": "UEPTModule975e3f66",
+      "displayName": "材质重命名复原",
+      "description": "记录/恢复材质按插槽名重命名的回滚",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "material_rename_restore",
+        "categoryPath": [
+          "3_材质贴图",
+          "2_材质修复映射"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "8555335c38ad1eadb6b985ed062435378120904a7a33575817f1aab7c2b50bde"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "3_材质贴图",
+        "2_材质修复映射"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/material_rename_restore",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-material-rename-restore.json",
+      "sourceDocument": "data/tool-docs/uept-material-rename-restore/uept-material-rename-restore.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-material-rename-restore/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-material-rename-restore/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-material-rename-restore/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-material-rename-restore/1.0.0/uept-material-rename-restore-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "46b4ead1146ac53fee17a77d39a33f48bb39dc4ca22b544482c27a3e2ecae538",
+        "latestPackageSize": 14935,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-material-strip-ncl-suffix",
+      "name": "UEPTModule59158c5d",
+      "displayName": "材质名去掉自动后缀",
+      "description": "清理材质名中的 _ncl1_1 这类自动后缀",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "material_strip_ncl_suffix",
+        "categoryPath": [
+          "3_材质贴图",
+          "2_材质修复映射"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "432ebcea86638bd20a3038dda58cde2b067bac7c5882123d4f8e44f0a88a2308"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "3_材质贴图",
+        "2_材质修复映射"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/material_strip_ncl_suffix",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-material-strip-ncl-suffix.json",
+      "sourceDocument": "data/tool-docs/uept-material-strip-ncl-suffix/uept-material-strip-ncl-suffix.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-material-strip-ncl-suffix/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-material-strip-ncl-suffix/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-material-strip-ncl-suffix/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-material-strip-ncl-suffix/1.0.0/uept-material-strip-ncl-suffix-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "62cc087a99bcc59b6615152547d80917467922e06c2c1787d9698f38cca7e09a",
+        "latestPackageSize": 13219,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-material-toolbox",
+      "name": "UEPTModule14b3f5c1",
+      "displayName": "材质工具箱",
+      "description": "材质同步/定向材质/插槽名互改/母材质替换/插槽清理",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "material_toolbox",
+        "categoryPath": [
+          "3_材质贴图",
+          "2_材质修复映射"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "c8ff25d3d195a7f0485812a0751073eeb20a4c6dcdab6cc4ab1b0308c59cdc6f"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "3_材质贴图",
+        "2_材质修复映射"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/material_toolbox",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-material-toolbox.json",
+      "sourceDocument": "data/tool-docs/uept-material-toolbox/uept-material-toolbox.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-material-toolbox/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-material-toolbox/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-material-toolbox/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-material-toolbox/1.0.0/uept-material-toolbox-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "2eb3b4ee9747d3e8a52b837750bf65d6ca34e6e6488f819609dd468ae92da90f",
+        "latestPackageSize": 41656,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-merge-actors-by-mesh-or-material",
+      "name": "UEPTModule226e69a6",
+      "displayName": "按网格体合并模型",
+      "description": "将选中的大量散落模型，按相同网格体或相同主材质(且插槽结构一致)分类，并把同组打包合并为一个独立的聚合网格体。",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "merge_actors_by_mesh_or_material",
+        "categoryPath": [
+          "2_模型对象",
+          "2_合并拆分"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "153196ce74d25adcb70c820e94cd23172736de7c0e88bc36c772904ebd12ac29"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "2_模型对象",
+        "2_合并拆分"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/merge_actors_by_mesh_or_material",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-merge-actors-by-mesh-or-material.json",
+      "sourceDocument": "data/tool-docs/uept-merge-actors-by-mesh-or-material/uept-merge-actors-by-mesh-or-material.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-merge-actors-by-mesh-or-material/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-merge-actors-by-mesh-or-material/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-merge-actors-by-mesh-or-material/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-merge-actors-by-mesh-or-material/1.0.0/uept-merge-actors-by-mesh-or-material-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "fd4fa5cd162928ac73a9e7dce34ea4763f2a629a08978ac841a1f9b8d7b4ae49",
+        "latestPackageSize": 20523,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-minimal-viewport-ray-test",
+      "name": "UEPTModulea6be9a00",
+      "displayName": "极简射线测试",
+      "description": "极简测试：视口发射线并打印 Actor",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "minimal_viewport_ray_test",
+        "categoryPath": [
+          "8_开发测试",
+          "1_API探测"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "0e8aad4282a31b38f9f70385ab206cdb57ce5bbda82c3f5278aaa3e951843edc"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "8_开发测试",
+        "1_api探测"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/minimal_viewport_ray_test",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-minimal-viewport-ray-test.json",
+      "sourceDocument": "data/tool-docs/uept-minimal-viewport-ray-test/uept-minimal-viewport-ray-test.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-minimal-viewport-ray-test/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-minimal-viewport-ray-test/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-minimal-viewport-ray-test/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-minimal-viewport-ray-test/1.0.0/uept-minimal-viewport-ray-test-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "1ced1884317676292ef1854b28fa6710653f7b558981c10403ca50239630608e",
+        "latestPackageSize": 10215,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-nanite-split-translucent",
+      "name": "UEPTModule25d0ceaa",
+      "displayName": "半透明拆分 Nanite",
+      "description": "拆出半透明分段，主体开 Nanite",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "nanite_split_translucent",
+        "categoryPath": [
+          "2_模型对象",
+          "4_渲染Nanite"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "48150bde0e40bfb61266590f93cf5a53d9fb6f6225528d9a8b63cb1321620ed3"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "2_模型对象",
+        "4_渲染nanite"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/nanite_split_translucent",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-nanite-split-translucent.json",
+      "sourceDocument": "data/tool-docs/uept-nanite-split-translucent/uept-nanite-split-translucent.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-nanite-split-translucent/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-nanite-split-translucent/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-nanite-split-translucent/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-nanite-split-translucent/1.0.0/uept-nanite-split-translucent-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "56e695b0bc4e8a4358e9b2cf041f634a5235bf9c4fd44bdadf296ba29d136300",
+        "latestPackageSize": 26527,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-nanite-toolbox",
+      "name": "UEPTModulee49c7dce",
+      "displayName": "Nanite 工具箱",
+      "description": "批量开关 Nanite / 诊断选中 Actor",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "nanite_toolbox",
+        "categoryPath": [
+          "2_模型对象",
+          "4_渲染Nanite"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "939f5a7f757762ffe7c7678a8fe14431f9e92f264aeacb035dd9d3d3f9ac739a"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "2_模型对象",
+        "4_渲染nanite"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/nanite_toolbox",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-nanite-toolbox.json",
+      "sourceDocument": "data/tool-docs/uept-nanite-toolbox/uept-nanite-toolbox.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-nanite-toolbox/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-nanite-toolbox/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-nanite-toolbox/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-nanite-toolbox/1.0.0/uept-nanite-toolbox-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "5348c648cec8eb4f7456fffbb3c42666ae61f83ac4ce52bf49be4737c3816afe",
+        "latestPackageSize": 34656,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-object-detail-viewer",
+      "name": "UEPTModule458ed39d",
+      "displayName": "对象属性查看",
+      "description": "打印选中对象的属性/方法/组件",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "object_detail_viewer",
+        "categoryPath": [
+          "8_开发测试",
+          "2_只读查询"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "800b943a816d703079fa956e8d9725d8896474166cb55d73c7fdbd26754aa950"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "8_开发测试",
+        "2_只读查询"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/object_detail_viewer",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-object-detail-viewer.json",
+      "sourceDocument": "data/tool-docs/uept-object-detail-viewer/uept-object-detail-viewer.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-object-detail-viewer/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-object-detail-viewer/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-object-detail-viewer/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-object-detail-viewer/1.0.0/uept-object-detail-viewer-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "890bdd5ccafeec63f8fa3c2131d418c7f451264ecbf732b3292ed7a424aa0284",
+        "latestPackageSize": 13808,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-organize-assets-by-static-mesh",
+      "name": "UEPTModuled32a9686",
+      "displayName": "资产自动整理",
+      "description": "按 SM 名称建子目录并归类材质/纹理",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "organize_assets_by_static_mesh",
+        "categoryPath": [
+          "6_导入导出",
+          "4_资产整理"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "c815f8007fc491524e9b37ccbc77930cd0ad8ed5c11ac4f1413aaf7c17b082d9"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "6_导入导出",
+        "4_资产整理"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/organize_assets_by_static_mesh",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-organize-assets-by-static-mesh.json",
+      "sourceDocument": "data/tool-docs/uept-organize-assets-by-static-mesh/uept-organize-assets-by-static-mesh.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-organize-assets-by-static-mesh/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-organize-assets-by-static-mesh/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-organize-assets-by-static-mesh/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-organize-assets-by-static-mesh/1.0.0/uept-organize-assets-by-static-mesh-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "d3621da5208f24def97401219f5dc9cf3f051f6995c81729a60f11101f7501a0",
+        "latestPackageSize": 16156,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-position-clipboard",
+      "name": "UEPTModuled679969c",
+      "displayName": "位置剪贴板",
+      "description": "记录/还原多组 Actor 的位置旋转缩放",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "position_clipboard",
+        "categoryPath": [
+          "1_Actor场景",
+          "4_位置变换"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "d45579daff11e3af92fdcaa449cdd651c8f814dff636108c011e7cccf7912339"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "1_actor场景",
+        "4_位置变换"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/position_clipboard",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-position-clipboard.json",
+      "sourceDocument": "data/tool-docs/uept-position-clipboard/uept-position-clipboard.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-position-clipboard/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-position-clipboard/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-position-clipboard/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-position-clipboard/1.0.0/uept-position-clipboard-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "b37b768c5f90f455b42c860e63c54c5f43c49569e5211a520c554802dddca02a",
+        "latestPackageSize": 17098,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-print-asset-paths",
+      "name": "UEPTModuleee5074de",
+      "displayName": "打印资产路径",
+      "description": "打印选中资产或Actor的资产路径",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "print_asset_paths",
+        "categoryPath": [
+          "6_导入导出",
+          "2_数据坐标"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "28a741b5d246aeb4cbbc7a31a2aaf41716b5c1361783b42f494a9e9b8ae44ef7"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "6_导入导出",
+        "2_数据坐标"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/print_asset_paths",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-print-asset-paths.json",
+      "sourceDocument": "data/tool-docs/uept-print-asset-paths/uept-print-asset-paths.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-print-asset-paths/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-print-asset-paths/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-print-asset-paths/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-print-asset-paths/1.0.0/uept-print-asset-paths-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "aacdf706c48d71a6c4a16752ab057dbfbbf508f8917041f1372243a7a0ef3d74",
+        "latestPackageSize": 10806,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-probe-material-graph-api",
+      "name": "UEPTModule4efe3b0c",
+      "displayName": "材质图API探测",
+      "description": "穷举母材质在当前UE Python下可读的图数据，定位追踪失败根因",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "probe_material_graph_api",
+        "categoryPath": [
+          "8_开发测试",
+          "1_API探测"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "6cb4dc18f3f1e0c826d2d375db8980c95c1d286fa2f7fc72790be8ba2209d2ea"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "8_开发测试",
+        "1_api探测"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/probe_material_graph_api",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-probe-material-graph-api.json",
+      "sourceDocument": "data/tool-docs/uept-probe-material-graph-api/uept-probe-material-graph-api.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-probe-material-graph-api/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-probe-material-graph-api/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-probe-material-graph-api/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-probe-material-graph-api/1.0.0/uept-probe-material-graph-api-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "405131590f6590851f57654f9446ff945cd60f22f94b009febdeabd56c161139",
+        "latestPackageSize": 20200,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-proj-converter",
+      "name": "UEPTModule657e906b",
+      "displayName": "Proj 坐标转换",
+      "description": "经纬度与自定义 Proj 投影坐标互转",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "proj_converter",
+        "categoryPath": [
+          "6_导入导出",
+          "2_数据坐标"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "2249d012feb6bc371139ee603075a385dd621a5c1ac37f3aad812d4ca0bcb737"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "6_导入导出",
+        "2_数据坐标"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/proj_converter",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-proj-converter.json",
+      "sourceDocument": "data/tool-docs/uept-proj-converter/uept-proj-converter.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-proj-converter/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-proj-converter/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-proj-converter/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-proj-converter/1.0.0/uept-proj-converter-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "36d58899e0562b6abaa14162c7267c505dbbb93c2d5fff91b0c4205dca57a946",
+        "latestPackageSize": 10634,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-rebind-sequencer-actors-by-name",
+      "name": "UEPTModule68a056da",
+      "displayName": "按名字重新绑定 Actor",
+      "description": "遍历 Sequence bindings, 按 display_name 找关卡同名 Actor, 一键重新绑定",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "rebind_sequencer_actors_by_name",
+        "categoryPath": [
+          "7_动画Sequencer",
+          "1_Sequencer"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "1ec451e11f94243bcdfaed426709c1668050c360e97410db341bad9291bb72a0"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "7_动画sequencer",
+        "1_sequencer"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/rebind_sequencer_actors_by_name",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-rebind-sequencer-actors-by-name.json",
+      "sourceDocument": "data/tool-docs/uept-rebind-sequencer-actors-by-name/uept-rebind-sequencer-actors-by-name.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-rebind-sequencer-actors-by-name/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-rebind-sequencer-actors-by-name/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-rebind-sequencer-actors-by-name/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-rebind-sequencer-actors-by-name/1.0.0/uept-rebind-sequencer-actors-by-name-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "1fb54e841aa6375e18726ea8fe3834a2ce9efa232fc90b4083d08a4a2227e4c7",
+        "latestPackageSize": 17574,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-reload-mesh-textures",
+      "name": "UEPTModule55eefcad",
+      "displayName": "重载模型贴图",
+      "description": "重载选中模型的贴图(材质实例+母材质)",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "reload_mesh_textures",
+        "categoryPath": [
+          "3_材质贴图",
+          "3_纹理处理"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "ec3d051d6519451d23d213960b562997a8006197cd5e126b3483a78e98075d99"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "3_材质贴图",
+        "3_纹理处理"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/reload_mesh_textures",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-reload-mesh-textures.json",
+      "sourceDocument": "data/tool-docs/uept-reload-mesh-textures/uept-reload-mesh-textures.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-reload-mesh-textures/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-reload-mesh-textures/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-reload-mesh-textures/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-reload-mesh-textures/1.0.0/uept-reload-mesh-textures-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "d871de5bd3acf86f7cc2c75345a880a23cf52cffdec6dc4e45043e17be851cd4",
+        "latestPackageSize": 15255,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-remove-tiny-foliage",
+      "name": "UEPTModule3267fde4",
+      "displayName": "清理微小植被",
+      "description": "清理选中植被系统中尺寸过小的实例（如小草、碎石），大幅降低性能开销。",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "remove_tiny_foliage",
+        "categoryPath": [
+          "4_植被实例",
+          "1_植被清理"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "81fafdb7177121156ee1cd0998331d3ec1344287926a8190c7413ecff9f3b807"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "4_植被实例",
+        "1_植被清理"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/remove_tiny_foliage",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-remove-tiny-foliage.json",
+      "sourceDocument": "data/tool-docs/uept-remove-tiny-foliage/uept-remove-tiny-foliage.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-remove-tiny-foliage/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-remove-tiny-foliage/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-remove-tiny-foliage/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-remove-tiny-foliage/1.0.0/uept-remove-tiny-foliage-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "7d16264ea5fe9e6f2cedfe47d6536836e798fa26332ff221777d175d6e7542d9",
+        "latestPackageSize": 9469,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-rename-actors-by-table",
+      "name": "UEPTModule956a0649",
+      "displayName": "按表格顺序重命名Actor",
+      "description": "按自定义列映射批量重命名选中Actor",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "rename_actors_by_table",
+        "categoryPath": [
+          "1_Actor场景",
+          "3_命名Tag"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "e26a17cad7c212df3c9c1a42ec9969a97517b2f6290c97f015d91adae54e697a"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "1_actor场景",
+        "3_命名tag"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/rename_actors_by_table",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-rename-actors-by-table.json",
+      "sourceDocument": "data/tool-docs/uept-rename-actors-by-table/uept-rename-actors-by-table.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-rename-actors-by-table/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-rename-actors-by-table/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-rename-actors-by-table/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-rename-actors-by-table/1.0.0/uept-rename-actors-by-table-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "7565bdc57a8075b344d870704c96f12ab67f2d76b6dc9e1c3fa060f8924d7e15",
+        "latestPackageSize": 24409,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-render-property-batch",
+      "name": "UEPTModulee5c4b9b6",
+      "displayName": "渲染属性批量设置",
+      "description": "批量改隐藏/可见/投影/最大绘制距离",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "render_property_batch",
+        "categoryPath": [
+          "2_模型对象",
+          "4_渲染Nanite"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "4649c62784df092642bd0519b746c48b99446f0039cbfb99cf745f5c79ff7c69"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "2_模型对象",
+        "4_渲染nanite"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/render_property_batch",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-render-property-batch.json",
+      "sourceDocument": "data/tool-docs/uept-render-property-batch/uept-render-property-batch.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-render-property-batch/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-render-property-batch/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-render-property-batch/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-render-property-batch/1.0.0/uept-render-property-batch-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "39b47ede1f21d24ab33f3a3c470bd1290e8ef595706015ca125b569cbd5a4b70",
+        "latestPackageSize": 17226,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-reset-transform",
+      "name": "UEPTModulefca4dcd6",
+      "displayName": "重置变换",
+      "description": "选中 Actor 位置归零/旋转归零/缩放归一",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "reset_transform",
+        "categoryPath": [
+          "1_Actor场景",
+          "4_位置变换"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "52fa78325277b0f1f4b0cd8476a0472b3d1d2d88f473cf61a166e49af5b13cb9"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "1_actor场景",
+        "4_位置变换"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/reset_transform",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-reset-transform.json",
+      "sourceDocument": "data/tool-docs/uept-reset-transform/uept-reset-transform.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-reset-transform/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-reset-transform/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-reset-transform/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-reset-transform/1.0.0/uept-reset-transform-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "725b0051389d484d983985e1e9d649c0ce8b868d339ae1162f02a3f47ba47d6c",
+        "latestPackageSize": 11420,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-reverse-sequencer-keys",
+      "name": "UEPTModule3936b597",
+      "displayName": "反转关键帧顺序",
+      "description": "反转 Sequencer 里框选的关键帧时间顺序",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "reverse_sequencer_keys",
+        "categoryPath": [
+          "7_动画Sequencer",
+          "1_Sequencer"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "65b3d370720a215ad2e80c2b02640f41da8fb05a94ecb45ec35262f5e89c40a0"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "7_动画sequencer",
+        "1_sequencer"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/reverse_sequencer_keys",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-reverse-sequencer-keys.json",
+      "sourceDocument": "data/tool-docs/uept-reverse-sequencer-keys/uept-reverse-sequencer-keys.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-reverse-sequencer-keys/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-reverse-sequencer-keys/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-reverse-sequencer-keys/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-reverse-sequencer-keys/1.0.0/uept-reverse-sequencer-keys-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "157a2580a5870585c92de3c283f1050d8c801064e0b9507a35bf891e24d1a241",
+        "latestPackageSize": 12455,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-scan-master-materials",
+      "name": "UEPTModule098bfb79",
+      "displayName": "母材质扫描",
+      "description": "统计场景实际使用的母材质及其材质实例/Actor引用数",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "scan_master_materials",
+        "categoryPath": [
+          "3_材质贴图",
+          "1_材质扫描检查"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "6059c44a336f717f6edd5016ed929e3178ac2caec64bb3f99f165f8ced6f1f17"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "3_材质贴图",
+        "1_材质扫描检查"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/scan_master_materials",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-scan-master-materials.json",
+      "sourceDocument": "data/tool-docs/uept-scan-master-materials/uept-scan-master-materials.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-scan-master-materials/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-scan-master-materials/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-scan-master-materials/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-scan-master-materials/1.0.0/uept-scan-master-materials-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "480d270f6169910d230ed37077356cf5dc96da37724a7cf1b6c53d715d79b6a4",
+        "latestPackageSize": 25241,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-select-actors-by-type",
+      "name": "UEPTModulef3fb0f07",
+      "displayName": "按类型选择Actor",
+      "description": "勾选常用类型批量选择关卡中的Actor",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "select_actors_by_type",
+        "categoryPath": [
+          "1_Actor场景",
+          "2_选择隔离"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "10ae14517208dba9c9a7220103fc14d1380d81e42241ce296fe9e498b555a389"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "1_actor场景",
+        "2_选择隔离"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/select_actors_by_type",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-select-actors-by-type.json",
+      "sourceDocument": "data/tool-docs/uept-select-actors-by-type/uept-select-actors-by-type.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-select-actors-by-type/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-select-actors-by-type/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-select-actors-by-type/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-select-actors-by-type/1.0.0/uept-select-actors-by-type-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "13018f702036bcab3196efb66e23be89e00b625bdcc772b2e5bb535c75f0a9fc",
+        "latestPackageSize": 19724,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-select-actors-in-box",
+      "name": "UEPTModuleaf5c42e9",
+      "displayName": "按Box范围选择Actor",
+      "description": "用选中Box范围批量选择关卡Actor",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "select_actors_in_box",
+        "categoryPath": [
+          "1_Actor场景",
+          "2_选择隔离"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "842e89d7e9436b694333a23ba974dde5baf92ea90aa9004c0f24676899eaadf0"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "1_actor场景",
+        "2_选择隔离"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/select_actors_in_box",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-select-actors-in-box.json",
+      "sourceDocument": "data/tool-docs/uept-select-actors-in-box/uept-select-actors-in-box.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-select-actors-in-box/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-select-actors-in-box/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-select-actors-in-box/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-select-actors-in-box/1.0.0/uept-select-actors-in-box-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "fa54bc0c6dedbd7fc0c4c5bd86fca15a7274d45b88087ac57bb83e95dcfc5120",
+        "latestPackageSize": 19470,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-select-actors-in-viewport",
+      "name": "UEPTModule073fe2b1",
+      "displayName": "选择当前视口Actor",
+      "description": "按当前编辑器视口方向选择可见范围内Actor",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "select_actors_in_viewport",
+        "categoryPath": [
+          "1_Actor场景",
+          "2_选择隔离"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "ac728c822102b7df9eedb15aebe4fe3785bfb67ca62f2cc1886f3425de8a583b"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "1_actor场景",
+        "2_选择隔离"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/select_actors_in_viewport",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-select-actors-in-viewport.json",
+      "sourceDocument": "data/tool-docs/uept-select-actors-in-viewport/uept-select-actors-in-viewport.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-select-actors-in-viewport/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-select-actors-in-viewport/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-select-actors-in-viewport/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-select-actors-in-viewport/1.0.0/uept-select-actors-in-viewport-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "e0f68f2893baec776e7789afff2a67823f07b686a4683f4b53f18507ef1cc4e5",
+        "latestPackageSize": 17994,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-snap-spline-points-to-ground",
+      "name": "UEPTModule1ba9c32e",
+      "displayName": "Spline 点贴地",
+      "description": "选中 Actor 的所有 Spline 控制点向下贴地",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "snap_spline_points_to_ground",
+        "categoryPath": [
+          "5_Spline曲线",
+          "1_Spline编辑"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "f09a7fcfecf6eed283b44f6210286029fe16e56051fbfebea851c19f4e9110a1"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "5_spline曲线",
+        "1_spline编辑"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/snap_spline_points_to_ground",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-snap-spline-points-to-ground.json",
+      "sourceDocument": "data/tool-docs/uept-snap-spline-points-to-ground/uept-snap-spline-points-to-ground.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-snap-spline-points-to-ground/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-snap-spline-points-to-ground/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-snap-spline-points-to-ground/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-snap-spline-points-to-ground/1.0.0/uept-snap-spline-points-to-ground-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "08378b943c55c5ffc126e79eca2d0204dd9c0274539a300f61dfc246b4e9c35f",
+        "latestPackageSize": 44090,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-spline-resampler",
+      "name": "UEPTModule749795ed",
+      "displayName": "Spline 重采样",
+      "description": "按间距采样 Spline，生成标记点或导出 JSON/CSV",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "spline_resampler",
+        "categoryPath": [
+          "5_Spline曲线",
+          "1_Spline编辑"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "c1207c02cd2ae1f493e9041e7d87a0120ca9dafc93a19757655a83899746ca4f"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "5_spline曲线",
+        "1_spline编辑"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/spline_resampler",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-spline-resampler.json",
+      "sourceDocument": "data/tool-docs/uept-spline-resampler/uept-spline-resampler.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-spline-resampler/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-spline-resampler/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-spline-resampler/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-spline-resampler/1.0.0/uept-spline-resampler-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "1606e106f57aa0840a7540270086e7b6cd5fd084df2040e4d8b6d2610b862deb",
+        "latestPackageSize": 15891,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-split-instanced-meshes-to-actors",
+      "name": "UEPTModulefaf86141",
+      "displayName": "HISM拆分为普通Actor",
+      "description": "将选中的HISM/ISM实例拆分为独立的StaticMeshActor。",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "split_instanced_meshes_to_actors",
+        "categoryPath": [
+          "4_植被实例",
+          "2_植被转换"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "795bdace7763850f5c986d9e2aec03695a952568a77675be5ac76fc6bd25326f"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "4_植被实例",
+        "2_植被转换"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/split_instanced_meshes_to_actors",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-split-instanced-meshes-to-actors.json",
+      "sourceDocument": "data/tool-docs/uept-split-instanced-meshes-to-actors/uept-split-instanced-meshes-to-actors.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-split-instanced-meshes-to-actors/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-split-instanced-meshes-to-actors/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-split-instanced-meshes-to-actors/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-split-instanced-meshes-to-actors/1.0.0/uept-split-instanced-meshes-to-actors-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "ed7e7d412197a2a6b3aaeeca0120817005bc89d23f15b0427710e11744cfcb26",
+        "latestPackageSize": 11089,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-static-mesh-to-blueprint",
+      "name": "UEPTModuleb4b558ff",
+      "displayName": "SM 批量转蓝图 Actor",
+      "description": "内容浏览器选中 Static Mesh，批量生成 BP_ 前缀蓝图",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "static_mesh_to_blueprint",
+        "categoryPath": [
+          "2_模型对象",
+          "1_SM蓝图转换"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "5c4ef258fca781be772163727d560b868509f69e264c86e51e6adc2c95dbaad3"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "2_模型对象",
+        "1_sm蓝图转换"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/static_mesh_to_blueprint",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-static-mesh-to-blueprint.json",
+      "sourceDocument": "data/tool-docs/uept-static-mesh-to-blueprint/uept-static-mesh-to-blueprint.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-static-mesh-to-blueprint/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-static-mesh-to-blueprint/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-static-mesh-to-blueprint/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-static-mesh-to-blueprint/1.0.0/uept-static-mesh-to-blueprint-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "b7fc2e3727166beba3e0c6fe7b8cf18fe555612e581eca4cc2f2fb20d30dd805",
+        "latestPackageSize": 9158,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-tag-actors-by-name",
+      "name": "UEPTModulef4fda323",
+      "displayName": "按命名设置Tag",
+      "description": "根据Actor名称中的关键字批量添加Tag",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "tag_actors_by_name",
+        "categoryPath": [
+          "1_Actor场景",
+          "3_命名Tag"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "684ce366b1f8959388bd7edced0a075c888a91fd78bfcb2da56c6423a7ebcc25"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "1_actor场景",
+        "3_命名tag"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/tag_actors_by_name",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-tag-actors-by-name.json",
+      "sourceDocument": "data/tool-docs/uept-tag-actors-by-name/uept-tag-actors-by-name.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-tag-actors-by-name/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-tag-actors-by-name/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-tag-actors-by-name/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-tag-actors-by-name/1.0.0/uept-tag-actors-by-name-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "e99dd6ab68487c13accad5e9b5c1998cc98d096f3fa8a85fa9589208abec4978",
+        "latestPackageSize": 13880,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-tagged-actor-exporter",
+      "name": "UEPTModule655626e5",
+      "displayName": "按 Tag 导出 Actor",
+      "description": "按 Tag 选中并导出 Actor 为 FBX/OBJ",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "tagged_actor_exporter",
+        "categoryPath": [
+          "6_导入导出",
+          "1_模型交换"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "8a3deee11a7dd71ad18839bec5e1e7ea0bcfee606383c4c6adc6d60e06b73a90"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "6_导入导出",
+        "1_模型交换"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/tagged_actor_exporter",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-tagged-actor-exporter.json",
+      "sourceDocument": "data/tool-docs/uept-tagged-actor-exporter/uept-tagged-actor-exporter.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-tagged-actor-exporter/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-tagged-actor-exporter/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-tagged-actor-exporter/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-tagged-actor-exporter/1.0.0/uept-tagged-actor-exporter-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "b8a8d40db8888e23f05d369cb78b84a9673ec5d85a693d5e9774f3597281e0fa",
+        "latestPackageSize": 12154,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-tex-batch-tool",
+      "name": "UEPTModulef37d81ac",
+      "displayName": "纹理批量处理",
+      "description": "按条件筛选纹理，修改尺寸/修复POT",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "tex_batch_tool",
+        "categoryPath": [
+          "3_材质贴图",
+          "3_纹理处理"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "dd83afe2347089cec7ee708d9eb82252bd61003ac92b78c00c56189fd9109e33"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "3_材质贴图",
+        "3_纹理处理"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/tex_batch_tool",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-tex-batch-tool.json",
+      "sourceDocument": "data/tool-docs/uept-tex-batch-tool/uept-tex-batch-tool.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-tex-batch-tool/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-tex-batch-tool/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-tex-batch-tool/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-tex-batch-tool/1.0.0/uept-tex-batch-tool-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "0e038d1baae1972da4fc0d4984b14c8fa7b6ebf3f5e56b592c0feb5fe2c6d59c",
+        "latestPackageSize": 23412,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-texture-deduplicator",
+      "name": "UEPTModule8d03bcd9",
+      "displayName": "纹理去重工具",
+      "description": "扫描同名重复纹理，可定位或 Consolidate 合并",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "texture_deduplicator",
+        "categoryPath": [
+          "3_材质贴图",
+          "3_纹理处理"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "bf207fb97b33e46c9dd32db69e357677749ddaa5295283c0382573e767974433"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "3_材质贴图",
+        "3_纹理处理"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/texture_deduplicator",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-texture-deduplicator.json",
+      "sourceDocument": "data/tool-docs/uept-texture-deduplicator/uept-texture-deduplicator.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-texture-deduplicator/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-texture-deduplicator/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-texture-deduplicator/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-texture-deduplicator/1.0.0/uept-texture-deduplicator-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "9479ef202a9723362ea8e837c2b953aa495e88bf9fbbdfcdd4145791fc5285ec",
+        "latestPackageSize": 14879,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-transfer-actor-transforms",
+      "name": "UEPTModule6b37e0cc",
+      "displayName": "复制粘贴变换",
+      "description": "按 Actor 名称匹配，在两组 Actor 间传递位置/旋转/缩放",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "transfer_actor_transforms",
+        "categoryPath": [
+          "1_Actor场景",
+          "4_位置变换"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "5662c1187f7972331141a704ca184e1bbe6d389091ff95e04127bc248e1d7751"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "1_actor场景",
+        "4_位置变换"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/transfer_actor_transforms",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-transfer-actor-transforms.json",
+      "sourceDocument": "data/tool-docs/uept-transfer-actor-transforms/uept-transfer-actor-transforms.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-transfer-actor-transforms/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-transfer-actor-transforms/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-transfer-actor-transforms/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-transfer-actor-transforms/1.0.0/uept-transfer-actor-transforms-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "33c7812e44bd5e14e4ca5547a18a9b79e6a616bdbace4f459dfd8189d350e108",
+        "latestPackageSize": 11627,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-viewport-box-creator",
+      "name": "UEPTModule1c33fed1",
+      "displayName": "视口中心创建 Box",
+      "description": "视口中心射线命中处生成 Cube",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "viewport_box_creator",
+        "categoryPath": [
+          "1_Actor场景",
+          "6_创建辅助"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "32c704543d9a896474e9cd15a12a6de6a9c145625ed06fba67190d714f4292a6"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "1_actor场景",
+        "6_创建辅助"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/viewport_box_creator",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-viewport-box-creator.json",
+      "sourceDocument": "data/tool-docs/uept-viewport-box-creator/uept-viewport-box-creator.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-viewport-box-creator/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-viewport-box-creator/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-viewport-box-creator/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-viewport-box-creator/1.0.0/uept-viewport-box-creator-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "80af8dce71bcd096a33c58f7d579a3cb0f3d279d09e12c0f7f325b8c128c7b5a",
+        "latestPackageSize": 13652,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "uept-viewport-screenshot",
+      "name": "UEPTModule64450a42",
+      "displayName": "视口截图",
+      "description": "按预设分辨率截取编辑器视口并保存",
+      "category": "utility",
+      "author": "场景C组",
+      "ownerTeam": "场景C组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "collection": {
+        "id": "ue-python-toolkit",
+        "role": "module",
+        "moduleId": "viewport_screenshot",
+        "categoryPath": [
+          "8_开发测试",
+          "3_诊断导出"
+        ],
+        "requiredShellVersion": "1.0.0",
+        "sourceSha256": "fd9e261e52531416221be32a1b8d60dea3162a110678436bb2e0b2d54814c92c"
+      },
+      "tags": [
+        "ue-python-toolkit",
+        "module",
+        "8_开发测试",
+        "3_诊断导出"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/viewport_screenshot",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-10-08T00:00:00Z",
+      "apiUrl": "/api/tools/uept-viewport-screenshot.json",
+      "sourceDocument": "data/tool-docs/uept-viewport-screenshot/uept-viewport-screenshot.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/uept-viewport-screenshot/1.0.0/manifest.json",
+        "latestReadme": "/downloads/uept-viewport-screenshot/1.0.0/README.md",
+        "latestMarkdown": "/downloads/uept-viewport-screenshot/1.0.0/tool.md",
+        "latestPackage": "/downloads/uept-viewport-screenshot/1.0.0/uept-viewport-screenshot-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "86975633f3221748628473c6cff92540de5ff6e5460b71efb12c9f94ebba29ae",
+        "latestPackageSize": 11187,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "materialnamingvalidator",
+      "name": "MaterialNamingValidator",
+      "displayName": "材质命名校验",
+      "description": "扫描当前已加载关卡中的 Static Mesh 材质槽与材质实例贴图命名，并在确认后修复所选资产。",
+      "category": "asset-management",
+      "author": "吴俊枫",
+      "ownerTeam": "场景B组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "chameleon",
+      "tags": [
+        "material",
+        "texture",
+        "naming",
+        "static-mesh",
+        "validation"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.1"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/MaterialNamingValidator",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-09-21T19:30:23+08:00",
+      "apiUrl": "/api/tools/materialnamingvalidator.json",
+      "sourceDocument": "data/tool-docs/materialnamingvalidator/materialnamingvalidator.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/materialnamingvalidator/1.0.0/manifest.json",
+        "latestReadme": "/downloads/materialnamingvalidator/1.0.0/README.md",
+        "latestMarkdown": "/downloads/materialnamingvalidator/1.0.0/tool.md",
+        "latestPackage": "/downloads/materialnamingvalidator/1.0.0/materialnamingvalidator-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "e870ac47b645774bbd9a038e8b1fc40310f8b1a0c8f287178c0d20481e5f5d61",
+        "latestPackageSize": 42343,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "meshexporttool",
+      "name": "MeshExportTool",
+      "displayName": "MeshExportTool",
+      "description": "快速导出场景大纲和内容浏览器中的模型，并附带模型贴图和 3ds Max 导入脚本。",
+      "category": "content",
+      "author": "殷鑫玉",
+      "ownerTeam": "场景A组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "chameleon",
+      "tags": [
+        "local-export"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/MeshExportTool",
+      "latestVersion": "1.0.1",
+      "updatedAt": "2026-09-04T09:12:24.0486840+08:00",
+      "apiUrl": "/api/tools/meshexporttool.json",
+      "sourceDocument": "data/tool-docs/meshexporttool/meshexporttool.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/meshexporttool/1.0.1/manifest.json",
+        "latestReadme": "/downloads/meshexporttool/1.0.1/README.md",
+        "latestMarkdown": "/downloads/meshexporttool/1.0.1/tool.md",
+        "latestPackage": "/downloads/meshexporttool/1.0.1/meshexporttool-1.0.1.tapython-tool.zip",
+        "latestPackageSha256": "daf37f3aec2173bda5dbcf7e8d4703e9b2218ae46c4e19870d3fce9231782edc",
+        "latestPackageSize": 54888,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "selection-audit-script",
+      "name": "SelectionAuditScript",
+      "displayName": "Selection Audit Script",
+      "description": "无界面的纯 Python 示例工具，用于验证 OnToolbar command 类型工具的发布、安装和卸载链路。",
+      "category": "validation",
+      "author": "Tool Hub QA",
+      "ownerTeam": "Pipeline QA",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "python-script",
+      "tags": [
+        "python",
+        "script",
+        "selection",
+        "audit"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolbar",
+      "installPath": "<Project>/TA/TAPython/Python/SelectionAuditScript/",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-08-31",
+      "apiUrl": "/api/tools/selection-audit-script.json",
+      "sourceDocument": "data/tool-docs/selection-audit-script/selection-audit-script.md",
+      "sourceMode": "markdown-with-external-files",
+      "downloads": {
+        "latestManifest": "/downloads/selection-audit-script/1.0.0/manifest.json",
+        "latestReadme": "/downloads/selection-audit-script/1.0.0/README.md",
+        "latestMarkdown": "/downloads/selection-audit-script/1.0.0/tool.md",
+        "latestPackage": "/downloads/selection-audit-script/1.0.0/selection-audit-script-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "db5fef670a9850ceb2a89e1b34102b7e5a148098e0981f8da3abbd5f22aaec89",
+        "latestPackageSize": 3043,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "batchtagtool",
+      "name": "BatchTagTool",
+      "displayName": "批量 Tag 工具",
+      "description": "收集场景选中模型到列表，批量添加统一命名或带序号的排序 Tag，支持批量移除、Tag 预览、多种排序依据，带撤销事务与进度提示，不修改资产文件。",
+      "category": "level-editing",
+      "author": "吴俊枫",
+      "ownerTeam": "场景B组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "chameleon",
+      "tags": [
+        "local-export"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.1"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/BatchTagTool",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-08-28T09:08:40Z",
+      "apiUrl": "/api/tools/batchtagtool.json",
+      "sourceDocument": "data/tool-docs/batchtagtool/batchtagtool.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/batchtagtool/1.0.0/manifest.json",
+        "latestReadme": "/downloads/batchtagtool/1.0.0/README.md",
+        "latestMarkdown": "/downloads/batchtagtool/1.0.0/tool.md",
+        "latestPackage": "/downloads/batchtagtool/1.0.0/batchtagtool-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "8870a90c617b1639a20bc53de9cd99231a925609b084b42fac8e26ba979a4c10",
+        "latestPackageSize": 48187,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "texturecompressionbatch",
+      "name": "TextureCompressionBatch",
+      "displayName": "贴图压缩批量设置",
+      "description": "扫描指定文件夹并按命名后缀分类贴图，批量设置压缩格式、sRGB 与最大纹理尺寸，也可统一调整内容浏览器中选中贴图的尺寸。",
+      "category": "rendering",
+      "author": "陈小娟",
+      "ownerTeam": "场景B组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "chameleon",
+      "tags": [
+        "texture",
+        "compression",
+        "batch-processing"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/TextureCompressionBatch",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-08-13T14:09:54+08:00",
+      "apiUrl": "/api/tools/texturecompressionbatch.json",
+      "sourceDocument": "data/tool-docs/texturecompressionbatch/texturecompressionbatch.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/texturecompressionbatch/1.0.0/manifest.json",
+        "latestReadme": "/downloads/texturecompressionbatch/1.0.0/README.md",
+        "latestMarkdown": "/downloads/texturecompressionbatch/1.0.0/tool.md",
+        "latestPackage": "/downloads/texturecompressionbatch/1.0.0/texturecompressionbatch-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "f3956e41df1c32f900f9ee4955ba25b8d27d2f0b9b5f35e349df189bc890de05",
+        "latestPackageSize": 43895,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "staticmeshbatchtool",
+      "name": "StaticMeshBatchTool",
+      "displayName": "Static Mesh Batch Tool",
+      "description": "批量设置静态网格的全UV精度，并可按需同步高精度切线基与重算法线/切线。",
+      "category": "asset-management",
+      "author": "杨世煜",
+      "ownerTeam": "场景B组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "chameleon",
+      "tags": [
+        "static-mesh",
+        "lod",
+        "build-settings"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/StaticMeshBatchTool",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-08-13T09:28:52+08:00",
+      "apiUrl": "/api/tools/staticmeshbatchtool.json",
+      "sourceDocument": "data/tool-docs/staticmeshbatchtool/staticmeshbatchtool.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/staticmeshbatchtool/1.0.0/manifest.json",
+        "latestReadme": "/downloads/staticmeshbatchtool/1.0.0/README.md",
+        "latestMarkdown": "/downloads/staticmeshbatchtool/1.0.0/tool.md",
+        "latestPackage": "/downloads/staticmeshbatchtool/1.0.0/staticmeshbatchtool-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "d5f0a4f87790fc559ab856dee44939c663f480c81d4aa4ff4edf47d9eb2aa874",
+        "latestPackageSize": 28079,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "opaquemeshnanite",
+      "name": "OpaqueMeshNanite",
+      "displayName": "不透明网格 Nanite 批量设置",
+      "description": "批量扫描文件夹或当前关卡中的静态网格体，按透明材质、水体材质和 Nanite 状态筛选，并统一应用 Nanite 与 Preserve Area 设置。",
+      "category": "asset-management",
+      "author": "吴俊枫",
+      "ownerTeam": "场景B组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "chameleon",
+      "tags": [
+        "nanite",
+        "static-mesh",
+        "batch-processing"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/OpaqueMeshNanite",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-08-13T02:27:11Z",
+      "apiUrl": "/api/tools/opaquemeshnanite.json",
+      "sourceDocument": "data/tool-docs/opaquemeshnanite/opaquemeshnanite.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/opaquemeshnanite/1.0.0/manifest.json",
+        "latestReadme": "/downloads/opaquemeshnanite/1.0.0/README.md",
+        "latestMarkdown": "/downloads/opaquemeshnanite/1.0.0/tool.md",
+        "latestPackage": "/downloads/opaquemeshnanite/1.0.0/opaquemeshnanite-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "de4506527075585e3e68909c40d4426165e989bf9783ae8b00eabe07d83cb983",
+        "latestPackageSize": 42584,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "assetdependencyrenamer",
+      "name": "AssetDependencyRenamer",
+      "displayName": "静态网格依赖批量重命名",
+      "description": "批量重命名静态网格体依赖的材质、材质槽和贴图，支持模板预览、冲突拦截、P4 只读处理，并可扫描和清理无有效引用的冗余材质。",
+      "category": "asset-management",
+      "author": "杨世煜",
+      "ownerTeam": "场景B组",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "chameleon",
+      "tags": [
+        "asset-renaming",
+        "static-mesh",
+        "material-cleanup",
+        "perforce"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/AssetDependencyRenamer",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-08-12T20:40:04.7313696+08:00",
+      "apiUrl": "/api/tools/assetdependencyrenamer.json",
+      "sourceDocument": "data/tool-docs/assetdependencyrenamer/assetdependencyrenamer.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/assetdependencyrenamer/1.0.0/manifest.json",
+        "latestReadme": "/downloads/assetdependencyrenamer/1.0.0/README.md",
+        "latestMarkdown": "/downloads/assetdependencyrenamer/1.0.0/tool.md",
+        "latestPackage": "/downloads/assetdependencyrenamer/1.0.0/assetdependencyrenamer-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "248d1cad2733047e41c087f7a2e8d27f1916da3dfcfae8d3ac1f7d0d8b4fb501",
+        "latestPackageSize": 59414,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "removeunusedmaterialslots",
+      "name": "RemoveUnusedMaterialSlots",
+      "displayName": "清理未使用材质槽",
+      "description": "扫描 StaticMesh 的 LOD Section 材质引用，预览并清理未使用材质槽；支持处理选中资产或全项目资产。",
+      "category": "rendering",
+      "author": "杨世煜",
+      "ownerTeam": "场景B组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "chameleon",
+      "tags": [
+        "static-mesh",
+        "material-slots",
+        "asset-cleanup"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/RemoveUnusedMaterialSlots",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-08-12T12:37:58Z",
+      "apiUrl": "/api/tools/removeunusedmaterialslots.json",
+      "sourceDocument": "data/tool-docs/removeunusedmaterialslots/removeunusedmaterialslots.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/removeunusedmaterialslots/1.0.0/manifest.json",
+        "latestReadme": "/downloads/removeunusedmaterialslots/1.0.0/README.md",
+        "latestMarkdown": "/downloads/removeunusedmaterialslots/1.0.0/tool.md",
+        "latestPackage": "/downloads/removeunusedmaterialslots/1.0.0/removeunusedmaterialslots-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "09d03e5e24b2e51e48a338a33af0652a89385a01ad2f508f3847e8fd36253ada",
+        "latestPackageSize": 27115,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "removeactortags",
+      "name": "RemoveActorTags",
+      "displayName": "批量修改 Actor Tags",
+      "description": "批量扫描并移除场景 Actor Tags，支持全部清空、首尾移除和按关键字过滤，可预览结果并通过 Ctrl+Z 撤销。",
+      "category": "level-editing",
+      "author": "杨世煜",
+      "ownerTeam": "场景B组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "chameleon",
+      "tags": [
+        "actor-tags",
+        "batch-editing",
+        "level-editing"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/RemoveActorTags",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-08-11T17:53:06+08:00",
+      "apiUrl": "/api/tools/removeactortags.json",
+      "sourceDocument": "data/tool-docs/removeactortags/removeactortags.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/removeactortags/1.0.0/manifest.json",
+        "latestReadme": "/downloads/removeactortags/1.0.0/README.md",
+        "latestMarkdown": "/downloads/removeactortags/1.0.0/tool.md",
+        "latestPackage": "/downloads/removeactortags/1.0.0/removeactortags-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "bf205def333ca65765b247b965232f02b8308903194b4b3049f9c4dc14b2d4d8",
+        "latestPackageSize": 26921,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "texturepow2resizer",
+      "name": "TexturePow2Resizer",
+      "displayName": "贴图POT尺寸调整",
+      "description": "批量扫描选中的 Texture2D，按指定策略调整为 2 的幂次尺寸，并支持原生设置调整或通过 Pillow 缩放后重新导入。",
+      "category": "rendering",
+      "author": "杨世煜",
+      "ownerTeam": "场景B组",
+      "status": "approved",
+      "riskLevel": "high",
+      "toolType": "chameleon",
+      "tags": [
+        "texture",
+        "power-of-two",
+        "batch-processing",
+        "reimport"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/TexturePow2Resizer",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-08-11T10:15:08Z",
+      "apiUrl": "/api/tools/texturepow2resizer.json",
+      "sourceDocument": "data/tool-docs/texturepow2resizer/texturepow2resizer.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/texturepow2resizer/1.0.0/manifest.json",
+        "latestReadme": "/downloads/texturepow2resizer/1.0.0/README.md",
+        "latestMarkdown": "/downloads/texturepow2resizer/1.0.0/tool.md",
+        "latestPackage": "/downloads/texturepow2resizer/1.0.0/texturepow2resizer-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "5e57974c2f24120f1192e9f3a2748e1e88819c0034578631cb4a50a1f12cf979",
+        "latestPackageSize": 67112,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "materialparentreplacer",
+      "name": "MaterialParentReplacer",
+      "displayName": "替换材质父项",
+      "description": "批量替换材质实例父项，支持选中材质实例或模型材质槽处理、旧父项过滤及循环依赖检查。",
+      "category": "rendering",
+      "author": "杨世煜",
+      "ownerTeam": "场景B组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "chameleon",
+      "tags": [
+        "material",
+        "batch-processing",
+        "asset-management",
+        "content-browser"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/MaterialParentReplacer",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-08-06T00:00:00+08:00",
+      "apiUrl": "/api/tools/materialparentreplacer.json",
+      "sourceDocument": "data/tool-docs/materialparentreplacer/materialparentreplacer.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/materialparentreplacer/1.0.0/manifest.json",
+        "latestReadme": "/downloads/materialparentreplacer/1.0.0/README.md",
+        "latestMarkdown": "/downloads/materialparentreplacer/1.0.0/tool.md",
+        "latestPackage": "/downloads/materialparentreplacer/1.0.0/materialparentreplacer-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "50e8c5e869c30c20a52f9bd9197c834eeabf4991269007c91af86bce9f787c00",
+        "latestPackageSize": 32290,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "splinemeshbuilder",
+      "name": "SplineMeshBuilder",
+      "displayName": "Spline 提取与建模",
+      "description": "从选中 Actor 提取 Spline（含蓝图与 Landscape Spline），沿样条生成平面/带厚度 StaticMesh 并延展 UV，或用已有模型生成 SplineMeshComponent。",
+      "category": "level-editing",
+      "author": "吴俊枫",
+      "ownerTeam": "场景B组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "chameleon",
+      "tags": [
+        "spline",
+        "landscape-spline",
+        "static-mesh",
+        "geometry-script",
+        "spline-mesh-component",
+        "uv"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/SplineMeshBuilder",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-07-28T19:00:00+08:00",
+      "apiUrl": "/api/tools/splinemeshbuilder.json",
+      "sourceDocument": "data/tool-docs/splinemeshbuilder/splinemeshbuilder.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/splinemeshbuilder/1.0.0/manifest.json",
+        "latestReadme": "/downloads/splinemeshbuilder/1.0.0/README.md",
+        "latestMarkdown": "/downloads/splinemeshbuilder/1.0.0/tool.md",
+        "latestPackage": "/downloads/splinemeshbuilder/1.0.0/splinemeshbuilder-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "d00f94f3889bceb50493eddb6fe43ffa84f3d38324489cc80a323123209b8918",
+        "latestPackageSize": 92815,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "nanitesplittranslucent",
+      "name": "NaniteSplitTranslucent",
+      "displayName": "半透明拆分 Nanite",
+      "description": "检测 StaticMesh 半透明材质分段，拆分半透明资产，并将源模型转换为 Nanite。",
+      "category": "asset-management",
+      "author": "吴俊枫",
+      "ownerTeam": "场景B组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "chameleon",
+      "tags": [
+        "static-mesh",
+        "nanite",
+        "translucent",
+        "geometry-script",
+        "asset-processing"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython",
+          "Geometry Script"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/NaniteSplitTranslucent",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-06-26T10:11:51Z",
+      "apiUrl": "/api/tools/nanitesplittranslucent.json",
+      "sourceDocument": "data/tool-docs/nanitesplittranslucent/nanitesplittranslucent.md",
+      "sourceMode": "v2-package-upload",
+      "downloads": {
+        "latestManifest": "/downloads/nanitesplittranslucent/1.0.0/manifest.json",
+        "latestReadme": "/downloads/nanitesplittranslucent/1.0.0/README.md",
+        "latestMarkdown": "/downloads/nanitesplittranslucent/1.0.0/tool.md",
+        "latestPackage": "/downloads/nanitesplittranslucent/1.0.0/nanitesplittranslucent-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "ae75ed3158536d0b367799dcc112361fc5490851972d992e6165cf5e91536991",
+        "latestPackageSize": 57002,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "position-clipboard-tool",
+      "name": "PositionClipboardTool",
+      "displayName": "位置剪贴板",
+      "description": "记录关卡中多个 Actor 的世界位置（及可选的旋转、缩放）到命名槽位，支持一键选中与粘贴回保存位置，内置 Ctrl+Z 撤销事务保护，适用于场景搭建中的位置备份与批量对齐。",
+      "category": "level-editing",
+      "author": "吴俊枫",
+      "ownerTeam": "场景B组",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "chameleon",
+      "tags": [
+        "position",
+        "clipboard",
+        "actor",
+        "level-editing",
+        "transform"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/PositionClipboardTool/",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-05-26",
+      "apiUrl": "/api/tools/position-clipboard-tool.json",
+      "sourceDocument": "data/tool-docs/position-clipboard-tool/position-clipboard-tool.md",
+      "sourceMode": "markdown-with-external-files",
+      "downloads": {
+        "latestManifest": "/downloads/position-clipboard-tool/1.0.0/manifest.json",
+        "latestReadme": "/downloads/position-clipboard-tool/1.0.0/README.md",
+        "latestMarkdown": "/downloads/position-clipboard-tool/1.0.0/tool.md",
+        "latestPackage": "/downloads/position-clipboard-tool/1.0.0/position-clipboard-tool-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "bd5239795298356010a39f6851f4502fc3ad6874a62a89e38529c8bf9e017a3c",
+        "latestPackageSize": 41716,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "tagged-actor-exporter",
+      "name": "TaggedActorExporter",
+      "displayName": "按TAG导出Actor",
+      "description": "通过 Actor Tag 批量筛选关卡中的 Actor，并将匹配对象导出为单个 FBX 或 OBJ 文件。同时保留文件内各对象的独立性，适用于场景资产分组导出流程。",
+      "category": "asset-management",
+      "author": "TA",
+      "ownerTeam": "TA",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "chameleon",
+      "tags": [
+        "actor",
+        "tag",
+        "export",
+        "fbx",
+        "level-editing"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/TaggedActorExporter/",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-05-25",
+      "apiUrl": "/api/tools/tagged-actor-exporter.json",
+      "sourceDocument": "data/tool-docs/tagged-actor-exporter/tagged-actor-exporter.md",
+      "sourceMode": "markdown-with-external-files",
+      "downloads": {
+        "latestManifest": "/downloads/tagged-actor-exporter/1.0.0/manifest.json",
+        "latestReadme": "/downloads/tagged-actor-exporter/1.0.0/README.md",
+        "latestMarkdown": "/downloads/tagged-actor-exporter/1.0.0/tool.md",
+        "latestPackage": "/downloads/tagged-actor-exporter/1.0.0/tagged-actor-exporter-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "f71910da1695f5b0f71dbdb87cfc255ebb26dd552ace5e73f026f5c58d5c41ed",
+        "latestPackageSize": 21726,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "proj-coordinate-converter",
+      "name": "ProjConverterTool",
+      "displayName": "Proj 坐标转换",
+      "description": "在 Unreal 编辑器内完成 EPSG:4326 与任意 Proj 字符串之间的双向坐标转换，支持结果复制，并对缺失 pyproj 依赖给出明确提示。",
+      "category": "utility",
+      "author": "R",
+      "ownerTeam": "项目开发",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "chameleon",
+      "tags": [
+        "coordinate-conversion",
+        "proj",
+        "pyproj"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.3",
+          "5.4",
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/ProjConverterTool/",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-05-22",
+      "apiUrl": "/api/tools/proj-coordinate-converter.json",
+      "sourceDocument": "data/tool-docs/proj-coordinate-converter/proj-coordinate-converter.md",
+      "sourceMode": "markdown-with-external-files",
+      "downloads": {
+        "latestManifest": "/downloads/proj-coordinate-converter/1.0.0/manifest.json",
+        "latestReadme": "/downloads/proj-coordinate-converter/1.0.0/README.md",
+        "latestMarkdown": "/downloads/proj-coordinate-converter/1.0.0/tool.md",
+        "latestPackage": "/downloads/proj-coordinate-converter/1.0.0/proj-coordinate-converter-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "434d43482672fdaec7ceaa5b8a4dc3d44a89873cceb573ac1bf980d30eb09db2",
+        "latestPackageSize": 23427,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "python-version-info",
+      "name": "PythonVersionInfo",
+      "displayName": "Python Version Info",
+      "description": "查看 Unreal 当前使用的 Python 版本、解释器路径、sys.path 以及已安装第三方模块，支持过滤与一键复制，便于排查运行环境问题。",
+      "category": "utility",
+      "author": "R",
+      "ownerTeam": "项目开发",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "chameleon",
+      "tags": [
+        "python",
+        "runtime-inspection",
+        "debugging"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.3",
+          "5.4",
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/PythonVersionInfo/",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-05-22",
+      "apiUrl": "/api/tools/python-version-info.json",
+      "sourceDocument": "data/tool-docs/python-version-info/python-version-info.md",
+      "sourceMode": "markdown-with-external-files",
+      "downloads": {
+        "latestManifest": "/downloads/python-version-info/1.0.0/manifest.json",
+        "latestReadme": "/downloads/python-version-info/1.0.0/README.md",
+        "latestMarkdown": "/downloads/python-version-info/1.0.0/tool.md",
+        "latestPackage": "/downloads/python-version-info/1.0.0/python-version-info-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "8631ec57245639c2a3bf30f5422e0485d8a5f861eb38475c760c447173b3ed10",
+        "latestPackageSize": 40088,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "spline-resampler",
+      "name": "SplineResamplerTool",
+      "displayName": "Spline Resampler",
+      "description": "在 Unreal 编辑器内创建或绑定 Spline Actor，按指定距离重采样样条线，生成标记点并将各采样点的 Transform 数据导出为 JSON 或 CSV。",
+      "category": "level-editing",
+      "author": "R",
+      "ownerTeam": "项目开发",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "chameleon",
+      "tags": [
+        "spline",
+        "resample",
+        "level-editing"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.3",
+          "5.4",
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/SplineResamplerTool/",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-05-22",
+      "apiUrl": "/api/tools/spline-resampler.json",
+      "sourceDocument": "data/tool-docs/spline-resampler/spline-resampler.md",
+      "sourceMode": "markdown-with-external-files",
+      "downloads": {
+        "latestManifest": "/downloads/spline-resampler/1.0.0/manifest.json",
+        "latestReadme": "/downloads/spline-resampler/1.0.0/README.md",
+        "latestMarkdown": "/downloads/spline-resampler/1.0.0/tool.md",
+        "latestPackage": "/downloads/spline-resampler/1.0.0/spline-resampler-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "58678267d4e8b5977ff36e4e6fd2b6d90bde5b06c485153e045f861a15d40418",
+        "latestPackageSize": 33731,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "viewport-box-creator",
+      "name": "ViewportBoxCreator",
+      "displayName": "Viewport Box Creator",
+      "description": "沿当前编辑器视口中心射线检测场景命中点并创建 Box，支持预览调试射线，便于快速在视口中心定位和放置基础占位体。",
+      "category": "level-editing",
+      "author": "R",
+      "ownerTeam": "项目开发",
+      "status": "approved",
+      "riskLevel": "medium",
+      "toolType": "chameleon",
+      "tags": [
+        "viewport",
+        "actor-placement",
+        "level-editing"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.3",
+          "5.4",
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/ViewportBoxCreator/",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-05-22",
+      "apiUrl": "/api/tools/viewport-box-creator.json",
+      "sourceDocument": "data/tool-docs/viewport-box-creator/viewport-box-creator.md",
+      "sourceMode": "markdown-with-external-files",
+      "downloads": {
+        "latestManifest": "/downloads/viewport-box-creator/1.0.0/manifest.json",
+        "latestReadme": "/downloads/viewport-box-creator/1.0.0/README.md",
+        "latestMarkdown": "/downloads/viewport-box-creator/1.0.0/tool.md",
+        "latestPackage": "/downloads/viewport-box-creator/1.0.0/viewport-box-creator-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "0a59d8fb2cbdacdbacf496afc3f00a2792e91ebd7d10dafd5297c181786de0f5",
+        "latestPackageSize": 22652,
+        "latestPackageAvailable": true
+      }
+    },
+    {
+      "slug": "viewport-screenshot",
+      "name": "ViewportScreenshot",
+      "displayName": "Viewport Screenshot",
+      "description": "在 Unreal 编辑器中按自定义分辨率截取当前视口画面，支持常用分辨率预设、文件名前缀设置，并将结果保存到项目 Saved/Screenshots 目录。",
+      "category": "utility",
+      "author": "R",
+      "ownerTeam": "项目开发",
+      "status": "approved",
+      "riskLevel": "low",
+      "toolType": "chameleon",
+      "tags": [
+        "screenshot",
+        "viewport",
+        "utility"
+      ],
+      "compatibility": {
+        "unrealEngine": [
+          "5.3",
+          "5.4",
+          "5.5"
+        ],
+        "tapython": [
+          "1.2+"
+        ],
+        "plugins": [
+          "TAPython"
+        ]
+      },
+      "mountPoint": "OnToolBarChameleon",
+      "installPath": "<Project>/TA/TAPython/Python/ViewportScreenshot/",
+      "latestVersion": "1.0.0",
+      "updatedAt": "2026-05-22",
+      "apiUrl": "/api/tools/viewport-screenshot.json",
+      "sourceDocument": "data/tool-docs/viewport-screenshot/viewport-screenshot.md",
+      "sourceMode": "markdown-with-external-files",
+      "downloads": {
+        "latestManifest": "/downloads/viewport-screenshot/1.0.0/manifest.json",
+        "latestReadme": "/downloads/viewport-screenshot/1.0.0/README.md",
+        "latestMarkdown": "/downloads/viewport-screenshot/1.0.0/tool.md",
+        "latestPackage": "/downloads/viewport-screenshot/1.0.0/viewport-screenshot-1.0.0.tapython-tool.zip",
+        "latestPackageSha256": "93dc8cd4c0f95fbce5315cde4d4b7425b7842c5f9e0bef6d820b3e20dbd59af5",
+        "latestPackageSize": 23208,
+        "latestPackageAvailable": true
+      }
+    },
     {
       "slug": "test-selection-audit-tool",
       "name": "TestSelectionAuditTool",
@@ -13,6 +4638,7 @@
       "ownerTeam": "Pipeline QA",
       "status": "approved",
       "riskLevel": "low",
+      "toolType": "chameleon",
       "tags": [
         "test-fixture",
         "validation",
@@ -44,8 +4670,8 @@
         "latestReadme": "/downloads/test-selection-audit-tool/0.2.0/README.md",
         "latestMarkdown": "/downloads/test-selection-audit-tool/0.2.0/tool.md",
         "latestPackage": "/downloads/test-selection-audit-tool/0.2.0/test-selection-audit-tool-0.2.0.tapython-tool.zip",
-        "latestPackageSha256": "22b1329feeeb0e93a265395b7bb489f643c0c7572b8f43399d2fb33028e3cd08",
-        "latestPackageSize": 6856,
+        "latestPackageSha256": "3c2f990f7a3fc880d8dad7da2cc66a805eb7c0d5263f0af3f2c31e4d896d7150",
+        "latestPackageSize": 6883,
         "latestPackageAvailable": true
       }
     },
@@ -59,6 +4685,7 @@
       "ownerTeam": "CC",
       "status": "approved",
       "riskLevel": "low",
+      "toolType": "chameleon",
       "tags": [
         "texture",
         "duplicate",
@@ -88,8 +4715,8 @@
         "latestReadme": "/downloads/texture-duplicate-sorter/1.0.0/README.md",
         "latestMarkdown": "/downloads/texture-duplicate-sorter/1.0.0/tool.md",
         "latestPackage": "/downloads/texture-duplicate-sorter/1.0.0/texture-duplicate-sorter-1.0.0.tapython-tool.zip",
-        "latestPackageSha256": "5143699901c57714f62037b111ceb1e19c3fb63349d04e03da32c12d0e3fe1cf",
-        "latestPackageSize": 40240,
+        "latestPackageSha256": "5e2273f4517a1c63611d56c3dbc6a3585aff1aa6602637019bf39cd3caa1d07f",
+        "latestPackageSize": 40267,
         "latestPackageAvailable": true
       }
     },
@@ -103,6 +4730,7 @@
       "ownerTeam": "场景B组",
       "status": "approved",
       "riskLevel": "medium",
+      "toolType": "chameleon",
       "tags": [
         "scene",
         "batch",
@@ -135,8 +4763,8 @@
         "latestReadme": "/downloads/scene-tools/1.0.0/README.md",
         "latestMarkdown": "/downloads/scene-tools/1.0.0/tool.md",
         "latestPackage": "/downloads/scene-tools/1.0.0/scene-tools-1.0.0.tapython-tool.zip",
-        "latestPackageSha256": "920a4cd7f8de7e13604e3e4e4b257acc3a0da6fd1f2e817f499d2dd2d8aee314",
-        "latestPackageSize": 335297,
+        "latestPackageSha256": "f8cfdfe8b4d28f6e23a4df02e5c362dcea6111dec7bc4606547ff40b8e88237f",
+        "latestPackageSize": 335324,
         "latestPackageAvailable": true
       }
     },
@@ -150,6 +4778,7 @@
       "ownerTeam": "Scene Team B",
       "status": "approved",
       "riskLevel": "medium",
+      "toolType": "chameleon",
       "tags": [
         "asset",
         "texture",
@@ -180,8 +4809,8 @@
         "latestReadme": "/downloads/asset-organizer/1.0.0/README.md",
         "latestMarkdown": "/downloads/asset-organizer/1.0.0/tool.md",
         "latestPackage": "/downloads/asset-organizer/1.0.0/asset-organizer-1.0.0.tapython-tool.zip",
-        "latestPackageSha256": "9a5b4e248097cb3bc6975309c8242119285d6f87975af1ee7637ee6b46dbc425",
-        "latestPackageSize": 89277,
+        "latestPackageSha256": "33b4660126f529cd8fd9d076a721764335734071f9cdaf92b290cb58cbdf557f",
+        "latestPackageSize": 89304,
         "latestPackageAvailable": true
       }
     },
@@ -195,6 +4824,7 @@
       "ownerTeam": "Technical Art",
       "status": "approved",
       "riskLevel": "medium",
+      "toolType": "chameleon",
       "tags": [
         "actor",
         "batch-rename",
@@ -227,8 +4857,8 @@
         "latestReadme": "/downloads/actor-rename-tool/1.2.0/README.md",
         "latestMarkdown": "/downloads/actor-rename-tool/1.2.0/tool.md",
         "latestPackage": "/downloads/actor-rename-tool/1.2.0/actor-rename-tool-1.2.0.tapython-tool.zip",
-        "latestPackageSha256": "003ce7bdca2f84cad77d438466d9c9c9cb78363525eaa7112c54c9ccee5d3781",
-        "latestPackageSize": 9208,
+        "latestPackageSha256": "36a85f1abb992731a910a02f7f1e017af755126805e817f581dcbd05c3d5782e",
+        "latestPackageSize": 9235,
         "latestPackageAvailable": true
       }
     }

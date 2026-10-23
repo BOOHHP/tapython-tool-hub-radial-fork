@@ -1,0 +1,194 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-10-23T15:50:07.062Z",
+  "tool": {
+    "slug": "uept-rename-actors-by-table",
+    "name": "UEPTModule956a0649",
+    "displayName": "按表格顺序重命名Actor",
+    "description": "按自定义列映射批量重命名选中Actor",
+    "category": "utility",
+    "author": "场景C组",
+    "ownerTeam": "场景C组",
+    "status": "approved",
+    "riskLevel": "medium",
+    "toolType": "python-script",
+    "collection": {
+      "id": "ue-python-toolkit",
+      "role": "module",
+      "moduleId": "rename_actors_by_table",
+      "categoryPath": [
+        "1_Actor场景",
+        "3_命名Tag"
+      ],
+      "requiredShellVersion": "1.0.0",
+      "sourceSha256": "e26a17cad7c212df3c9c1a42ec9969a97517b2f6290c97f015d91adae54e697a"
+    },
+    "tags": [
+      "ue-python-toolkit",
+      "module",
+      "1_actor场景",
+      "3_命名tag"
+    ],
+    "compatibility": {
+      "unrealEngine": [
+        "5.5"
+      ],
+      "tapython": [
+        "1.2+"
+      ],
+      "plugins": [
+        "TAPython"
+      ]
+    },
+    "mountPoint": "OnToolbar",
+    "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/rename_actors_by_table",
+    "sourceDocument": "data/tool-docs/uept-rename-actors-by-table/uept-rename-actors-by-table.md",
+    "sourceMode": "v2-package-upload",
+    "updatedAt": "2026-10-08T00:00:00Z",
+    "downloads": {
+      "latestManifest": "/downloads/uept-rename-actors-by-table/1.0.0/manifest.json",
+      "latestReadme": "/downloads/uept-rename-actors-by-table/1.0.0/README.md",
+      "latestMarkdown": "/downloads/uept-rename-actors-by-table/1.0.0/tool.md",
+      "latestPackage": "/downloads/uept-rename-actors-by-table/1.0.0/uept-rename-actors-by-table-1.0.0.tapython-tool.zip",
+      "latestPackageSha256": "7565bdc57a8075b344d870704c96f12ab67f2d76b6dc9e1c3fa060f8924d7e15",
+      "latestPackageSize": 24409,
+      "latestPackageAvailable": true
+    },
+    "summary": {
+      "features": [
+        "按自定义列映射批量重命名选中Actor"
+      ],
+      "unrealApis": [],
+      "widgetAkas": [],
+      "installSteps": [
+        "重新打开 UE Python 工具集"
+      ],
+      "riskNotes": [
+        "该模块会修改编辑器状态或资产。"
+      ]
+    },
+    "documentationMarkdown": "# 按表格顺序重命名Actor\n\n> 按自定义列映射批量重命名选中Actor\n\n## 快速开始\n1. 重新打开 UE Python 工具集\n\n## 文件清单\n\n| 文件 | 用途 | 存放路径 |\n|------|------|----------|\n| `tool.py` | python | `Python/UEPythonToolkit/Modules/rename_actors_by_table/tool.py` |\n| `module.json` | metadata | `Python/UEPythonToolkit/Modules/rename_actors_by_table/module.json` |\n\n## 架构简述\n\n- 工具名称：`UEPTModule956a0649`\n- 挂载点：`OnToolbar`\n- 核心 API：未声明\n- 核心控件 Aka：未声明\n\n## MenuConfig\n\n```json menuconfig path=MenuConfig.snippet.json\n@file:assets/MenuConfig.snippet.json\n```\n\n## Controller\n\n```python controller path=UEPythonToolkit/Modules/rename_actors_by_table/tool.py\n@file:UEPythonToolkit/Modules/rename_actors_by_table/tool.py\n```\n\n## View\n\n```json chameleon-ui path=UEPythonToolkit/Modules/rename_actors_by_table/module.json\n@file:UEPythonToolkit/Modules/rename_actors_by_table/module.json\n```\n\n## 使用说明\n\n1. 按自定义列映射批量重命名选中Actor\n\n## 注意事项\n\n- 该模块会修改编辑器状态或资产。\n\n## Agent 安装指令\n\nAgent 应以 v2 package manifest 为安装事实源，先验证 ZIP SHA256、manifest、文件 hash 和 MenuConfig 合并预览，再执行写入。",
+    "codeAssets": [
+      {
+        "path": "MenuConfig.snippet.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "size": 3
+      },
+      {
+        "path": "UEPythonToolkit/Modules/rename_actors_by_table/tool.py",
+        "sha256": "e26a17cad7c212df3c9c1a42ec9969a97517b2f6290c97f015d91adae54e697a",
+        "size": 17362
+      },
+      {
+        "path": "UEPythonToolkit/Modules/rename_actors_by_table/module.json",
+        "sha256": "1d7e9dd78728e2e1d5b5e65ee19c01b1f70c779ff92dd052e94aa2c7f3346c6c",
+        "size": 3827
+      },
+      {
+        "path": "UEPythonToolkit/__init__.py",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    ],
+    "versions": [
+      {
+        "version": "1.0.0",
+        "releasedAt": "2026-10-08",
+        "author": "场景C组",
+        "changeSummary": "v2 package upload.",
+        "breaking": false,
+        "downloads": {
+          "manifest": "/downloads/uept-rename-actors-by-table/1.0.0/manifest.json",
+          "readme": "/downloads/uept-rename-actors-by-table/1.0.0/README.md",
+          "markdown": "/downloads/uept-rename-actors-by-table/1.0.0/tool.md",
+          "package": "/downloads/uept-rename-actors-by-table/1.0.0/uept-rename-actors-by-table-1.0.0.tapython-tool.zip",
+          "packageSha256": "7565bdc57a8075b344d870704c96f12ab67f2d76b6dc9e1c3fa060f8924d7e15",
+          "packageSize": 24409,
+          "packageAvailable": true
+        },
+        "manifest": {
+          "schemaVersion": "1.0.0",
+          "name": "UEPTModule956a0649",
+          "displayName": "按表格顺序重命名Actor",
+          "version": "1.0.0",
+          "author": "场景C组",
+          "description": "按自定义列映射批量重命名选中Actor",
+          "category": "utility",
+          "toolType": "python-script",
+          "tags": [
+            "ue-python-toolkit",
+            "module",
+            "1_actor场景",
+            "3_命名tag"
+          ],
+          "compatibility": {
+            "unrealEngine": [
+              "5.5"
+            ],
+            "tapython": [
+              "1.2+"
+            ],
+            "plugins": [
+              "TAPython"
+            ]
+          },
+          "dependencies": [
+            "ue-python-toolkit"
+          ],
+          "mountPoint": "OnToolbar",
+          "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/rename_actors_by_table",
+          "riskLevel": "medium",
+          "files": [
+            {
+              "path": "MenuConfig.snippet.json",
+              "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+              "size": 3
+            },
+            {
+              "path": "UEPythonToolkit/Modules/rename_actors_by_table/tool.py",
+              "sha256": "e26a17cad7c212df3c9c1a42ec9969a97517b2f6290c97f015d91adae54e697a",
+              "size": 17362
+            },
+            {
+              "path": "UEPythonToolkit/Modules/rename_actors_by_table/module.json",
+              "sha256": "1d7e9dd78728e2e1d5b5e65ee19c01b1f70c779ff92dd052e94aa2c7f3346c6c",
+              "size": 3827
+            },
+            {
+              "path": "UEPythonToolkit/__init__.py",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0
+            }
+          ],
+          "menuConfigMerge": {
+            "target": "<Project>/TA/TAPython/UI/MenuConfig.json",
+            "mountPoint": "OnToolbar",
+            "itemsToAdd": []
+          },
+          "preInstallChecks": [
+            "确认项目已安装 TAPython"
+          ],
+          "postInstallSteps": [
+            "重新打开 UE Python 工具集"
+          ],
+          "uninstallSteps": [
+            "删除 UEPythonToolkit/Modules/rename_actors_by_table 目录"
+          ],
+          "createdAt": "2026-10-08T00:00:00Z",
+          "updatedAt": "2026-10-08T00:00:00Z",
+          "collection": {
+            "id": "ue-python-toolkit",
+            "role": "module",
+            "moduleId": "rename_actors_by_table",
+            "categoryPath": [
+              "1_Actor场景",
+              "3_命名Tag"
+            ],
+            "requiredShellVersion": "1.0.0",
+            "sourceSha256": "e26a17cad7c212df3c9c1a42ec9969a97517b2f6290c97f015d91adae54e697a"
+          }
+        }
+      }
+    ]
+  }
+}

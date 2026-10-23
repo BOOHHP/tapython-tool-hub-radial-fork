@@ -20,6 +20,7 @@ import { syncToolIndex } from '../catalog/toolIndex.js';
 import { EventStore } from '../identity/events.js';
 import { createFeishuProvider } from '../auth/feishuProvider.js';
 import { AuditLog } from '../identity/auditLog.js';
+import { AuthorAliases } from '../identity/authorAliases.js';
 import { createAdminGuard, HubAuth } from '../identity/hubAuth.js';
 import { SessionService } from '../identity/sessionService.js';
 import { UserRepository } from '../identity/userRepository.js';
@@ -88,7 +89,7 @@ export async function createApp(config: ApiConfig) {
   app.register(registerIdentityRoutes(identity?.routeDeps));
   app.register(registerAdminRoutes(submissionRepository, submissionWorkflow, adminWorkflow, authService, identity?.hubAuth, identity?.audit));
   if (identity) {
-    app.register(registerAdminUserRoutes(identity.users, createAdminGuard(authService, identity.hubAuth)));
+    app.register(registerAdminUserRoutes(identity.users, createAdminGuard(authService, identity.hubAuth), new AuthorAliases(hubDatabase!.db)));
   }
 
   if (config.serveStatic) {

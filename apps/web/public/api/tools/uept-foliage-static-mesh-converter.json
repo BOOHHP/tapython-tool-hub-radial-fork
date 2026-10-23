@@ -1,0 +1,194 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-10-23T15:50:06.810Z",
+  "tool": {
+    "slug": "uept-foliage-static-mesh-converter",
+    "name": "UEPTModule16d6ca60",
+    "displayName": "植被与SM双向转换",
+    "description": "植被与静态网格体双向转换；可选合并同类型网格",
+    "category": "utility",
+    "author": "场景C组",
+    "ownerTeam": "场景C组",
+    "status": "approved",
+    "riskLevel": "medium",
+    "toolType": "python-script",
+    "collection": {
+      "id": "ue-python-toolkit",
+      "role": "module",
+      "moduleId": "foliage_static_mesh_converter",
+      "categoryPath": [
+        "4_植被实例",
+        "2_植被转换"
+      ],
+      "requiredShellVersion": "1.0.0",
+      "sourceSha256": "cbba7ed45494093b1d56db437c581ae4fe6c7205c6109475394229e3c09ac439"
+    },
+    "tags": [
+      "ue-python-toolkit",
+      "module",
+      "4_植被实例",
+      "2_植被转换"
+    ],
+    "compatibility": {
+      "unrealEngine": [
+        "5.5"
+      ],
+      "tapython": [
+        "1.2+"
+      ],
+      "plugins": [
+        "TAPython"
+      ]
+    },
+    "mountPoint": "OnToolbar",
+    "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/foliage_static_mesh_converter",
+    "sourceDocument": "data/tool-docs/uept-foliage-static-mesh-converter/uept-foliage-static-mesh-converter.md",
+    "sourceMode": "v2-package-upload",
+    "updatedAt": "2026-10-08T00:00:00Z",
+    "downloads": {
+      "latestManifest": "/downloads/uept-foliage-static-mesh-converter/1.0.0/manifest.json",
+      "latestReadme": "/downloads/uept-foliage-static-mesh-converter/1.0.0/README.md",
+      "latestMarkdown": "/downloads/uept-foliage-static-mesh-converter/1.0.0/tool.md",
+      "latestPackage": "/downloads/uept-foliage-static-mesh-converter/1.0.0/uept-foliage-static-mesh-converter-1.0.0.tapython-tool.zip",
+      "latestPackageSha256": "6052d683ef4671a651cf9d8fd7f7bd6821f18955335d33a21688f5ae9853f147",
+      "latestPackageSize": 18384,
+      "latestPackageAvailable": true
+    },
+    "summary": {
+      "features": [
+        "植被与静态网格体双向转换；可选合并同类型网格"
+      ],
+      "unrealApis": [],
+      "widgetAkas": [],
+      "installSteps": [
+        "重新打开 UE Python 工具集"
+      ],
+      "riskNotes": [
+        "该模块会修改编辑器状态或资产。"
+      ]
+    },
+    "documentationMarkdown": "# 植被与SM双向转换\n\n> 植被与静态网格体双向转换；可选合并同类型网格\n\n## 快速开始\n1. 重新打开 UE Python 工具集\n\n## 文件清单\n\n| 文件 | 用途 | 存放路径 |\n|------|------|----------|\n| `tool.py` | python | `Python/UEPythonToolkit/Modules/foliage_static_mesh_converter/tool.py` |\n| `module.json` | metadata | `Python/UEPythonToolkit/Modules/foliage_static_mesh_converter/module.json` |\n\n## 架构简述\n\n- 工具名称：`UEPTModule16d6ca60`\n- 挂载点：`OnToolbar`\n- 核心 API：未声明\n- 核心控件 Aka：未声明\n\n## MenuConfig\n\n```json menuconfig path=MenuConfig.snippet.json\n@file:assets/MenuConfig.snippet.json\n```\n\n## Controller\n\n```python controller path=UEPythonToolkit/Modules/foliage_static_mesh_converter/tool.py\n@file:UEPythonToolkit/Modules/foliage_static_mesh_converter/tool.py\n```\n\n## View\n\n```json chameleon-ui path=UEPythonToolkit/Modules/foliage_static_mesh_converter/module.json\n@file:UEPythonToolkit/Modules/foliage_static_mesh_converter/module.json\n```\n\n## 使用说明\n\n1. 植被与静态网格体双向转换；可选合并同类型网格\n\n## 注意事项\n\n- 该模块会修改编辑器状态或资产。\n\n## Agent 安装指令\n\nAgent 应以 v2 package manifest 为安装事实源，先验证 ZIP SHA256、manifest、文件 hash 和 MenuConfig 合并预览，再执行写入。",
+    "codeAssets": [
+      {
+        "path": "MenuConfig.snippet.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "size": 3
+      },
+      {
+        "path": "UEPythonToolkit/Modules/foliage_static_mesh_converter/tool.py",
+        "sha256": "cbba7ed45494093b1d56db437c581ae4fe6c7205c6109475394229e3c09ac439",
+        "size": 12867
+      },
+      {
+        "path": "UEPythonToolkit/Modules/foliage_static_mesh_converter/module.json",
+        "sha256": "3f71fea484c4467efcc94027a9bf6e8fbf8220b8b5e236b41e61304b0b40eb38",
+        "size": 2180
+      },
+      {
+        "path": "UEPythonToolkit/__init__.py",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    ],
+    "versions": [
+      {
+        "version": "1.0.0",
+        "releasedAt": "2026-10-08",
+        "author": "场景C组",
+        "changeSummary": "v2 package upload.",
+        "breaking": false,
+        "downloads": {
+          "manifest": "/downloads/uept-foliage-static-mesh-converter/1.0.0/manifest.json",
+          "readme": "/downloads/uept-foliage-static-mesh-converter/1.0.0/README.md",
+          "markdown": "/downloads/uept-foliage-static-mesh-converter/1.0.0/tool.md",
+          "package": "/downloads/uept-foliage-static-mesh-converter/1.0.0/uept-foliage-static-mesh-converter-1.0.0.tapython-tool.zip",
+          "packageSha256": "6052d683ef4671a651cf9d8fd7f7bd6821f18955335d33a21688f5ae9853f147",
+          "packageSize": 18384,
+          "packageAvailable": true
+        },
+        "manifest": {
+          "schemaVersion": "1.0.0",
+          "name": "UEPTModule16d6ca60",
+          "displayName": "植被与SM双向转换",
+          "version": "1.0.0",
+          "author": "场景C组",
+          "description": "植被与静态网格体双向转换；可选合并同类型网格",
+          "category": "utility",
+          "toolType": "python-script",
+          "tags": [
+            "ue-python-toolkit",
+            "module",
+            "4_植被实例",
+            "2_植被转换"
+          ],
+          "compatibility": {
+            "unrealEngine": [
+              "5.5"
+            ],
+            "tapython": [
+              "1.2+"
+            ],
+            "plugins": [
+              "TAPython"
+            ]
+          },
+          "dependencies": [
+            "ue-python-toolkit"
+          ],
+          "mountPoint": "OnToolbar",
+          "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/foliage_static_mesh_converter",
+          "riskLevel": "medium",
+          "files": [
+            {
+              "path": "MenuConfig.snippet.json",
+              "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+              "size": 3
+            },
+            {
+              "path": "UEPythonToolkit/Modules/foliage_static_mesh_converter/tool.py",
+              "sha256": "cbba7ed45494093b1d56db437c581ae4fe6c7205c6109475394229e3c09ac439",
+              "size": 12867
+            },
+            {
+              "path": "UEPythonToolkit/Modules/foliage_static_mesh_converter/module.json",
+              "sha256": "3f71fea484c4467efcc94027a9bf6e8fbf8220b8b5e236b41e61304b0b40eb38",
+              "size": 2180
+            },
+            {
+              "path": "UEPythonToolkit/__init__.py",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0
+            }
+          ],
+          "menuConfigMerge": {
+            "target": "<Project>/TA/TAPython/UI/MenuConfig.json",
+            "mountPoint": "OnToolbar",
+            "itemsToAdd": []
+          },
+          "preInstallChecks": [
+            "确认项目已安装 TAPython"
+          ],
+          "postInstallSteps": [
+            "重新打开 UE Python 工具集"
+          ],
+          "uninstallSteps": [
+            "删除 UEPythonToolkit/Modules/foliage_static_mesh_converter 目录"
+          ],
+          "createdAt": "2026-10-08T00:00:00Z",
+          "updatedAt": "2026-10-08T00:00:00Z",
+          "collection": {
+            "id": "ue-python-toolkit",
+            "role": "module",
+            "moduleId": "foliage_static_mesh_converter",
+            "categoryPath": [
+              "4_植被实例",
+              "2_植被转换"
+            ],
+            "requiredShellVersion": "1.0.0",
+            "sourceSha256": "cbba7ed45494093b1d56db437c581ae4fe6c7205c6109475394229e3c09ac439"
+          }
+        }
+      }
+    ]
+  }
+}

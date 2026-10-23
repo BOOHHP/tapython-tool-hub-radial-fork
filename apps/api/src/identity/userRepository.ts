@@ -10,6 +10,8 @@ export interface UserRecord {
   name: string;
   email?: string;
   department?: string;
+  // Admin override; effective team is team ?? department.
+  team?: string;
   status: 'active' | 'left';
   roles: Role[];
   createdAt: string;
@@ -111,6 +113,17 @@ export class UserRepository {
     return this.get(openId)!;
   }
 
+  setTeam(actor: string, openId: string, team: string | null): UserRecord {
+    const user = this.get(openId);
+    if (!user) {
+      throw new Error(`User ${openId} not found`);
+    }
+    const next = team?.trim() || null;
+    this.db.prepare('UPDATE users SET team = ? WHERE open_id = ?').run(next, openId);
+    this.audit.record({ actor, action: 'user.team', entityType: 'user', entityId: openId, before: user.team ?? null, after: next });
+    return this.get(openId)!;
+  }
+
   markLeft(actor: string, openId: string): UserRecord {
     const user = this.get(openId);
     if (!user) {
@@ -160,6 +173,7 @@ export class UserRepository {
       name: String(row.name),
       email: row.email === null ? undefined : String(row.email),
       department: row.department === null ? undefined : String(row.department),
+      team: row.team === null || row.team === undefined ? undefined : String(row.team),
       status: row.status === 'left' ? 'left' : 'active',
       roles: this.rolesOf(openId),
       createdAt: String(row.created_at),

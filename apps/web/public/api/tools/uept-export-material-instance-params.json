@@ -1,0 +1,194 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-10-23T15:50:06.786Z",
+  "tool": {
+    "slug": "uept-export-material-instance-params",
+    "name": "UEPTModuledeea2960",
+    "displayName": "导出材质实例参数数据",
+    "description": "导出选中材质实例的参数/StaticSwitch诊断数据",
+    "category": "utility",
+    "author": "场景C组",
+    "ownerTeam": "场景C组",
+    "status": "approved",
+    "riskLevel": "low",
+    "toolType": "python-script",
+    "collection": {
+      "id": "ue-python-toolkit",
+      "role": "module",
+      "moduleId": "export_material_instance_params",
+      "categoryPath": [
+        "8_开发测试",
+        "3_诊断导出"
+      ],
+      "requiredShellVersion": "1.0.0",
+      "sourceSha256": "76bf3dc41bef00129678ab3d8fcb9ae78d5a438705e8bb85503f77060ef0056d"
+    },
+    "tags": [
+      "ue-python-toolkit",
+      "module",
+      "8_开发测试",
+      "3_诊断导出"
+    ],
+    "compatibility": {
+      "unrealEngine": [
+        "5.5"
+      ],
+      "tapython": [
+        "1.2+"
+      ],
+      "plugins": [
+        "TAPython"
+      ]
+    },
+    "mountPoint": "OnToolbar",
+    "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/export_material_instance_params",
+    "sourceDocument": "data/tool-docs/uept-export-material-instance-params/uept-export-material-instance-params.md",
+    "sourceMode": "v2-package-upload",
+    "updatedAt": "2026-10-08T00:00:00Z",
+    "downloads": {
+      "latestManifest": "/downloads/uept-export-material-instance-params/1.0.0/manifest.json",
+      "latestReadme": "/downloads/uept-export-material-instance-params/1.0.0/README.md",
+      "latestMarkdown": "/downloads/uept-export-material-instance-params/1.0.0/tool.md",
+      "latestPackage": "/downloads/uept-export-material-instance-params/1.0.0/uept-export-material-instance-params-1.0.0.tapython-tool.zip",
+      "latestPackageSha256": "e4250dd4fe966f14e7c6c2020af6418ce5b4b7776828530ce146d512ede0656d",
+      "latestPackageSize": 26784,
+      "latestPackageAvailable": true
+    },
+    "summary": {
+      "features": [
+        "导出选中材质实例的参数/StaticSwitch诊断数据"
+      ],
+      "unrealApis": [],
+      "widgetAkas": [],
+      "installSteps": [
+        "重新打开 UE Python 工具集"
+      ],
+      "riskNotes": [
+        "该模块标记为只读或非破坏性。"
+      ]
+    },
+    "documentationMarkdown": "# 导出材质实例参数数据\n\n> 导出选中材质实例的参数/StaticSwitch诊断数据\n\n## 快速开始\n1. 重新打开 UE Python 工具集\n\n## 文件清单\n\n| 文件 | 用途 | 存放路径 |\n|------|------|----------|\n| `tool.py` | python | `Python/UEPythonToolkit/Modules/export_material_instance_params/tool.py` |\n| `module.json` | metadata | `Python/UEPythonToolkit/Modules/export_material_instance_params/module.json` |\n\n## 架构简述\n\n- 工具名称：`UEPTModuledeea2960`\n- 挂载点：`OnToolbar`\n- 核心 API：未声明\n- 核心控件 Aka：未声明\n\n## MenuConfig\n\n```json menuconfig path=MenuConfig.snippet.json\n@file:assets/MenuConfig.snippet.json\n```\n\n## Controller\n\n```python controller path=UEPythonToolkit/Modules/export_material_instance_params/tool.py\n@file:UEPythonToolkit/Modules/export_material_instance_params/tool.py\n```\n\n## View\n\n```json chameleon-ui path=UEPythonToolkit/Modules/export_material_instance_params/module.json\n@file:UEPythonToolkit/Modules/export_material_instance_params/module.json\n```\n\n## 使用说明\n\n1. 导出选中材质实例的参数/StaticSwitch诊断数据\n\n## 注意事项\n\n- 该模块标记为只读或非破坏性。\n\n## Agent 安装指令\n\nAgent 应以 v2 package manifest 为安装事实源，先验证 ZIP SHA256、manifest、文件 hash 和 MenuConfig 合并预览，再执行写入。",
+    "codeAssets": [
+      {
+        "path": "MenuConfig.snippet.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "size": 3
+      },
+      {
+        "path": "UEPythonToolkit/Modules/export_material_instance_params/tool.py",
+        "sha256": "76bf3dc41bef00129678ab3d8fcb9ae78d5a438705e8bb85503f77060ef0056d",
+        "size": 21849
+      },
+      {
+        "path": "UEPythonToolkit/Modules/export_material_instance_params/module.json",
+        "sha256": "411d8844c85a9df2f924b7b1c14759bd659fef7bdf15571a8bdfeeb80380a602",
+        "size": 1591
+      },
+      {
+        "path": "UEPythonToolkit/__init__.py",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    ],
+    "versions": [
+      {
+        "version": "1.0.0",
+        "releasedAt": "2026-10-08",
+        "author": "场景C组",
+        "changeSummary": "v2 package upload.",
+        "breaking": false,
+        "downloads": {
+          "manifest": "/downloads/uept-export-material-instance-params/1.0.0/manifest.json",
+          "readme": "/downloads/uept-export-material-instance-params/1.0.0/README.md",
+          "markdown": "/downloads/uept-export-material-instance-params/1.0.0/tool.md",
+          "package": "/downloads/uept-export-material-instance-params/1.0.0/uept-export-material-instance-params-1.0.0.tapython-tool.zip",
+          "packageSha256": "e4250dd4fe966f14e7c6c2020af6418ce5b4b7776828530ce146d512ede0656d",
+          "packageSize": 26784,
+          "packageAvailable": true
+        },
+        "manifest": {
+          "schemaVersion": "1.0.0",
+          "name": "UEPTModuledeea2960",
+          "displayName": "导出材质实例参数数据",
+          "version": "1.0.0",
+          "author": "场景C组",
+          "description": "导出选中材质实例的参数/StaticSwitch诊断数据",
+          "category": "utility",
+          "toolType": "python-script",
+          "tags": [
+            "ue-python-toolkit",
+            "module",
+            "8_开发测试",
+            "3_诊断导出"
+          ],
+          "compatibility": {
+            "unrealEngine": [
+              "5.5"
+            ],
+            "tapython": [
+              "1.2+"
+            ],
+            "plugins": [
+              "TAPython"
+            ]
+          },
+          "dependencies": [
+            "ue-python-toolkit"
+          ],
+          "mountPoint": "OnToolbar",
+          "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit/Modules/export_material_instance_params",
+          "riskLevel": "low",
+          "files": [
+            {
+              "path": "MenuConfig.snippet.json",
+              "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+              "size": 3
+            },
+            {
+              "path": "UEPythonToolkit/Modules/export_material_instance_params/tool.py",
+              "sha256": "76bf3dc41bef00129678ab3d8fcb9ae78d5a438705e8bb85503f77060ef0056d",
+              "size": 21849
+            },
+            {
+              "path": "UEPythonToolkit/Modules/export_material_instance_params/module.json",
+              "sha256": "411d8844c85a9df2f924b7b1c14759bd659fef7bdf15571a8bdfeeb80380a602",
+              "size": 1591
+            },
+            {
+              "path": "UEPythonToolkit/__init__.py",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0
+            }
+          ],
+          "menuConfigMerge": {
+            "target": "<Project>/TA/TAPython/UI/MenuConfig.json",
+            "mountPoint": "OnToolbar",
+            "itemsToAdd": []
+          },
+          "preInstallChecks": [
+            "确认项目已安装 TAPython"
+          ],
+          "postInstallSteps": [
+            "重新打开 UE Python 工具集"
+          ],
+          "uninstallSteps": [
+            "删除 UEPythonToolkit/Modules/export_material_instance_params 目录"
+          ],
+          "createdAt": "2026-10-08T00:00:00Z",
+          "updatedAt": "2026-10-08T00:00:00Z",
+          "collection": {
+            "id": "ue-python-toolkit",
+            "role": "module",
+            "moduleId": "export_material_instance_params",
+            "categoryPath": [
+              "8_开发测试",
+              "3_诊断导出"
+            ],
+            "requiredShellVersion": "1.0.0",
+            "sourceSha256": "76bf3dc41bef00129678ab3d8fcb9ae78d5a438705e8bb85503f77060ef0056d"
+          }
+        }
+      }
+    ]
+  }
+}

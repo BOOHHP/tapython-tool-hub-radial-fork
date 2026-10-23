@@ -6,7 +6,7 @@ import {
   SaveOutlined,
   ToolOutlined
 } from '@ant-design/icons';
-import { Alert, Button, Card, Col, Empty, Flex, Form, Input, Popconfirm, Row, Select, Space, Table, Tag, Typography, message } from 'antd';
+import { Alert, Button, Card, Col, Empty, Flex, Form, Input, Popconfirm, Row, Select, Space, Table, Tabs, Tag, Typography, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { AdminUpdateToolRequest, SubmissionRecord, ToolRecord, ToolStatus } from '@tapython-tool-hub/shared';
@@ -23,6 +23,7 @@ import {
   type HubUser
 } from '../../services/auth';
 import { roleLabels } from '../account/HeaderAccount';
+import { UserManagement } from './UserManagement';
 import { riskColor, statusColor } from '../tools/display';
 
 const { Paragraph, Text, Title } = Typography;
@@ -319,6 +320,9 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
         />
       ) : null}
       {authUser && mayReview ? (
+      <Tabs
+        items={[
+          { key: 'review', label: '审核与发布', children: (
       <Row gutter={[18, 18]}>
         <Col xs={24} xl={15}>
           <Card
@@ -457,6 +461,10 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
           </Card>
         </Col>
       </Row>
+          ) },
+          ...(mayAdminister ? [{ key: 'people', label: '人员管理', children: <UserManagement /> }] : [])
+        ]}
+      />
       ) : null}
     </Space>
   );
