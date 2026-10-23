@@ -19,6 +19,14 @@ export interface ApiConfig {
   adminPasswordHash?: string;
   authSessionSecret?: string;
   adminSessionTtlHours?: number;
+  feishuAuthEnabled?: boolean;
+  feishuProvider?: string;
+  feishuAppId?: string;
+  feishuAppSecret?: string;
+  feishuScope?: string;
+  feishuFetchDepartment?: boolean;
+  bootstrapAdminEmails?: string[];
+  publicBaseUrl?: string;
 }
 
 export function loadConfig(): ApiConfig {
@@ -41,7 +49,15 @@ export function loadConfig(): ApiConfig {
     adminUsername: process.env.ADMIN_USERNAME,
     adminPasswordHash: process.env.ADMIN_PASSWORD_HASH,
     authSessionSecret: process.env.AUTH_SESSION_SECRET,
-    adminSessionTtlHours: Number(process.env.ADMIN_SESSION_TTL_HOURS ?? 12)
+    adminSessionTtlHours: Number(process.env.ADMIN_SESSION_TTL_HOURS ?? 12),
+    feishuAuthEnabled: parseBoolean(process.env.AUTH_FEISHU_ENABLED, false),
+    feishuProvider: process.env.FEISHU_PROVIDER || undefined,
+    feishuAppId: process.env.FEISHU_APP_ID || undefined,
+    feishuAppSecret: process.env.FEISHU_APP_SECRET || undefined,
+    feishuScope: process.env.FEISHU_SCOPE || undefined,
+    feishuFetchDepartment: parseBoolean(process.env.FEISHU_FETCH_DEPARTMENT, false),
+    bootstrapAdminEmails: (process.env.BOOTSTRAP_ADMIN_EMAILS ?? '').split(',').map((email) => email.trim()).filter(Boolean),
+    publicBaseUrl: process.env.PUBLIC_BASE_URL || undefined
   };
 }
 
