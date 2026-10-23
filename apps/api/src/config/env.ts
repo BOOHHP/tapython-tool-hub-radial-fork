@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 export interface ApiConfig {
   databaseUrl?: string;
+  sqlitePath?: string;
   host: string;
   port: number;
   repoRoot: string;
@@ -26,6 +27,7 @@ export function loadConfig(): ApiConfig {
 
   return {
     databaseUrl: process.env.DATABASE_URL,
+    sqlitePath: process.env.SQLITE_PATH,
     host: process.env.API_HOST ?? '127.0.0.1',
     port: Number(process.env.API_PORT ?? 8787),
     repoRoot,

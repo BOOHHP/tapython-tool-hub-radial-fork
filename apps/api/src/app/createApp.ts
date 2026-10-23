@@ -2,6 +2,7 @@ import cors from '@fastify/cors';
 import fastify from 'fastify';
 import type { ApiConfig } from '../config/env.js';
 import { createDatabasePool } from '../database/client.js';
+import { openHubDatabase } from '../database/hubDatabase.js';
 import { FileSubmissionRepository } from '../repositories/fileSubmissionRepository.js';
 import { PgSubmissionRepository } from '../repositories/pgSubmissionRepository.js';
 import { StaticToolRepository } from '../repositories/staticToolRepository.js';
@@ -19,6 +20,7 @@ import { registerStaticAssets } from './staticPlugin.js';
 export async function createApp(config: ApiConfig) {
   const app = fastify({ logger: true });
   const databasePool = createDatabasePool(config);
+  const hubDatabase = await openHubDatabase(config);
   const toolRepository = new StaticToolRepository(config);
   const submissionRepository = databasePool
     ? new PgSubmissionRepository(databasePool)
@@ -33,7 +35,7 @@ export async function createApp(config: ApiConfig) {
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type']
   });
-  app.register(registerHealthRoutes(databasePool));
+  app.register(registerHealthRoutes(databasePool, hubDatabase));
   app.register(registerToolRoutes(toolRepository));
   app.register(registerDownloadRoutes(config));
   app.register(registerSubmissionRoutes(submissionRepository, submissionWorkflow));
@@ -45,6 +47,7 @@ export async function createApp(config: ApiConfig) {
   }
 
   app.addHook('onClose', async () => {
+    hubDatabase?.db.close();
     await databasePool?.end();
   });
 
