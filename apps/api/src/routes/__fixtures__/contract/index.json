@@ -1,0 +1,56 @@
+{
+    "schemaVersion":  "1.0.0",
+    "generatedAt":  "2026-10-23T08:59:46.069Z",
+    "total":  1,
+    "tools":  [
+                  {
+                      "slug":  "ue-python-toolkit",
+                      "name":  "UEPythonToolkit",
+                      "displayName":  "UE Python 工具集",
+                      "description":  "统一管理场景C组分类 UE Python 工具的 Tkinter Shell。",
+                      "category":  "pipeline",
+                      "author":  "场景C组",
+                      "ownerTeam":  "场景C组",
+                      "status":  "approved",
+                      "riskLevel":  "low",
+                      "toolType":  "python-script",
+                      "collection":  {
+                                         "id":  "ue-python-toolkit",
+                                         "role":  "shell",
+                                         "uiKind":  "tkinter-shell"
+                                     },
+                      "tags":  [
+                                   "ue-python-toolkit",
+                                   "tool-shell",
+                                   "tkinter"
+                               ],
+                      "compatibility":  {
+                                            "unrealEngine":  [
+                                                                 "5.5"
+                                                             ],
+                                            "tapython":  [
+                                                             "1.2+"
+                                                         ],
+                                            "plugins":  [
+                                                            "TAPython"
+                                                        ]
+                                        },
+                      "mountPoint":  "OnToolbar",
+                      "installPath":  "\u003cProject\u003e/TA/TAPython/Python/UEPythonToolkit",
+                      "latestVersion":  "1.0.0",
+                      "updatedAt":  "2026-10-08T00:00:00Z",
+                      "apiUrl":  "/api/tools/ue-python-toolkit.json",
+                      "sourceDocument":  "data/tool-docs/ue-python-toolkit/ue-python-toolkit.md",
+                      "sourceMode":  "v2-package-upload",
+                      "downloads":  {
+                                        "latestManifest":  "/downloads/ue-python-toolkit/1.0.0/manifest.json",
+                                        "latestReadme":  "/downloads/ue-python-toolkit/1.0.0/README.md",
+                                        "latestMarkdown":  "/downloads/ue-python-toolkit/1.0.0/tool.md",
+                                        "latestPackage":  "/downloads/ue-python-toolkit/1.0.0/ue-python-toolkit-1.0.0.tapython-tool.zip",
+                                        "latestPackageSha256":  "70e80fb9705fe3706bb3c8590a233ad9dea2582a387c1125a754963066bef877",
+                                        "latestPackageSize":  87379,
+                                        "latestPackageAvailable":  true
+                                    }
+                  }
+              ]
+}

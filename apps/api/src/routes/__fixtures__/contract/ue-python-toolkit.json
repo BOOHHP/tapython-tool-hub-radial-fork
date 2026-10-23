@@ -1,0 +1,188 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-10-23T08:59:45.583Z",
+  "tool": {
+    "slug": "ue-python-toolkit",
+    "name": "UEPythonToolkit",
+    "displayName": "UE Python 工具集",
+    "description": "统一管理场景C组分类 UE Python 工具的 Tkinter Shell。",
+    "category": "pipeline",
+    "author": "场景C组",
+    "ownerTeam": "场景C组",
+    "status": "approved",
+    "riskLevel": "low",
+    "toolType": "python-script",
+    "collection": {
+      "id": "ue-python-toolkit",
+      "role": "shell",
+      "uiKind": "tkinter-shell"
+    },
+    "tags": [
+      "ue-python-toolkit",
+      "tool-shell",
+      "tkinter"
+    ],
+    "compatibility": {
+      "unrealEngine": [
+        "5.5"
+      ],
+      "tapython": [
+        "1.2+"
+      ],
+      "plugins": [
+        "TAPython"
+      ]
+    },
+    "mountPoint": "OnToolbar",
+    "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit",
+    "sourceDocument": "data/tool-docs/ue-python-toolkit/ue-python-toolkit.md",
+    "sourceMode": "v2-package-upload",
+    "updatedAt": "2026-10-08T00:00:00Z",
+    "downloads": {
+      "latestManifest": "/downloads/ue-python-toolkit/1.0.0/manifest.json",
+      "latestReadme": "/downloads/ue-python-toolkit/1.0.0/README.md",
+      "latestMarkdown": "/downloads/ue-python-toolkit/1.0.0/tool.md",
+      "latestPackage": "/downloads/ue-python-toolkit/1.0.0/ue-python-toolkit-1.0.0.tapython-tool.zip",
+      "latestPackageSha256": "70e80fb9705fe3706bb3c8590a233ad9dea2582a387c1125a754963066bef877",
+      "latestPackageSize": 87379,
+      "latestPackageAvailable": true
+    },
+    "summary": {
+      "features": [
+        "按分类发现并运行独立 Python 工具",
+        "统一渲染 TOOL_META 参数",
+        "记录参数与运行日志"
+      ],
+      "unrealApis": [
+        "unreal.register_slate_post_tick_callback"
+      ],
+      "widgetAkas": [],
+      "installSteps": [
+        "重新打开 UE Python 工具集"
+      ],
+      "riskNotes": [
+        "Shell 本身不修改资产；具体风险由模块声明。"
+      ]
+    },
+    "documentationMarkdown": "# UE Python 工具集\n\n> 统一管理场景C组分类 UE Python 工具的 Tkinter Shell。\n\n## 快速开始\n1. 重新打开 UE Python 工具集\n\n## 文件清单\n\n| 文件 | 用途 | 存放路径 |\n|------|------|----------|\n| `runtime.py` | python | `Python/UEPythonToolkit/runtime.py` |\n| `__init__.py` | python | `Python/UEPythonToolkit/__init__.py` |\n| `collection.lock.json` | metadata | `Python/UEPythonToolkit/collection.lock.json` |\n\n## 架构简述\n\n- 工具名称：`UEPythonToolkit`\n- 挂载点：`OnToolbar`\n- 核心 API：`unreal.register_slate_post_tick_callback`\n- 核心控件 Aka：未声明\n\n## MenuConfig\n\n```json menuconfig path=MenuConfig.snippet.json\n@file:assets/MenuConfig.snippet.json\n```\n\n## Controller\n\n```python controller path=UEPythonToolkit/runtime.py\n@file:UEPythonToolkit/runtime.py\n```\n\n## Controller\n\n```python controller path=UEPythonToolkit/__init__.py\n@file:UEPythonToolkit/__init__.py\n```\n\n## View\n\n```json chameleon-ui path=UEPythonToolkit/collection.lock.json\n@file:UEPythonToolkit/collection.lock.json\n```\n\n## 使用说明\n\n1. 按分类发现并运行独立 Python 工具\n2. 统一渲染 TOOL_META 参数\n3. 记录参数与运行日志\n\n## 注意事项\n\n- Shell 本身不修改资产；具体风险由模块声明。\n\n## Agent 安装指令\n\nAgent 应以 v2 package manifest 为安装事实源，先验证 ZIP SHA256、manifest、文件 hash 和 MenuConfig 合并预览，再执行写入。",
+    "codeAssets": [
+      {
+        "path": "MenuConfig.snippet.json",
+        "sha256": "789f8e09d1d80ebff1ac6ef5a3aa30369c2e225e24cfb682151747ad5455322a",
+        "size": 151
+      },
+      {
+        "path": "UEPythonToolkit/runtime.py",
+        "sha256": "d720d7a6b03acfcca5432ece1832228fd5cc7b0413908ae7fdcc57daf5ab0cc7",
+        "size": 83498
+      },
+      {
+        "path": "UEPythonToolkit/__init__.py",
+        "sha256": "03566a79fab0197dc77025577fd1d4e5b587f8913c31862b5a09fa0a1bb8dd81",
+        "size": 28
+      },
+      {
+        "path": "UEPythonToolkit/collection.lock.json",
+        "sha256": "01991a9759a929b59965e31b463e637ce5c459b61d787fc3a5163b085d7e9530",
+        "size": 808
+      }
+    ],
+    "versions": [
+      {
+        "version": "1.0.0",
+        "releasedAt": "2026-10-08",
+        "author": "场景C组",
+        "changeSummary": "v2 package upload.",
+        "breaking": false,
+        "downloads": {
+          "manifest": "/downloads/ue-python-toolkit/1.0.0/manifest.json",
+          "readme": "/downloads/ue-python-toolkit/1.0.0/README.md",
+          "markdown": "/downloads/ue-python-toolkit/1.0.0/tool.md",
+          "package": "/downloads/ue-python-toolkit/1.0.0/ue-python-toolkit-1.0.0.tapython-tool.zip",
+          "packageSha256": "70e80fb9705fe3706bb3c8590a233ad9dea2582a387c1125a754963066bef877",
+          "packageSize": 87379,
+          "packageAvailable": true
+        },
+        "manifest": {
+          "schemaVersion": "1.0.0",
+          "name": "UEPythonToolkit",
+          "displayName": "UE Python 工具集",
+          "version": "1.0.0",
+          "author": "场景C组",
+          "description": "统一管理场景C组分类 UE Python 工具的 Tkinter Shell。",
+          "category": "pipeline",
+          "toolType": "python-script",
+          "tags": [
+            "ue-python-toolkit",
+            "tool-shell",
+            "tkinter"
+          ],
+          "compatibility": {
+            "unrealEngine": [
+              "5.5"
+            ],
+            "tapython": [
+              "1.2+"
+            ],
+            "plugins": [
+              "TAPython"
+            ]
+          },
+          "dependencies": [],
+          "mountPoint": "OnToolbar",
+          "installPath": "<Project>/TA/TAPython/Python/UEPythonToolkit",
+          "riskLevel": "low",
+          "files": [
+            {
+              "path": "MenuConfig.snippet.json",
+              "sha256": "789f8e09d1d80ebff1ac6ef5a3aa30369c2e225e24cfb682151747ad5455322a",
+              "size": 151
+            },
+            {
+              "path": "UEPythonToolkit/runtime.py",
+              "sha256": "d720d7a6b03acfcca5432ece1832228fd5cc7b0413908ae7fdcc57daf5ab0cc7",
+              "size": 83498
+            },
+            {
+              "path": "UEPythonToolkit/__init__.py",
+              "sha256": "03566a79fab0197dc77025577fd1d4e5b587f8913c31862b5a09fa0a1bb8dd81",
+              "size": 28
+            },
+            {
+              "path": "UEPythonToolkit/collection.lock.json",
+              "sha256": "01991a9759a929b59965e31b463e637ce5c459b61d787fc3a5163b085d7e9530",
+              "size": 808
+            }
+          ],
+          "menuConfigMerge": {
+            "target": "<Project>/TA/TAPython/UI/MenuConfig.json",
+            "mountPoint": "OnToolbar",
+            "itemsToAdd": [
+              {
+                "name": "UE Python 工具集",
+                "command": "import UEPythonToolkit; UEPythonToolkit.launch()",
+                "ExtensionHookName": "OnToolbar"
+              }
+            ]
+          },
+          "preInstallChecks": [
+            "确认项目已安装 TAPython"
+          ],
+          "postInstallSteps": [
+            "重新打开 UE Python 工具集"
+          ],
+          "uninstallSteps": [
+            "确认已卸载所有模块后删除 UEPythonToolkit 目录"
+          ],
+          "createdAt": "2026-10-08T00:00:00Z",
+          "updatedAt": "2026-10-08T00:00:00Z",
+          "collection": {
+            "id": "ue-python-toolkit",
+            "role": "shell",
+            "uiKind": "tkinter-shell"
+          }
+        }
+      }
+    ]
+  }
+}
