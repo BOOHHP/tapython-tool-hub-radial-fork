@@ -1,5 +1,5 @@
-import { LoginOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Dropdown, Space, Tag, Typography } from 'antd';
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Button, Dropdown, Space, Tag, Tooltip, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import { feishuLoginUrl, getHubSession, isFeishuLoginEnabled, logoutHub, type HubUser } from '../../services/auth';
 
@@ -29,17 +29,39 @@ export function HeaderAccount() {
 
   if (!user) {
     return (
-      <Button icon={<LoginOutlined />} href={feishuLoginUrl(`${window.location.pathname}${window.location.hash}`)}>
-        飞书登录
-      </Button>
+      <Tooltip title="飞书登录" placement="bottom">
+        <Button
+          shape="circle"
+          size="large"
+          icon={<UserOutlined />}
+          aria-label="飞书登录"
+          className="header-account-button"
+          href={feishuLoginUrl(`${window.location.pathname}${window.location.hash}`)}
+        />
+      </Tooltip>
     );
   }
 
   return (
     <Dropdown
       trigger={['click']}
+      placement="bottomRight"
       menu={{
         items: [
+          {
+            key: 'profile',
+            disabled: true,
+            label: (
+              <Space direction="vertical" size={2}>
+                <Text strong>{user.name}</Text>
+                {user.email ? <Text type="secondary">{user.email}</Text> : null}
+                {user.roles.length > 0 ? (
+                  <Space size={4}>{user.roles.map((role) => <Tag key={role} color={role === 'admin' ? 'gold' : 'blue'}>{roleLabels[role]}</Tag>)}</Space>
+                ) : null}
+              </Space>
+            )
+          },
+          { type: 'divider' },
           {
             key: 'logout',
             icon: <LogoutOutlined />,
@@ -49,12 +71,9 @@ export function HeaderAccount() {
         ]
       }}
     >
-      <Button icon={<UserOutlined />} aria-label={`账号 ${user.name}`}>
-        <Space size={6}>
-          <Text>{user.name}</Text>
-          {user.roles.map((role) => <Tag key={role} color={role === 'admin' ? 'gold' : 'blue'}>{roleLabels[role]}</Tag>)}
-        </Space>
-      </Button>
+      <button type="button" className="header-account-avatar" aria-label={`账号 ${user.name}，点击展开菜单`}>
+        <Avatar size={40}>{user.name.slice(0, 1)}</Avatar>
+      </button>
     </Dropdown>
   );
 }

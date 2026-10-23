@@ -2,19 +2,17 @@ import {
   CheckCircleOutlined,
   CloseCircleOutlined,
   DeleteOutlined,
-  LoginOutlined,
   ReloadOutlined,
   SaveOutlined,
   ToolOutlined
 } from '@ant-design/icons';
-import { Alert, Button, Card, Col, Divider, Empty, Flex, Form, Input, Popconfirm, Row, Select, Space, Table, Tag, Typography, message } from 'antd';
+import { Alert, Button, Card, Col, Empty, Flex, Form, Input, Popconfirm, Row, Select, Space, Table, Tag, Typography, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { AdminUpdateToolRequest, SubmissionRecord, ToolRecord, ToolStatus } from '@tapython-tool-hub/shared';
 import { deleteAdminSubmission, deleteAdminTool, listAdminSubmissions, reviewAdminSubmission, updateAdminTool } from '../../services/adminConsole';
 import {
   canReview,
-  feishuLoginUrl,
   getCurrentAdmin,
   getHubSession,
   isFeishuLoginEnabled,
@@ -468,10 +466,7 @@ function AdminLoginPanel({ loading, onLogin, feishuEnabled }: { loading: boolean
   return (
     <Card title="后台登录" className="admin-login-panel">
       {feishuEnabled ? (
-        <>
-          <Button type="primary" size="large" block icon={<LoginOutlined />} href={feishuLoginUrl('/#admin')}>使用飞书登录</Button>
-          <Divider plain>应急管理员登录</Divider>
-        </>
+        <Text type="secondary" className="admin-login-hint">已启用飞书登录：点击页面右上角的圆形头像按钮即可登录。下方为应急管理员登录。</Text>
       ) : null}
       <Form layout="vertical" onFinish={onLogin} autoComplete="off">
         <Form.Item name="username" label="用户名" rules={[{ required: true, message: '请输入用户名' }]}>

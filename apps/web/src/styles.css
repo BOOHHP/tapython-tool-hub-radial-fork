@@ -2027,3 +2027,32 @@ li,
 .admin-session-tag {
   margin-inline-start: 8px;
 }
+
+.header-account-button,
+.header-account-avatar {
+  flex: none;
+}
+
+.header-account-avatar {
+  padding: 0;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  line-height: 0;
+  transition: border-color 0.2s;
+}
+
+.header-account-avatar:hover,
+.header-account-avatar:focus-visible {
+  border-color: #2563eb;
+}
+
+.header-account-avatar .ant-avatar {
+  background: #2563eb;
+}
+
+.admin-login-hint {
+  display: block;
+  margin-bottom: 16px;
+}
