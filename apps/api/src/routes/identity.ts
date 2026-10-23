@@ -105,7 +105,7 @@ export function registerIdentityRoutes(deps?: IdentityDeps) {
         return reply.redirect(pending.returnTo);
       } catch (error) {
         const failure = failureStatus(error);
-        request.log.warn({ code: failure.code }, 'feishu web login failed');
+        request.log.warn({ code: failure.code, reason: error instanceof Error ? error.message : undefined }, 'feishu web login failed');
         return reply.redirect(`/?login_error=${failure.code}`);
       }
     });
@@ -138,7 +138,7 @@ export function registerIdentityRoutes(deps?: IdentityDeps) {
           return { user: publicUser(user), ...issued };
         } catch (error) {
           const failure = failureStatus(error);
-          request.log.warn({ code: failure.code }, 'feishu code exchange failed');
+          request.log.warn({ code: failure.code, reason: error instanceof Error ? error.message : undefined }, 'feishu code exchange failed');
           return reply.code(failure.status).send({ error: failure.code });
         }
       }
