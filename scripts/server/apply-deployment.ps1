@@ -209,6 +209,33 @@ if ((Get-EnvValue 'STORE_BACKEND') -eq 'sqlite') {
     }
 }
 
+# ── 3c. One-time artifacts migration (only when .env sets ARTIFACT_ROOT) ──
+# Copies tool docs, downloads and generated API JSON into ARTIFACT_ROOT, verified by hash. The repo
+# copies stay untouched; a failure runs this start with the old repo-relative paths (ARTIFACT_ROOT=off).
+$artifactRoot = Get-EnvValue 'ARTIFACT_ROOT'
+if ($artifactRoot -and $artifactRoot -ne 'off') {
+    $nodeExe = (Get-Command node.exe -ErrorAction SilentlyContinue).Source
+    if (-not $nodeExe) { $nodeExe = 'node.exe' }
+    $migrationCli = Join-Path $repoRoot 'apps\api\dist\migration\cli.js'
+    if (-not (Test-Path $migrationCli)) {
+        Write-Log "ERROR: ARTIFACT_ROOT is set but the migration CLI is not built; using repo data paths for this run."
+        $storeOverride += 'set ARTIFACT_ROOT=off&& '
+    } else {
+        $previousPreference = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
+        $artifactOutput = & $nodeExe --no-warnings $migrationCli artifacts --repo $repoRoot --artifacts $artifactRoot 2>&1
+        $artifactExit = $LASTEXITCODE
+        $ErrorActionPreference = $previousPreference
+        $artifactOutput | ForEach-Object { Write-Log "  artifacts: $_" }
+        if ($artifactExit -ne 0) {
+            Write-Log "ERROR: artifacts migration failed (exit $artifactExit); using repo data paths for this run."
+            $storeOverride += 'set ARTIFACT_ROOT=off&& '
+        } else {
+            Write-Log "Artifacts migration step finished."
+        }
+    }
+}
+
 # ── 4. Start production services ──
 # Use SINGLE mode: the API process (node/Fastify) serves both the static web
 # build and the API on one port. vite preview is NOT used because it exits

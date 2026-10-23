@@ -9,7 +9,7 @@ import type { ApiConfig } from '../config/env.js';
 const slugPattern = /^[a-z0-9-]+$/;
 
 export class AdminWorkflow {
-  constructor(private readonly config: ApiConfig) {}
+  constructor(private readonly config: ApiConfig, private readonly onToolsChanged?: () => void) {}
 
   async deleteTool(slug: string): Promise<boolean> {
     if (!slugPattern.test(slug)) {
@@ -60,8 +60,10 @@ export class AdminWorkflow {
       toolDataRoot: this.config.toolDataRoot,
       toolDocsRoot: this.config.toolDocsRoot,
       apiRoot: this.config.toolApiRoot,
-      downloadRoot: this.config.downloadRoot
+      downloadRoot: this.config.downloadRoot,
+      logicalDocsPath: this.config.logicalDocsPath
     });
+    this.onToolsChanged?.();
   }
 
   private async removeToolSource(sourcePath: string, slug: string): Promise<void> {

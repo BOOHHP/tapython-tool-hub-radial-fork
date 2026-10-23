@@ -29,6 +29,23 @@ export interface ApiConfig {
   publicBaseUrl?: string;
   eventsEnabled?: boolean;
   storeBackend?: string;
+  artifactRoot?: string;
+  // Stable sourceDocument prefix for published tools, whatever directory the docs physically live in.
+  logicalDocsPath?: string;
+}
+
+export function resolveDataRoots(repoRoot: string, env: NodeJS.ProcessEnv) {
+  // "off" lets the deploy script force repo-relative paths for one run without editing .env.
+  const artifactRoot = env.ARTIFACT_ROOT && env.ARTIFACT_ROOT !== 'off' ? path.resolve(env.ARTIFACT_ROOT) : undefined;
+  const base = (artifactSegments: string[], repoSegments: string[]) => (artifactRoot ? path.join(artifactRoot, ...artifactSegments) : path.join(repoRoot, ...repoSegments));
+  return {
+    artifactRoot,
+    logicalDocsPath: artifactRoot ? 'data/tool-docs' : undefined,
+    toolDataRoot: env.TOOL_DATA_ROOT ?? base(['tools'], ['data', 'tools']),
+    toolDocsRoot: env.TOOL_DOCS_ROOT ?? base(['tool-docs'], ['data', 'tool-docs']),
+    toolApiRoot: env.TOOL_API_ROOT ?? base(['api', 'tools'], ['apps', 'web', 'public', 'api', 'tools']),
+    downloadRoot: env.TOOL_DOWNLOAD_ROOT ?? base(['downloads'], ['apps', 'web', 'public', 'downloads'])
+  };
 }
 
 export function loadConfig(): ApiConfig {
@@ -41,10 +58,7 @@ export function loadConfig(): ApiConfig {
     host: process.env.API_HOST ?? '127.0.0.1',
     port: Number(process.env.API_PORT ?? 8787),
     repoRoot,
-    toolDataRoot: process.env.TOOL_DATA_ROOT ?? path.join(repoRoot, 'data', 'tools'),
-    toolDocsRoot: process.env.TOOL_DOCS_ROOT ?? path.join(repoRoot, 'data', 'tool-docs'),
-    toolApiRoot: process.env.TOOL_API_ROOT ?? path.join(repoRoot, 'apps', 'web', 'public', 'api', 'tools'),
-    downloadRoot: process.env.TOOL_DOWNLOAD_ROOT ?? path.join(repoRoot, 'apps', 'web', 'public', 'downloads'),
+    ...resolveDataRoots(repoRoot, process.env),
     submissionRoot: process.env.SUBMISSION_ROOT ?? path.join(repoRoot, '.tapython-tool-hub', 'submissions'),
     serveStatic: parseBoolean(process.env.SERVE_STATIC, true),
     webStaticRoot: process.env.WEB_STATIC_ROOT ?? path.join(repoRoot, 'dist'),

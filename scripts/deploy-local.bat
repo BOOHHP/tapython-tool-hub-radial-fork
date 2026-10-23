@@ -72,6 +72,12 @@ REM submission/review flow) and do not exist in the local dev repo. Pull them
 REM down before building so generated API/download artifacts include them,
 REM then merge local additions back during the mirror step.
 echo [deploy-local] step 1/4: pulling server-authored tool docs and building locally...
+REM Once the server holds its data under .tapython-tool-hub\artifacts (marker written by
+REM the artifacts migration), the repo copies are not authoritative and are not pulled.
+if exist "%UNC_TARGET%\.tapython-tool-hub\artifacts\.migrated.json" (
+    echo [deploy-local] server artifacts are authoritative; skipping tool-docs pull.
+    goto :after_pull
+)
 echo [deploy-local] pulling server-authored tool docs before build...
 robocopy "%UNC_TARGET%\data\tool-docs" "%REPO_ROOT%\data\tool-docs" /E /NFL /NDL /NJH /NJS /NP
 set "RC=%errorlevel%"
@@ -79,6 +85,7 @@ if %RC% GEQ 8 (
     echo [deploy-local] ERROR: failed to pull server tool docs, code %RC%.
     exit /b %RC%
 )
+:after_pull
 
 call npm run build
 if errorlevel 1 goto :build_fail

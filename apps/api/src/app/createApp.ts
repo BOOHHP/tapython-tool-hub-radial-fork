@@ -16,6 +16,7 @@ import { registerDownloadRoutes } from '../routes/downloads.js';
 import { registerHealthRoutes } from '../routes/health.js';
 import { registerIdentityRoutes } from '../routes/identity.js';
 import { registerEventRoutes } from '../routes/events.js';
+import { syncToolIndex } from '../catalog/toolIndex.js';
 import { EventStore } from '../identity/events.js';
 import { createFeishuProvider } from '../auth/feishuProvider.js';
 import { AuditLog } from '../identity/auditLog.js';
@@ -34,7 +35,16 @@ export async function createApp(config: ApiConfig) {
   const databasePool = createDatabasePool(config);
   const hubDatabase = await openHubDatabase(config);
   const toolRepository = new StaticToolRepository(config);
-  const adminWorkflow = new AdminWorkflow(config);
+  const syncTools = hubDatabase
+    ? () => {
+        try {
+          syncToolIndex(hubDatabase.db, config.toolApiRoot);
+        } catch (error) {
+          app.log.warn({ err: error }, 'tool index sync failed');
+        }
+      }
+    : undefined;
+  const adminWorkflow = new AdminWorkflow(config, syncTools);
   const authService = new AuthService(config);
   let submissionRepository: SubmissionRepository;
   let events: EventStore | undefined;
@@ -60,7 +70,8 @@ export async function createApp(config: ApiConfig) {
     await databasePool?.end();
     throw error;
   }
-  const submissionWorkflow = new SubmissionWorkflow(config, submissionRepository);
+  const submissionWorkflow = new SubmissionWorkflow(config, submissionRepository, syncTools);
+  syncTools?.();
 
   app.register(cors, {
     origin: true,

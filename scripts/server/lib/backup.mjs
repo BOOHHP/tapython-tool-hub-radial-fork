@@ -4,8 +4,8 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 
-// Everything the server currently treats as authoritative. artifacts/ joins this list when it replaces public/downloads.
-export const DEFAULT_INCLUDE = ['.tapython-tool-hub/submissions', 'data/tool-docs', 'apps/web/public/downloads'];
+// Everything the server treats as authoritative. The older repo-relative data dirs stay listed as the pre-artifacts fallback.
+export const DEFAULT_INCLUDE = ['.tapython-tool-hub/submissions', '.tapython-tool-hub/artifacts', 'data/tool-docs', 'apps/web/public/downloads'];
 export const RETENTION = { deploy: 10, daily: 30 };
 export const KINDS = ['deploy', 'daily', 'export'];
 

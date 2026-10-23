@@ -10,6 +10,8 @@ export interface GenerateToolDataOptions {
   toolDocsRoot: string;
   apiRoot: string;
   downloadRoot: string;
+  // Keeps the published sourceDocument path stable when the docs live outside the repo (e.g. server artifacts).
+  logicalDocsPath?: string;
 }
 
 export interface GenerateToolDataResult {
@@ -119,7 +121,7 @@ async function readMarkdownTools(options: GenerateToolDataOptions): Promise<Tool
     if (!parsed.data.slug && !isToolMarkdownCandidate(fileName)) {
       continue;
     }
-    tools.push(await buildToolFromMarkdown(parsed.data, parsed.content, sourcePath, options.root));
+    tools.push(await buildToolFromMarkdown(parsed.data, parsed.content, sourcePath, options.root, options.logicalDocsPath && `${options.logicalDocsPath}/${fileName.split(path.sep).join('/')}`));
   }
 
   return tools;
@@ -136,13 +138,13 @@ function isToolMarkdownCandidate(fileName: string): boolean {
   return false;
 }
 
-async function buildToolFromMarkdown(data: ToolData, markdown: string, sourcePath: string, root: string): Promise<ToolData> {
+async function buildToolFromMarkdown(data: ToolData, markdown: string, sourcePath: string, root: string, logicalSourceDocument?: string): Promise<ToolData> {
   const slug = required(data.slug, 'slug', sourcePath);
   const version = required(data.version, 'version', sourcePath);
   const toolType = data.toolType ?? 'chameleon';
   const mountPoint = data.mountPoint ?? (toolType === 'python-script' ? 'OnToolbar' : 'OnToolBarChameleon');
   const entryJson = toolType === 'chameleon' ? required(data.entryJson, 'entryJson', sourcePath) : data.entryJson;
-  const sourceDocument = path.relative(root, sourcePath).split(path.sep).join('/');
+  const sourceDocument = logicalSourceDocument ?? path.relative(root, sourcePath).split(path.sep).join('/');
   const assetFiles = await extractCodeAssets(markdown, path.dirname(sourcePath));
   const codeAssets = assetFiles.map(stripAssetContent);
   const latestManifest = buildManifest(data, version, codeAssets, data.updatedAt ?? data.releasedAt);

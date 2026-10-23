@@ -89,7 +89,8 @@ export class SubmissionWorkflow {
 
   constructor(
     private readonly config: ApiConfig,
-    private readonly repository: SubmissionRepository
+    private readonly repository: SubmissionRepository,
+    private readonly onToolsChanged?: () => void
   ) {}
 
   async createSubmission(request: ToolSubmissionRequest): Promise<SubmissionRecord> {
@@ -322,8 +323,10 @@ export class SubmissionWorkflow {
       toolDataRoot: this.config.toolDataRoot,
       toolDocsRoot: this.config.toolDocsRoot,
       apiRoot: this.config.toolApiRoot,
-      downloadRoot: this.config.downloadRoot
+      downloadRoot: this.config.downloadRoot,
+      logicalDocsPath: this.config.logicalDocsPath
     });
+    this.onToolsChanged?.();
   }
 
   private async writeSubmittedPackage(id: string, manifest: TapythonToolPackageManifest, packageBuffer: Buffer): Promise<void> {
