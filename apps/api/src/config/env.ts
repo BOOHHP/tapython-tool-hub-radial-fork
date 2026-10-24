@@ -28,6 +28,8 @@ export interface ApiConfig {
   bootstrapAdminEmails?: string[];
   publicBaseUrl?: string;
   eventsEnabled?: boolean;
+  notifyEnabled?: boolean;
+  notifyProvider?: string;
   storeBackend?: string;
   artifactRoot?: string;
   // Stable sourceDocument prefix for published tools, whatever directory the docs physically live in.
@@ -75,6 +77,8 @@ export function loadConfig(): ApiConfig {
     bootstrapAdminEmails: (process.env.BOOTSTRAP_ADMIN_EMAILS ?? '').split(',').map((email) => email.trim()).filter(Boolean),
     publicBaseUrl: process.env.PUBLIC_BASE_URL || undefined,
     eventsEnabled: parseBoolean(process.env.EVENTS_ENABLED, false),
+    notifyEnabled: parseBoolean(process.env.NOTIFY_ENABLED, false),
+    notifyProvider: process.env.NOTIFY_PROVIDER || undefined,
     storeBackend: process.env.STORE_BACKEND || undefined
   };
 }

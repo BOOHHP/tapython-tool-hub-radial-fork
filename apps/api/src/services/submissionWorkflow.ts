@@ -84,26 +84,64 @@ export class PackageResourceLimitError extends Error {
   }
 }
 
+export interface SubmissionHooks {
+  onSubmitted?: (submission: SubmissionRecord) => void;
+  onReviewed?: (submission: SubmissionRecord, review: ReviewRecord) => void;
+  onListed?: (submission: SubmissionRecord) => void;
+}
+
 export class SubmissionWorkflow {
   private readonly packageSubmissionLocks = new Map<string, Promise<void>>();
 
   constructor(
     private readonly config: ApiConfig,
     private readonly repository: SubmissionRepository,
-    private readonly onToolsChanged?: () => void
+    private readonly onToolsChanged?: () => void,
+    private readonly hooks: SubmissionHooks = {}
   ) {}
 
   async createSubmission(request: ToolSubmissionRequest): Promise<SubmissionRecord> {
+    const submission = await this.submit(request);
+    this.notifySubmitted(submission);
+    return submission;
+  }
+
+  private async submit(request: ToolSubmissionRequest): Promise<SubmissionRecord> {
     const validationReport = await this.validate(request);
     return this.repository.create(request, validationReport);
+  }
+
+  // A failing notification must never fail the submission itself.
+  private notifySubmitted(submission: SubmissionRecord): void {
+    if (submission.status !== 'pending') return;
+    try {
+      this.hooks.onSubmitted?.(submission);
+    } catch {
+      // best effort
+    }
+  }
+
+  private notifyReviewed(submission: SubmissionRecord, review: ReviewRecord): void {
+    try {
+      this.hooks.onReviewed?.(submission, review);
+    } catch {
+      // best effort
+    }
+    if (review.decision !== 'approved') return;
+    try {
+      this.hooks.onListed?.(submission);
+    } catch {
+      // best effort
+    }
   }
 
   async createPackageSubmission(input: PackageSubmissionInput): Promise<SubmissionRecord> {
     const parsedPackage = parseToolPackage(input.packageBuffer);
     const publishManifest = applyPackageSubmissionMetadata(parsedPackage.manifest, input.submitter, input.metadata);
     const request = buildSubmissionRequestFromPackage({ ...parsedPackage, manifest: publishManifest }, input.submitter, input.notes);
-    const submission = await this.createSubmission(request);
+    const submission = await this.submit(request);
     await this.writeSubmittedPackage(submission.id, parsedPackage.manifest, input.packageBuffer);
+    this.notifySubmitted(submission);
     return submission;
   }
 
@@ -190,6 +228,7 @@ export class SubmissionWorkflow {
       const archiveCreated = await this.writeRepairedPackageArchive(publishManifest, repairFingerprint, input.packageBuffer);
       try {
         const submission = await this.repository.create(request, validationReport);
+        this.notifySubmitted(submission);
         return { submission, repairReport: repaired.report };
       } catch (error) {
         if (archiveCreated) {
@@ -231,7 +270,9 @@ export class SubmissionWorkflow {
         await this.publish(current);
         current.status = 'approved';
         current.reviews = [review, ...current.reviews];
-        return this.repository.save(current);
+        const saved = await this.repository.save(current);
+        this.notifyReviewed(saved, review);
+        return saved;
       });
     }
 
@@ -242,7 +283,9 @@ export class SubmissionWorkflow {
     }
 
     submission.reviews = [review, ...submission.reviews];
-    return this.repository.save(submission);
+    const saved = await this.repository.save(submission);
+    this.notifyReviewed(saved, review);
+    return saved;
   }
 
   private async validate(request: ToolSubmissionRequest): Promise<ValidationReport> {

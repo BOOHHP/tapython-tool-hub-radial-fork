@@ -494,6 +494,29 @@ test('publishes compatible API and downloads after approval', async () => {
   }
 });
 
+test('fires notification hooks for submit, review and listing, and survives a throwing hook', async () => {
+  const context = await createContext();
+  try {
+    const events: string[] = [];
+    const workflow = new SubmissionWorkflow(context.config, context.repository, undefined, {
+      onSubmitted: (submission) => { events.push(`submitted:${submission.slug}`); },
+      onReviewed: (_submission, review) => { events.push(`reviewed:${review.decision}`); throw new Error('bot down'); },
+      onListed: (submission) => { events.push(`listed:${submission.slug}`); }
+    });
+
+    const draft = await workflow.createSubmission({ ...validSubmission('hook-draft', '1.0.0', 'pending'), markdown: 'not a tool doc' });
+    assert.equal(draft.status, 'draft');
+    assert.deepEqual(events, []);
+
+    const submission = await workflow.createSubmission(validSubmission('hook-tool', '1.0.0', 'pending'));
+    const reviewed = await workflow.reviewSubmission(submission.id, { reviewer: 'TA Reviewer', decision: 'approved' });
+    assert.equal(reviewed?.status, 'approved');
+    assert.deepEqual(events, ['submitted:hook-tool', 'reviewed:approved', 'listed:hook-tool']);
+  } finally {
+    await context.cleanup();
+  }
+});
+
 test('publishes a pure python script without a chameleon entry json', async () => {
   const context = await createContext();
   const targetContext = await createContext();

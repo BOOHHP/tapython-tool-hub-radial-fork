@@ -35,8 +35,21 @@ import { AdminWorkflow } from '../services/adminWorkflow.js';
 import { AuthService } from '../services/authService.js';
 import { SubmissionWorkflow } from '../services/submissionWorkflow.js';
 import { registerStaticAssets } from './staticPlugin.js';
+import { MockFeishuBot, RealFeishuBot, type FeishuBot } from '../notify/feishuBot.js';
+import { NotificationService } from '../notify/notificationService.js';
 
-export async function createApp(config: ApiConfig) {
+export interface AppOverrides {
+  // Tests inject a recording bot; production builds it from the Feishu app credentials.
+  bot?: FeishuBot;
+}
+
+declare module 'fastify' {
+  interface FastifyInstance {
+    notifications: NotificationService | null;
+  }
+}
+
+export async function createApp(config: ApiConfig, overrides: AppOverrides = {}) {
   const app = fastify({ logger: true });
   const databasePool = createDatabasePool(config);
   const hubDatabase = await openHubDatabase(config);
@@ -76,8 +89,15 @@ export async function createApp(config: ApiConfig) {
     await databasePool?.end();
     throw error;
   }
-  const submissionWorkflow = new SubmissionWorkflow(config, submissionRepository, syncTools);
+  const notifications = buildNotifications(config, hubDatabase?.db, identity, overrides.bot, (message, detail) => app.log.warn(detail, message));
+  const submissionWorkflow = new SubmissionWorkflow(config, submissionRepository, syncTools, notifications ? {
+    onSubmitted: (submission) => notifications.submissionPending(submission),
+    onReviewed: (submission, review) => notifications.reviewed(submission, review),
+    onListed: (submission) => notifications.toolListed(submission)
+  } : {});
   syncTools?.();
+  notifications?.start();
+  app.decorate('notifications', notifications ?? null);
 
   app.register(cors, {
     origin: true,
@@ -107,12 +127,34 @@ export async function createApp(config: ApiConfig) {
   }
 
   app.addHook('onClose', async () => {
+    await notifications?.stop();
     hubDatabase?.db.close();
     await databasePool?.end();
   });
 
   return app;
 }
+function buildNotifications(config: ApiConfig, db: SqliteDatabase | undefined, identity: unknown, bot: FeishuBot | undefined, warn: (message: string, detail: Record<string, unknown>) => void) {
+  if (!config.notifyEnabled) {
+    return undefined;
+  }
+  if (!db || !identity) {
+    throw new Error('NOTIFY_ENABLED requires SQLITE_PATH and AUTH_FEISHU_ENABLED (recipients are signed-in Feishu users)');
+  }
+  let resolved = bot;
+  if (!resolved) {
+    if (config.notifyProvider === 'mock') {
+      resolved = new MockFeishuBot();
+    } else {
+      if (!config.feishuAppId || !config.feishuAppSecret) {
+        throw new Error('NOTIFY_ENABLED requires FEISHU_APP_ID and FEISHU_APP_SECRET (or NOTIFY_PROVIDER=mock)');
+      }
+      resolved = new RealFeishuBot({ appId: config.feishuAppId, appSecret: config.feishuAppSecret });
+    }
+  }
+  return new NotificationService(db, resolved, { publicBaseUrl: config.publicBaseUrl, log: warn });
+}
+
 function linkReviewer(db: SqliteDatabase) {
   return (reviewId: string, openId: string) => {
     db.prepare('UPDATE submission_reviews SET reviewer_open_id = ? WHERE review_id = ?').run(openId, reviewId);
