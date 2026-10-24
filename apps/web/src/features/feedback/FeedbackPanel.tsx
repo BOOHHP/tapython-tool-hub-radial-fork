@@ -1,14 +1,12 @@
 import { MessageOutlined, ArrowLeftOutlined } from '@ant-design/icons';
-import { Alert, Button, Card, Empty, Form, Input, Modal, Radio, Space, Switch, Table, Tag, Typography, message } from 'antd';
+import { Alert, Button, Card, Empty, Form, Input, Modal, Radio, Space, Table, Tag, Typography, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useCallback, useEffect, useState } from 'react';
 import {
   feedbackKindLabels,
   feedbackStatusColors,
   feedbackStatusLabels,
-  getNotificationPrefs,
   listMyFeedback,
-  setNotificationPrefs,
   submitFeedback,
   type FeedbackKind,
   type FeedbackRecord
@@ -36,7 +34,7 @@ interface FeedbackFormValues {
   body: string;
 }
 
-// Personal center section: submit feedback, follow its progress and manage notification preferences.
+// Submit feedback and follow its progress.
 export function FeedbackPanel() {
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm<FeedbackFormValues>();
@@ -45,7 +43,6 @@ export function FeedbackPanel() {
   const [composing, setComposing] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [openId, setOpenId] = useState<string>();
-  const [listed, setListed] = useState<boolean>();
   const [needLogin, setNeedLogin] = useState(false);
 
   const reload = useCallback(async () => {
@@ -63,7 +60,6 @@ export function FeedbackPanel() {
 
   useEffect(() => {
     void reload();
-    void getNotificationPrefs().then((prefs) => setListed(prefs.listed)).catch(() => undefined);
   }, [reload]);
 
   const submit = async () => {
@@ -108,20 +104,6 @@ export function FeedbackPanel() {
           onRow={(row) => ({ onClick: () => setOpenId(row.id), className: 'feedback-row' })}
           locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="还没有提交过反馈" /> }}
         />
-      </Card>
-
-      <Card title="通知设置">
-        <Space direction="vertical" size={8}>
-          <Space>
-            <Switch
-              checked={listed ?? true}
-              loading={listed === undefined}
-              onChange={(next) => void setNotificationPrefs(next).then((prefs) => setListed(prefs.listed)).catch((error: unknown) => messageApi.error(error instanceof Error ? error.message : String(error)))}
-            />
-            <Text>有新工具上架时通过飞书提醒我</Text>
-          </Space>
-          <Text type="secondary">投稿审核结果、反馈回复等与你直接相关的通知始终会发送。</Text>
-        </Space>
       </Card>
 
       <Modal open={composing} title="提交反馈" okText="提交" cancelText="取消" confirmLoading={submitting} onOk={() => void submit()} onCancel={() => setComposing(false)} destroyOnClose>

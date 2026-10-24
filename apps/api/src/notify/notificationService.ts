@@ -170,8 +170,10 @@ export class NotificationService {
   }
 
   feedbackCreated(feedback: FeedbackRef): void {
-    for (const openId of this.openIdsWithRole('admin')) {
-      if (openId === feedback.authorOpenId) continue;
+    // With a single admin the author would never hear about their own feedback, so only skip the author when someone else can handle it.
+    const admins = this.openIdsWithRole('admin');
+    const others = admins.filter((openId) => openId !== feedback.authorOpenId);
+    for (const openId of others.length > 0 ? others : admins) {
       this.enqueue('feedback.created', openId, `feedback.created:${feedback.id}:${openId}`, {
         title: feedback.kind === 'bug' ? '新的问题反馈' : '新的功能建议',
         color: 'blue',

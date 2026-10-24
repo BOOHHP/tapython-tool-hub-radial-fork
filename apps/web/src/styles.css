@@ -2131,3 +2131,46 @@ li,
 }
 .feedback-row { cursor: pointer; }
 .feedback-body { white-space: pre-wrap; word-break: break-word; }
+
+/* Drawer and Modal render outside .app-shell, so they need the dark palette explicitly. */
+.ant-drawer .ant-drawer-content,
+.ant-drawer .ant-drawer-header,
+.ant-modal .ant-modal-content,
+.ant-modal .ant-modal-header {
+  color: var(--color-text);
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+.ant-drawer-title,
+.ant-modal-title,
+.ant-drawer-close,
+.ant-modal-close,
+.ant-drawer .ant-descriptions-item-label,
+.ant-drawer .ant-descriptions-item-content,
+.ant-drawer .ant-list-header,
+.ant-drawer .ant-empty-description,
+.ant-modal .ant-form-item-label > label,
+.ant-modal .ant-radio-wrapper {
+  color: var(--color-text) !important;
+  background: transparent;
+}
+
+.ant-drawer .ant-list-item,
+.ant-drawer .ant-list-header {
+  border-color: var(--color-border) !important;
+}
+
+.ant-drawer .ant-input-data-count,
+.ant-modal .ant-input-data-count {
+  color: var(--color-muted);
+}
+
+.feedback-body {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.feedback-row {
+  cursor: pointer;
+}

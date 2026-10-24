@@ -115,3 +115,18 @@ test('the Feishu bot fetches a tenant token, posts an interactive card and class
   sendCode = 99991400;
   await assert.rejects(() => bot.send('ou_3', message, 'u4'), (error: BotSendError) => error.retryable === true);
 });
+
+test('a new feedback reaches the author when they are the only admin', async () => {
+  const { service, bot } = await setup();
+  const feedback = { id: 'f1', kind: 'bug', title: 'T', body: 'B', authorOpenId: 'ou_admin', authorName: 'Admin A', updatedAt: '2026-10-24T00:00:00.000Z' };
+  service.feedbackCreated(feedback);
+  await service.flush();
+  assert.deepEqual(bot.sent.map((item) => item.openId), ['ou_admin']);
+
+  const { service: second, bot: secondBot, users } = await setup();
+  users.upsertFromFeishu({ openId: 'ou_admin2', name: 'Admin B', email: 'admin.b@example.com' });
+  users.setRoles('test', 'ou_admin2', ['admin']);
+  second.feedbackCreated(feedback);
+  await second.flush();
+  assert.deepEqual(secondBot.sent.map((item) => item.openId), ['ou_admin2']);
+});

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ToolRecord } from '@tapython-tool-hub/shared';
 import { claimAlias, getProfile, NotSignedInError, releaseAlias, type MyProfile } from '../../services/me';
 import { roleLabels } from '../account/HeaderAccount';
+import { NotificationSettings } from './NotificationSettings';
 import { FeedbackPanel } from '../feedback/FeedbackPanel';
 
 const { Paragraph, Text, Title } = Typography;
@@ -124,6 +125,8 @@ export function PersonalCenter({ tools, favoriteSlugs, onOpenTool }: PersonalCen
           />
         </Space>
       </Card>
+
+      <NotificationSettings />
 
       <Row gutter={[18, 18]}>
         <Col xs={24} xl={14}>
