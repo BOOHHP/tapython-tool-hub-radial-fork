@@ -81,3 +81,6 @@ export const updateAdminFeedback = (id: string, changes: { status?: FeedbackStat
 
 export const getNotificationPrefs = () => call<{ listed: boolean }>('/api/v1/me/notifications');
 export const setNotificationPrefs = (listed: boolean) => call<{ listed: boolean }>('/api/v1/me/notifications', { method: 'PUT', body: JSON.stringify({ listed }) });
+
+export const sendTestNotification = () => call<{ sent: number; retrying: number; failed: number }>('/api/v1/admin/notifications/test', { method: 'POST' });
+export const getNotificationDiagnostics = () => call<{ counts: Record<string, number>; recentFailures: Array<{ kind: string; error: string; createdAt: string }> }>('/api/v1/admin/notifications');

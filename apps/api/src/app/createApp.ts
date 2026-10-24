@@ -19,6 +19,7 @@ import { registerEventRoutes } from '../routes/events.js';
 import { registerStatsRoutes } from '../routes/stats.js';
 import { registerMeRoutes } from '../routes/me.js';
 import { registerFeedbackRoutes } from '../routes/feedback.js';
+import { registerNotificationAdminRoutes } from '../routes/notificationAdmin.js';
 import { FeedbackStore } from '../feedback/feedbackStore.js';
 import { NotificationPrefs } from '../notify/prefs.js';
 import { FavoriteStore } from '../identity/favorites.js';
@@ -122,6 +123,9 @@ export async function createApp(config: ApiConfig, overrides: AppOverrides = {})
     app.register(registerStatsRoutes(new StatsService(hubDatabase.db), identity.hubAuth, authService));
     app.register(registerMeRoutes(identity.hubAuth, new FavoriteStore(hubDatabase.db), new ProfileService(hubDatabase.db, aliases), new NotificationPrefs(hubDatabase.db)));
     app.register(registerFeedbackRoutes({ store: new FeedbackStore(hubDatabase.db), hubAuth: identity.hubAuth, authService, audit: identity.audit, notifications }));
+    if (notifications) {
+      app.register(registerNotificationAdminRoutes(notifications, identity.hubAuth, authService));
+    }
   }
   if (identity) {
     app.register(registerAdminUserRoutes(identity.users, createAdminGuard(authService, identity.hubAuth), new AuthorAliases(hubDatabase!.db)));

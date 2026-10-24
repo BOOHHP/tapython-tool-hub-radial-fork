@@ -25,6 +25,7 @@ import {
 import { roleLabels } from '../account/HeaderAccount';
 import { UserManagement } from './UserManagement';
 import { FeedbackManagement } from './FeedbackManagement';
+import { getNotificationDiagnostics, sendTestNotification } from '../../services/feedback';
 import { riskColor, statusColor } from '../tools/display';
 
 const { Paragraph, Text, Title } = Typography;
@@ -109,6 +110,20 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
       messageApi.error(error instanceof Error ? error.message : String(error));
     } finally {
       setLoginLoading(false);
+    }
+  };
+
+  const testNotification = async () => {
+    try {
+      const result = await sendTestNotification();
+      if (result.sent > 0) {
+        messageApi.success('测试通知已发送，请在飞书中查看');
+        return;
+      }
+      const { recentFailures } = await getNotificationDiagnostics();
+      messageApi.error(`发送失败：${recentFailures[0]?.error ?? '未知原因'}`);
+    } catch (error) {
+      messageApi.error(error instanceof Error ? error.message : String(error));
     }
   };
 
@@ -309,7 +324,12 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
             {authUser.source === 'local' ? <Tag className="admin-session-tag">应急管理员</Tag> : null}
             {authUser.hub?.roles.map((role) => <Tag key={role} color={role === 'admin' ? 'gold' : 'blue'} className="admin-session-tag">{roleLabels[role]}</Tag>)}
           </Text>
-          <Button onClick={() => void logout()}>退出登录</Button>
+          <Space>
+            {authUser.source === 'feishu' && mayAdminister ? (
+              <Button onClick={() => void testNotification()}>发送测试通知</Button>
+            ) : null}
+            <Button onClick={() => void logout()}>退出登录</Button>
+          </Space>
         </Flex>
       ) : null}
       {authUser && !mayReview ? (

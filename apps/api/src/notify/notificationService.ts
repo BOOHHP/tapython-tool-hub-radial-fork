@@ -114,6 +114,15 @@ export class NotificationService {
     return Object.fromEntries(rows.map((row) => [String(row.status), Number(row.n)]));
   }
 
+  // Counts plus the latest failure reasons, enough to tell a missing Feishu permission from an outage.
+  diagnostics() {
+    const failures = this.db
+      .prepare("SELECT kind, attempts, last_error, created_at FROM notifications WHERE last_error IS NOT NULL ORDER BY created_at DESC LIMIT 5")
+      .all()
+      .map((row) => ({ kind: String(row.kind), attempts: Number(row.attempts), error: String(row.last_error), createdAt: String(row.created_at) }));
+    return { counts: this.summary(), recentFailures: failures };
+  }
+
   // --- Domain notifications -------------------------------------------------
 
   submissionPending(submission: SubmissionRef & { notes?: string }): void {

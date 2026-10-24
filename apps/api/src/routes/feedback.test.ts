@@ -5,7 +5,7 @@ import path from 'node:path';
 import test from 'node:test';
 import { createApp } from '../app/createApp.js';
 import type { ApiConfig } from '../config/env.js';
-import { MockFeishuBot } from '../notify/feishuBot.js';
+import { BotSendError, MockFeishuBot } from '../notify/feishuBot.js';
 
 const verifier = 'v'.repeat(48);
 
@@ -143,4 +143,23 @@ test('NOTIFY_ENABLED fails fast without identity storage or Feishu credentials',
   } finally {
     await fs.rm(root, { recursive: true, force: true });
   }
+});
+
+test('admins can send themselves a test notification and read delivery diagnostics', async () => {
+  await withApp(async ({ app, bot, as }) => {
+    const admin = await as('admin@example.com');
+    const member = await as('member@example.com');
+    assert.equal((await app.inject({ method: 'POST', url: '/api/v1/admin/notifications/test', headers: member.headers })).statusCode, 403);
+    const sent = await app.inject({ method: 'POST', url: '/api/v1/admin/notifications/test', headers: admin.headers });
+    assert.equal(sent.statusCode, 202);
+    assert.equal(sent.json().sent, 1);
+    assert.deepEqual(bot.sent.map((item) => item.openId), [admin.openId]);
+
+    bot.failWith = new BotSendError('Feishu send failed (code 99991672: no permission)', false);
+    const failed = await app.inject({ method: 'POST', url: '/api/v1/admin/notifications/test', headers: admin.headers });
+    assert.equal(failed.json().failed, 1);
+    const diagnostics = (await app.inject({ url: '/api/v1/admin/notifications', headers: admin.headers })).json();
+    assert.deepEqual(diagnostics.counts, { sent: 1, failed: 1 });
+    assert.match(diagnostics.recentFailures[0].error, /99991672/);
+  });
 });
