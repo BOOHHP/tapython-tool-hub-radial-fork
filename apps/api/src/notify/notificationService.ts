@@ -16,6 +16,17 @@ interface SubmissionRef {
   submitter: string;
 }
 
+export interface FeedbackRef {
+  id: string;
+  kind: string;
+  title: string;
+  body: string;
+  authorOpenId: string;
+  authorName: string;
+  assigneeOpenId?: string;
+  updatedAt: string;
+}
+
 const defaultRetryDelaysMs = [60_000, 5 * 60_000, 30 * 60_000, 2 * 60 * 60_000];
 const batchSize = 20;
 const maxText = 200;
@@ -147,6 +158,52 @@ export class NotificationService {
         link: this.link('查看工具', '')
       });
     }
+  }
+
+  feedbackCreated(feedback: FeedbackRef): void {
+    for (const openId of this.openIdsWithRole('admin')) {
+      if (openId === feedback.authorOpenId) continue;
+      this.enqueue('feedback.created', openId, `feedback.created:${feedback.id}:${openId}`, {
+        title: feedback.kind === 'bug' ? '新的问题反馈' : '新的功能建议',
+        color: 'blue',
+        lines: [`**${clip(feedback.title)}**`, `提交人：${clip(feedback.authorName)}`, clip(feedback.body)],
+        link: this.link('前往处理', '#admin')
+      });
+    }
+  }
+
+  // Staff replies reach the author; author replies reach the assignee, or the admins when nobody is assigned.
+  feedbackReplied(feedback: FeedbackRef, reply: { id: string; authorOpenId: string; authorName: string; body: string; staff: boolean }): void {
+    const recipients = reply.staff ? [feedback.authorOpenId] : feedback.assigneeOpenId ? [feedback.assigneeOpenId] : this.openIdsWithRole('admin');
+    for (const openId of recipients) {
+      if (openId === reply.authorOpenId) continue;
+      this.enqueue('feedback.reply', openId, `feedback.reply:${reply.id}:${openId}`, {
+        title: reply.staff ? '你的反馈有新回复' : '反馈有新的补充',
+        color: 'blue',
+        lines: [`**${clip(feedback.title)}**`, `${clip(reply.authorName)}：${clip(reply.body)}`],
+        link: this.link(reply.staff ? '查看回复' : '前往处理', reply.staff ? '#me' : '#admin')
+      });
+    }
+  }
+
+  feedbackStatusChanged(feedback: FeedbackRef, status: string, changedBy: string): void {
+    const label: Record<string, string> = { open: '待处理', in_progress: '处理中', resolved: '已解决', wontfix: '暂不处理' };
+    const done = status === 'resolved';
+    this.enqueue('feedback.status', feedback.authorOpenId, `feedback.status:${feedback.id}:${status}:${feedback.updatedAt}`, {
+      title: `反馈状态更新：${label[status] ?? status}`,
+      color: done ? 'green' : status === 'wontfix' ? 'grey' : 'blue',
+      lines: [`**${clip(feedback.title)}**`, `处理人：${clip(changedBy)}`],
+      link: this.link('查看详情', '#me')
+    });
+  }
+
+  feedbackAssigned(feedback: FeedbackRef, assigneeOpenId: string): void {
+    this.enqueue('feedback.assigned', assigneeOpenId, `feedback.assigned:${feedback.id}:${assigneeOpenId}:${feedback.updatedAt}`, {
+      title: '有反馈分派给你',
+      color: 'orange',
+      lines: [`**${clip(feedback.title)}**`, `提交人：${clip(feedback.authorName)}`, clip(feedback.body)],
+      link: this.link('前往处理', '#admin')
+    });
   }
 
   // Active user ids for a role; admins also count as reviewers.

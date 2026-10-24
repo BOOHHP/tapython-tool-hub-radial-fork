@@ -3,10 +3,11 @@ import { AliasError } from '../identity/authorAliases.js';
 import { FavoriteLimitError, isValidSlug, type FavoriteStore } from '../identity/favorites.js';
 import type { HubAuth } from '../identity/hubAuth.js';
 import type { ProfileService } from '../identity/profile.js';
+import type { NotificationPrefs } from '../notify/prefs.js';
 import { publicUser, sameOrigin } from './identity.js';
 
 // Everything here belongs to the signed-in Feishu user; the emergency admin has no personal data.
-export function registerMeRoutes(hubAuth: HubAuth, favorites: FavoriteStore, profile: ProfileService) {
+export function registerMeRoutes(hubAuth: HubAuth, favorites: FavoriteStore, profile: ProfileService, prefs: NotificationPrefs) {
   const authenticate = async (request: FastifyRequest, reply: FastifyReply) => {
     const session = hubAuth.resolveWithRefresh(request, reply);
     if (!session) {
@@ -59,6 +60,16 @@ export function registerMeRoutes(hubAuth: HubAuth, favorites: FavoriteStore, pro
     app.delete<{ Params: { slug: string } }>('/api/v1/me/favorites/:slug', async (request, reply) => {
       favorites.remove(openIdOf(request), request.params.slug);
       return reply.code(204).send();
+    });
+
+    app.get('/api/v1/me/notifications', async (request) => prefs.get(openIdOf(request)));
+
+    app.put<{ Body: { listed?: unknown } }>('/api/v1/me/notifications', async (request, reply) => {
+      if (typeof request.body?.listed !== 'boolean') {
+        return reply.code(400).send({ error: 'invalid_preferences' });
+      }
+      prefs.setListed(openIdOf(request), request.body.listed);
+      return prefs.get(openIdOf(request));
     });
 
     app.get('/api/v1/me/profile', async (request) => ({ user: publicUser(request.hubSession!.user), ...profile.get(openIdOf(request)) }));

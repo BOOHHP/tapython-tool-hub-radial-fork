@@ -18,6 +18,9 @@ import { registerIdentityRoutes } from '../routes/identity.js';
 import { registerEventRoutes } from '../routes/events.js';
 import { registerStatsRoutes } from '../routes/stats.js';
 import { registerMeRoutes } from '../routes/me.js';
+import { registerFeedbackRoutes } from '../routes/feedback.js';
+import { FeedbackStore } from '../feedback/feedbackStore.js';
+import { NotificationPrefs } from '../notify/prefs.js';
 import { FavoriteStore } from '../identity/favorites.js';
 import { ProfileService } from '../identity/profile.js';
 import { StatsService } from '../stats/statsService.js';
@@ -68,6 +71,7 @@ export async function createApp(config: ApiConfig, overrides: AppOverrides = {})
   let submissionRepository: SubmissionRepository;
   let events: EventStore | undefined;
   let identity: ReturnType<typeof buildIdentity>;
+  let notifications: NotificationService | undefined;
   try {
     if (config.storeBackend === 'sqlite') {
       if (!hubDatabase) {
@@ -84,12 +88,12 @@ export async function createApp(config: ApiConfig, overrides: AppOverrides = {})
       events = new EventStore(hubDatabase.db);
     }
     identity = buildIdentity(config, hubDatabase?.db, events, (message, detail) => app.log.warn(detail, message));
+    notifications = buildNotifications(config, hubDatabase?.db, identity, overrides.bot, (message, detail) => app.log.warn(detail, message));
   } catch (error) {
     hubDatabase?.db.close();
     await databasePool?.end();
     throw error;
   }
-  const notifications = buildNotifications(config, hubDatabase?.db, identity, overrides.bot, (message, detail) => app.log.warn(detail, message));
   const submissionWorkflow = new SubmissionWorkflow(config, submissionRepository, syncTools, notifications ? {
     onSubmitted: (submission) => notifications.submissionPending(submission),
     onReviewed: (submission, review) => notifications.reviewed(submission, review),
@@ -116,7 +120,8 @@ export async function createApp(config: ApiConfig, overrides: AppOverrides = {})
   if (identity && hubDatabase) {
     const aliases = new AuthorAliases(hubDatabase.db);
     app.register(registerStatsRoutes(new StatsService(hubDatabase.db), identity.hubAuth, authService));
-    app.register(registerMeRoutes(identity.hubAuth, new FavoriteStore(hubDatabase.db), new ProfileService(hubDatabase.db, aliases)));
+    app.register(registerMeRoutes(identity.hubAuth, new FavoriteStore(hubDatabase.db), new ProfileService(hubDatabase.db, aliases), new NotificationPrefs(hubDatabase.db)));
+    app.register(registerFeedbackRoutes({ store: new FeedbackStore(hubDatabase.db), hubAuth: identity.hubAuth, authService, audit: identity.audit, notifications }));
   }
   if (identity) {
     app.register(registerAdminUserRoutes(identity.users, createAdminGuard(authService, identity.hubAuth), new AuthorAliases(hubDatabase!.db)));
