@@ -24,6 +24,7 @@ import {
 } from '../../services/auth';
 import { roleLabels } from '../account/HeaderAccount';
 import { UserManagement } from './UserManagement';
+import { FeedbackManagement } from './FeedbackManagement';
 import { riskColor, statusColor } from '../tools/display';
 
 const { Paragraph, Text, Title } = Typography;
@@ -462,6 +463,7 @@ export function AdminConsole({ tools, loadingTools, onToolsChanged }: AdminConso
         </Col>
       </Row>
           ) },
+          { key: 'feedback', label: '反馈处理', children: <FeedbackManagement myOpenId={authUser.hub?.openId} /> },
           ...(mayAdminister ? [{ key: 'people', label: '人员管理', children: <UserManagement /> }] : [])
         ]}
       />

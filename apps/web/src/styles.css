@@ -2129,3 +2129,5 @@ li,
   height: auto;
   text-align: left;
 }
+.feedback-row { cursor: pointer; }
+.feedback-body { white-space: pre-wrap; word-break: break-word; }
