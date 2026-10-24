@@ -1,5 +1,5 @@
-import { MessageOutlined } from '@ant-design/icons';
-import { Button, Card, Empty, Form, Input, Modal, Radio, Space, Switch, Table, Tag, Typography, message } from 'antd';
+import { MessageOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import { Alert, Button, Card, Empty, Form, Input, Modal, Radio, Space, Switch, Table, Tag, Typography, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useCallback, useEffect, useState } from 'react';
 import {
@@ -15,7 +15,20 @@ import {
 } from '../../services/feedback';
 import { FeedbackDrawer } from './FeedbackDrawer';
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
+
+export function FeedbackPageHeader({ onBack }: { onBack: () => void }) {
+  return (
+    <section className="view-return-panel" aria-label="Feedback navigation">
+      <Button icon={<ArrowLeftOutlined />} onClick={onBack}>返回工具库</Button>
+      <div className="view-return-copy">
+        <Text className="eyebrow">Feedback</Text>
+        <Title level={4}>反馈与建议</Title>
+        <Text type="secondary">提交问题或建议，处理进度会通过飞书通知你。</Text>
+      </div>
+    </section>
+  );
+}
 
 interface FeedbackFormValues {
   kind: FeedbackKind;
@@ -33,13 +46,16 @@ export function FeedbackPanel() {
   const [submitting, setSubmitting] = useState(false);
   const [openId, setOpenId] = useState<string>();
   const [listed, setListed] = useState<boolean>();
+  const [needLogin, setNeedLogin] = useState(false);
 
   const reload = useCallback(async () => {
     setLoading(true);
     try {
       setItems(await listMyFeedback());
     } catch (error) {
-      messageApi.error(error instanceof Error ? error.message : String(error));
+      const text = error instanceof Error ? error.message : String(error);
+      if (text === '请先登录') setNeedLogin(true);
+      else messageApi.error(text);
     } finally {
       setLoading(false);
     }
@@ -65,6 +81,10 @@ export function FeedbackPanel() {
       setSubmitting(false);
     }
   };
+
+  if (needLogin) {
+    return <Alert type="info" showIcon message="请先登录" description="提交和查看反馈需要登录，请点击页面右上角的圆形按钮，使用飞书登录。" />;
+  }
 
   const columns: ColumnsType<FeedbackRecord> = [
     { title: '标题', dataIndex: 'title', ellipsis: true },

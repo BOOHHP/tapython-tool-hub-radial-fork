@@ -11,6 +11,7 @@ import {
   FileProtectOutlined,
   FileSearchOutlined,
   GithubOutlined,
+  MessageOutlined,
   RobotOutlined,
   SafetyCertificateOutlined,
   SettingOutlined,
@@ -50,6 +51,7 @@ import type { FileDiffRow, ManifestDiffRow, ToolFileManifest, ToolManifest, Tool
 import { AdminConsole } from '../features/admin/AdminConsole';
 import { StatsDashboard, StatsPageHeader } from '../features/stats/StatsDashboard';
 import { PersonalCenter, PersonalPageHeader } from '../features/account/PersonalCenter';
+import { FeedbackPageHeader, FeedbackPanel } from '../features/feedback/FeedbackPanel';
 import { useHubSession } from '../features/account/useHubSession';
 import { addFavorite, mergeFavorites, removeFavorite } from '../services/me';
 import { HeaderAccount } from '../features/account/HeaderAccount';
@@ -64,7 +66,7 @@ import { getApiBaseUrl, getApiUrl, getCategories, getRiskLevels, getStatuses, ge
 const { Header, Content } = Layout;
 const { Paragraph, Text, Title } = Typography;
 
-type ViewMode = 'tools' | 'tool' | 'submit' | 'admin' | 'stats' | 'me';
+type ViewMode = 'tools' | 'tool' | 'submit' | 'admin' | 'stats' | 'me' | 'feedback';
 type ToolViewMode = 'detail' | 'compare';
 type InstallMode = 'ai' | 'cli' | 'zip';
 type CliPlatform = 'posix' | 'windows' | 'download';
@@ -84,12 +86,13 @@ function viewModeFromHash(hash: string): ViewMode | undefined {
   if (normalized === 'admin') return 'admin';
   if (normalized === 'stats') return 'stats';
   if (normalized === 'me') return 'me';
+  if (normalized === 'feedback') return 'feedback';
   return undefined;
 }
 
 function writeViewModeHash(viewMode: ViewMode) {
   if (typeof window === 'undefined') return;
-  const nextHash = viewMode === 'submit' || viewMode === 'admin' || viewMode === 'stats' || viewMode === 'me' ? `#${viewMode}` : '';
+  const nextHash = viewMode === 'submit' || viewMode === 'admin' || viewMode === 'stats' || viewMode === 'me' || viewMode === 'feedback' ? `#${viewMode}` : '';
   const nextUrl = `${window.location.pathname}${window.location.search}${nextHash}`;
   window.history.replaceState(null, '', nextUrl);
 }
@@ -259,7 +262,10 @@ export function ToolHubPage() {
               <Text type="secondary" className="header-subtitle">面向 TAPython / Unreal Editor 的工具发布与安装审计</Text>
             </Space>
           </Flex>
-          <HeaderAccount />
+          <Space size={12} align="center">
+            <Button type={viewMode === 'feedback' ? 'primary' : 'default'} icon={<MessageOutlined />} onClick={() => navigateToView('feedback')}>反馈与建议</Button>
+            <HeaderAccount />
+          </Space>
         </Flex>
       </Header>
       <Content className="app-content">
@@ -277,6 +283,7 @@ export function ToolHubPage() {
         {viewMode === 'admin' ? <AdminPageHeader onBack={goHome} /> : null}
         {viewMode === 'stats' ? <StatsPageHeader onBack={goHome} /> : null}
         {viewMode === 'me' ? <PersonalPageHeader onBack={goHome} /> : null}
+        {viewMode === 'feedback' ? <FeedbackPageHeader onBack={goHome} /> : null}
         {viewMode === 'tools' ? <OverviewStats tools={catalogTools} loading={loadingTools} /> : null}
         {toolError ? <Alert className="tool-load-alert" type="error" showIcon message="工具数据加载失败" description={toolError} /> : null}
         {viewMode === 'tools' && (
@@ -343,6 +350,7 @@ export function ToolHubPage() {
         {viewMode === 'admin' && <AdminConsole tools={tools} loadingTools={loadingTools} onToolsChanged={refreshTools} />}
       {viewMode === 'stats' && <StatsDashboard />}
       {viewMode === 'me' && <PersonalCenter tools={tools} favoriteSlugs={favoriteSlugs} onOpenTool={openToolBySlug} />}
+      {viewMode === 'feedback' && <FeedbackPanel />}
       </Content>
     </Layout>
   );
